@@ -27,6 +27,7 @@ gem 'capybara'
 gem 'cucumber-rails', :require => false
 gem 'cucumber-rails-training-wheels'
 gem 'database_cleaner'
+gem 'rspec-rails'
 
 group :development do
   gem 'spring'

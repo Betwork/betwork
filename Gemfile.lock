@@ -507,6 +507,14 @@ GEM
     rspec-mocks (3.12.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
+    rspec-rails (5.1.2)
+      actionpack (>= 5.2)
+      activesupport (>= 5.2)
+      railties (>= 5.2)
+      rspec-core (~> 3.10)
+      rspec-expectations (~> 3.10)
+      rspec-mocks (~> 3.10)
+      rspec-support (~> 3.10)
     rspec-support (3.12.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
@@ -611,6 +619,7 @@ DEPENDENCIES
   puma
   rails (= 5.2.0)
   rails_12factor
+  rspec-rails
   sanitize
   sass-rails (~> 5.0.0)
   spring
