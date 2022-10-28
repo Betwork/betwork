@@ -22,7 +22,7 @@
           <%= odd.money_line%>
         </td>
         <td>
-            <input type="submit" value="Place Bet" class="btn btn-primary">
+        <%= link_to 'Place Bet', new_event_path, :class => 'btn btn-primary' %>
         </td>
       </tr>
     <% end %>

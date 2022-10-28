@@ -5,3 +5,5 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Odd.create([{team_one_name: 'Los Angeles Lakers', team_two_name: 'Chicago Bulls', money_line: 225}])
