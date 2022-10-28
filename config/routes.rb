@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   resources :posts
+  resources :odds
   resources :comments, only: [:create, :destroy]
   devise_for :users
   resources :users do

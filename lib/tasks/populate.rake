@@ -6,7 +6,7 @@ namespace :fill do
     puts 'Erasing existing data'
     puts '====================='
 
-    [User, Post, Event, Comment].each(&:delete_all)
+    [User, Post, Event, Comment, Odd].each(&:delete_all)
     ActsAsVotable::Vote.delete_all
     PublicActivity::Activity.delete_all
 
@@ -26,6 +26,12 @@ namespace :fill do
       user.sign_in_count = 0
       user.posts_count = 0
       puts "created user #{user.name}"
+    end
+
+    Odd.populate 5 do |bet|
+      bet.team_one_name = Faker::Name.name
+      bet.team_two_name = Faker::Name.name
+      bet.money_line= -110
     end
 
 
@@ -111,6 +117,11 @@ namespace :fill do
       comment.save
       puts "user #{user.name} commented on event #{event.id}"
     end
+
+    puts 'Creating Odds for Bets'
+    puts '============================='
+
+    
 
   end
 end

@@ -1,0 +1,30 @@
+<h2>All Odds</h2>
+
+<table class="table table-striped col-md-12" id="bets">
+  <thead>
+    <tr>
+	    <th>Home Team</th>
+	    <th>Away Team</th>
+      <th>Odds</th>
+      <th>Place Bets</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @odds.each do |odd| %>
+      <tr>
+        <td>
+          <%= odd.team_one_name%>
+        </td>
+        <td>
+          <%= odd.team_two_name%>
+        </td>
+        <td>
+          <%= odd.money_line%>
+        </td>
+        <td>
+            <input type="submit" value="Place Bet" class="btn btn-primary">
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

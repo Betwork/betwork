@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170613183247) do
+ActiveRecord::Schema.define(version: 20221001024445) do
 
   create_table "activities", force: :cascade do |t|
     t.string   "trackable_type"
@@ -121,6 +121,12 @@ ActiveRecord::Schema.define(version: 20170613183247) do
   create_table "merit_scores", force: :cascade do |t|
     t.integer "sash_id"
     t.string  "category", default: "default"
+  end
+
+  create_table "odds", force: :cascade do |t|
+    t.string  "team_one_name", null: false
+    t.string  "team_two_name", null: false
+    t.integer "money_line"
   end
 
   create_table "posts", force: :cascade do |t|
