@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-lg-3">
+  <table class="table table-striped col-md-12" id="bets">
+  <thead>
+    <tr>
+	    <th>Home Team</th>
+	    <th>Away Team</th>
+      <th>Odds</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>
+          <%= @game.team_one_name%>
+        </td>
+        <td>
+          <%= @game.team_two_name%>
+        </td>
+        <td>
+          <%= @game.money_line%>
+        </td>
+        <td>
+        <%= link_to 'Place Bet', friends_odd_path(odd), :class => 'btn btn-primary' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+  </div>
+  <div class="col-lg-6 well">
+    <h3>Friends</h3>
+    <hr>
+    <div id="friends">
+      <%= render(@friends) || render('shared/no_resource', resources: 'Friends') %>
+    </div>
+    <%= render 'shared/paginate', resources: @friends %>
+  </div>
+  # <div class="col-lg-3">
+  #   <%= render 'shared/links' %>
+  # </div>
+</div>

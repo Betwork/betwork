@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
 
   resources :posts
-  resources :odds
+  resources :odds do 
+    member do
+      get :friends
+    end
+  end
   resources :comments, only: [:create, :destroy]
   devise_for :users
   resources :users do

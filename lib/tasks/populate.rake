@@ -1,6 +1,7 @@
 namespace :fill do
   desc 'Fill data'
   task data: :environment do
+    require_relative '../populator_fixes.rb'
     require 'faker'
     require 'populator'
     puts 'Erasing existing data'

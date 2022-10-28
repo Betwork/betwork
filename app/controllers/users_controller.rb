@@ -46,7 +46,10 @@ class UsersController < ApplicationController
   end
 
   def set_user
+    puts "USER PARAMS WEEEEEEEE"
+    puts params 
     @user = User.friendly.find_by(slug: params[:id]) || User.find_by(id: params[:id])
+    puts @user
     render_404 and return unless @user
   end
 end

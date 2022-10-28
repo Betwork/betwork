@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '~> 2.6.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.2'
+gem 'rails', '5.2.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.0'
@@ -22,7 +22,11 @@ gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 
 #Need cucumber for testing
-gem 'cucumber'
+#gem 'cucumber'
+gem 'capybara'
+gem 'cucumber-rails', :require => false
+gem 'cucumber-rails-training-wheels'
+gem 'database_cleaner'
 
 group :development do
   gem 'spring'
