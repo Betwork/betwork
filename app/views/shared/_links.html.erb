@@ -1,12 +1,17 @@
 <div id="links" class="well">
   <h5>
     <%= fa_icon 'newspaper-o' %>
-    <%= link_to 'NewsFeed', root_path %>
+    <%= link_to 'Betwork Board', root_path %>
   </h5>
   <h5>
-    <%= fa_icon 'calendar-o' %>
-    <%= link_to 'Create Event', new_event_path %>
+    <%= fa_icon 'money' %>
+    <%= link_to 'Live Bets', odds_path%>
   </h5>
+ <h5>
+    <%= fa_icon 'calendar-o' %>
+    <%= link_to 'Create Event', new_event_path%>
+  </h5>
+ 
   <h5>
     <%= fa_icon 'calendar-o' %>
     <%= link_to 'Events Calendar', calendar_events_path %>
