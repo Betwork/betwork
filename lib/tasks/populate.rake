@@ -119,21 +119,6 @@ namespace :fill do
       puts "user #{user.name} commented on event #{event.id}"
     end
 
-    User.where("boolean_column = 't'").update_all(boolean_column: 1)
-    User.where("boolean_column = 'f'").update_all(boolean_column: 0)
-
-    Post.where("boolean_column = 't'").update_all(boolean_column: 1)
-    Post.where("boolean_column = 'f'").update_all(boolean_column: 0)
-
-    Event.where("boolean_column = 't'").update_all(boolean_column: 1)
-    Event.where("boolean_column = 'f'").update_all(boolean_column: 0)
-    
-    Comment.where("boolean_column = 't'").update_all(boolean_column: 1)
-    Comment.where("boolean_column = 'f'").update_all(boolean_column: 0)
-
-    Odd.where("boolean_column = 't'").update_all(boolean_column: 1)
-    Odd.where("boolean_column = 'f'").update_all(boolean_column: 0)
-
 
     puts 'Creating Odds for Bets'
     puts '============================='
