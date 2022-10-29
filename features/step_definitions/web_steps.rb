@@ -22,7 +22,7 @@
 require 'uri'
 require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
-#require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "selectors"))
+# require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "selectors"))
 
 module WithinHelpers
   def with_scope(locator)
@@ -63,6 +63,11 @@ end
 
 When /^(?:|I )fill in "([^"]*)" for "([^"]*)"$/ do |value, field|
   fill_in(field, :with => value)
+end
+
+When /^(?:|I )click within "([^"]*)"$/ do |selector|
+  # find(selector, visible: false).click
+  find(selector).click
 end
 
 # Use this to fill in an entire form with data from a table. Example:
