@@ -14,9 +14,7 @@ module NavigationHelpers
       case page_name
   
       when /^the (Betwork )?home\s?page$/ then '/'
-      when /^the (Betwork )?home\s?page$/ then '/'
-      when /^the (RottenPotatoes )?home\s?page$/ then '/movies'
-      when /^the movies page$/ then '/movies'
+      when /^the Sign up page$/ then '/users/sign_up'
   
       # Add more mappings here.
       # Here is an example that pulls values out of the Regexp:

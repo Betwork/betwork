@@ -5,6 +5,7 @@
 # files.
 
 require 'cucumber/rails'
+Capybara.ignore_hidden_elements = false
 
 # frozen_string_literal: true
 
