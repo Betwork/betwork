@@ -119,6 +119,7 @@ namespace :fill do
       puts "user #{user.name} commented on event #{event.id}"
     end
 
+
     puts 'Creating Odds for Bets'
     puts '============================='
 
