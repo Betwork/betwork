@@ -14,5 +14,12 @@ Scenario: We enter a valid username and password and should be able to log in
     And I fill in "user_password" with "password"
     When I press "Log in" 
     Then I should not see "Log in"
+    And I should not see "Invalid"
+
+Scenario: We enter an invalid username and password and should not be able to log in 
+    When I fill in "user_email" with "fake@notreal.com"
+    And I fill in "user_password" with "not real"
+    When I press "Log in"
+    Then I should see "Invalid"
 
 
