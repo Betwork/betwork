@@ -13,6 +13,7 @@ Scenario: We enter a valid username and password and should be able to log in
     When I fill in "user_email" with "test@betwork.com"
     And I fill in "user_password" with "password"
     When I press "Log in" 
+    Given I am on the Betwork home page
     Then I should not see "Log in"
     And I should not see "Invalid"
 
@@ -27,9 +28,7 @@ Scenario: We are able to succesfully log out
     And I fill in "user_password" with "password"
     When I hit return
     Then I should not see "Log in"
-    And I take a screenshot
-    And I should see "Invalid"
+    And I am on the Betwork home page
     Then I navigate to the dropdown-menu
-    Then I press "Log Out" 
+    Then I sign out of Betwork
     Then I should see "Signed out. Bye!"
-

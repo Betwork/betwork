@@ -142,3 +142,7 @@ end
 Then /I navigate to the dropdown-menu/ do
   find(:xpath, '//*[@id="navbar-top"]/ul').click
 end
+
+Then /I sign out of Betwork/ do 
+  find(:xpath, '/html/body/nav/div/div[2]/ul/li/ul/li[4]/a').click
+end
