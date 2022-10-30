@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_01_024445) do
+ActiveRecord::Schema.define(version: 2022_10_01_024446) do
 
   create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
@@ -36,6 +36,15 @@ ActiveRecord::Schema.define(version: 2022_10_01_024445) do
     t.index ["badge_id", "sash_id"], name: "index_badges_sashes_on_badge_id_and_sash_id"
     t.index ["badge_id"], name: "index_badges_sashes_on_badge_id"
     t.index ["sash_id"], name: "index_badges_sashes_on_sash_id"
+  end
+
+  create_table "bets", force: :cascade do |t|
+    t.string "team_one_name", null: false
+    t.string "team_two_name", null: false
+    t.integer "money_line"
+    t.string "user_one_name", null: false
+    t.string "user_two_name", null: false
+    t.integer "amount"
   end
 
   create_table "comments", force: :cascade do |t|

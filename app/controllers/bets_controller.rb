@@ -1,19 +1,23 @@
-class OddsController < ApplicationController
+class BetsController < ApplicationController
     before_action :set_user
 
-    def index
-        @odds = Odd.all
+    def placeBet
+      @bet = params[:]
     end
 
-    def friends
-        puts params[:page]
-        @friends = @user.following_users.paginate(page: params[:page])
-        @game = Odd.find params[:id]
-    end
-
-    def show
-        @odds = Odd.all
-    end
+    # def index
+    #     @odds = Odd.all
+    # end
+    #
+    # def friends
+    #     puts params[:page]
+    #     @friends = @user.following_users.paginate(page: params[:page])
+    #     @game = Odd.find params[:id]
+    # end
+    #
+    # def show
+    #     @odds = Odd.all
+    # end
 
 private
 

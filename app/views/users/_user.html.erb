@@ -6,7 +6,11 @@
   </div>
   <div class="col-lg-4">
     <div class="follow">
-      <%= render 'follows/form', user: user %>
+      <% if request.env['PATH_INFO'] =~ /\/odds\/\d\/friends/ %>
+        <%= render 'odds/form', user: user %>
+      <% else %>
+        <%= render 'follows/form', user: user %>
+      <% end %>
     </div>
   </div>
 </div>

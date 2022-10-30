@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get :friends
     end
   end
+  resources :bets
   resources :comments, only: [:create, :destroy]
   devise_for :users
   resources :users do
