@@ -25,7 +25,7 @@ Given /the Betwork test database exists/ do
   genders = ['male', 'female']
   password = 'betwork'
 
-  User.populate 20 do |user|
+  User.populate 5 do |user|
     user.name = Faker::Name.name
     user.email = Faker::Internet.email
     user.sex = genders
@@ -145,4 +145,16 @@ end
 
 Then /I sign out of Betwork/ do 
   find(:xpath, '/html/body/nav/div/div[2]/ul/li/ul/li[4]/a').click
+end
+
+When /I last press follow/ do
+  within all(".follow").last do
+    click_button("follow")
+  end
+end
+
+Given /my test friend exists/ do
+  user = User.new(name: 'Betty', email: 'Betty@betwork.com', sex: 'female', password: 'password')
+  user.skip_confirmation!
+  user.save!
 end
