@@ -1,9 +1,13 @@
 class BetsController < ApplicationController
     before_action :set_user
 
-    def placeBet
-      @bet = params[:]
+    def placebet
+      puts "TEST THIS OUT"
     end
+
+    def updatebet
+    end
+
 
     # def index
     #     @odds = Odd.all

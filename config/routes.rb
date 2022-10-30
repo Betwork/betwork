@@ -6,7 +6,12 @@ Rails.application.routes.draw do
       get :friends
     end
   end
-  resources :bets
+  resources :bets do
+    member do
+      get :updatebet
+      get :placebet
+    end
+  end
   resources :comments, only: [:create, :destroy]
   devise_for :users
   resources :users do
