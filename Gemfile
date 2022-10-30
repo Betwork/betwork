@@ -31,6 +31,7 @@ gem 'database_cleaner'
 gem 'rspec-rails'
 gem 'selenium-webdriver'
 gem 'webdrivers', '4.0'
+gem 'email_spec'
 
 group :development do
   gem 'spring'

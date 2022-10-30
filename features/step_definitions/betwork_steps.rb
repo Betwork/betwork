@@ -9,7 +9,7 @@ end
 
 Given /the user database has been cleared/ do 
   [User].each(&:delete_all)
-  sleep(3)
+  # sleep(3)
 end
 
 Given /the Betwork test database exists/ do 

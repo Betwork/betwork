@@ -15,6 +15,11 @@ Feature: user can sign up account on Betwork
         And I fill in "Password confirmation" with "012345678"
         When I press "Sign up"
         Then I should see "A message with a confirmation link has been sent to your email address"
+        And "jd@betwork.com" should receive an email
+        When I open the email
+        Then I should see "confirm" in the email body
+        When I follow "Confirm my account" in the email
+#        Then I should see "Your email address has been successfully confirmed"
 
     Scenario: Sign up with duplicate email
         When I go to the Sign up page
