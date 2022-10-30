@@ -1,8 +1,144 @@
+require_relative '../../lib/populator_fixes.rb'
+require 'faker'
+require 'populator'
+
+
+When /I hit return/ do
+  find(:id, 'user_password').native.send_keys(:enter)
+end
+
+Given /the user database has been cleared/ do 
+  [User].each(&:delete_all)
+  sleep(3)
+end
+
+Given /the Betwork test database exists/ do 
+  puts 'Erasing existing data'
+  puts '====================='
+
+  [User, Post, Event, Comment, Odd].each(&:delete_all)
+  ActsAsVotable::Vote.delete_all
+  PublicActivity::Activity.delete_all
+
+  puts 'Creating users'
+  puts '=============='
+  genders = ['male', 'female']
+  password = 'betwork'
+
+  User.populate 20 do |user|
+    user.name = Faker::Name.name
+    user.email = Faker::Internet.email
+    user.sex = genders
+    user.dob = Faker::Date.between(from: 45.years.ago, to: 15.years.ago)
+    user.phone_number = Faker::PhoneNumber.cell_phone
+    user.encrypted_password = User.new(password: password).encrypted_password
+    user.confirmed_at = DateTime.now
+    user.sign_in_count = 0
+    user.posts_count = 0
+    puts "created user #{user.name}"
+  end
+
+  Odd.populate 5 do |bet|
+    bet.team_one_name = Faker::Name.name
+    bet.team_two_name = Faker::Name.name
+    bet.money_line= -110
+  end
+
+
+  user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
+  user.skip_confirmation!
+  user.save!
+  puts 'Created test user with email=test@socify.com and password=password'
+
+  puts 'Generate Friendly id slug for users'
+  puts '==================================='
+  User.find_each(&:save)
+
+  puts 'Creating Posts'
+  puts '=============='
+  users = User.all
+
+  15.times do
+    post = Post.new
+    post.content = Populator.sentences(2..4)
+    post.user = users.sample
+    post.save!
+    puts "created post #{post.id}"
+  end
+
+  puts 'Creating Comments For Posts'
+  puts '==========================='
+
+  posts = Post.all
+
+  15.times do
+    post = posts.sample
+    user = users.sample
+    comment = post.comments.new
+    comment.comment = Populator.sentences(1)
+    comment.user = user
+    comment.save
+    puts "user #{user.name} commented on post #{post.id}"
+  end
+
+  puts 'Creating Events'
+  puts '==============='
+
+  15.times do
+    event = Event.new
+    event.name = Populator.words(1..3).titleize
+    event.event_datetime = Faker::Date.between(from: 2.years.ago, to: 1.day.from_now)
+    event.user = users.sample
+    event.save
+    puts "created event #{event.name}"
+  end
+
+  puts 'Creating Likes For Posts'
+  puts '========================'
+
+  15.times do
+    post = posts.sample
+    user = users.sample
+    post.liked_by user
+    puts "post #{post.id} liked by user #{user.name}"
+  end
+
+  puts 'Creating Likes For Events'
+  puts '========================='
+  events = Event.all
+
+  15.times do
+    event = events.sample
+    user = users.sample
+    event.liked_by user
+    puts "event #{event.id} liked by user #{user.name}"
+  end
+
+  puts 'Creating Comments For Events'
+  puts '============================='
+
+  15.times do
+    event = events.sample
+    user = users.sample
+    comment = event.comments.new
+    comment.commentable_type = 'Event'
+    comment.comment = Populator.sentences(1)
+    comment.user = user
+    comment.save
+    puts "user #{user.name} commented on event #{event.id}"
+  end
+end
+
+And /I take a screenshot/ do
+  page.save_screenshot('test.png')
+end
+
 Given /the admin user exists/ do 
     user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
     user.skip_confirmation!
     user.save!
-      # each returned element will be a hash whose key is the table header.
-      # you should arrange to add that movie to the database here.
-    #pending "Fill in this step in movie_steps.rb"
+end
+
+Then /I navigate to the dropdown-menu/ do
+  find(:xpath, '//*[@id="navbar-top"]/ul').click
 end

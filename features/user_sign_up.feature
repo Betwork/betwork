@@ -5,6 +5,7 @@ Feature: user can sign up account on Betwork
 
     Background: We are on the home page and haven't created an account
         Given I am on the Betwork home page
+        Given the user database has been cleared
 
     Scenario: Sign up successful
         When I go to the Sign up page

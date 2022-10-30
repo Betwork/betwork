@@ -5,7 +5,14 @@
 # files.
 
 require 'cucumber/rails'
+require 'selenium/webdriver'
+
+
+
+# Capybara.default_driver = Selenium::WebDriver.for :chrome
 Capybara.ignore_hidden_elements = false
+Capybara.default_driver = :selenium_headless
+
 
 # frozen_string_literal: true
 
@@ -34,7 +41,7 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.strategy = :truncation
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end

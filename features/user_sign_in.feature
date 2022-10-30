@@ -22,5 +22,14 @@ Scenario: We enter an invalid username and password and should not be able to lo
     When I press "Log in"
     Then I should see "Invalid"
 
-
+Scenario: We are able to succesfully log out
+    When I fill in "user_email" with "test@betwork.com"
+    And I fill in "user_password" with "password"
+    When I hit return
+    Then I should not see "Log in"
+    And I take a screenshot
+    And I should see "Invalid"
+    Then I navigate to the dropdown-menu
+    Then I press "Log Out" 
+    Then I should see "Signed out. Bye!"
 

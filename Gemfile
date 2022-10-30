@@ -21,6 +21,7 @@ gem 'bootstrap-sass', '~> 3.4.1'
 gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 
+
 #Need cucumber for testing
 #gem 'cucumber'
 gem 'capybara'
@@ -28,6 +29,8 @@ gem 'cucumber-rails', :require => false
 gem 'cucumber-rails-training-wheels'
 gem 'database_cleaner'
 gem 'rspec-rails'
+gem 'selenium-webdriver'
+gem 'webdrivers', '4.0'
 
 group :development do
   gem 'spring'
@@ -39,7 +42,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'puma'
+  gem 'puma', '5.6.5'
   gem 'sqlite3', '~> 1.3.11'
 end
 
