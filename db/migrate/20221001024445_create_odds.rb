@@ -1,4 +1,4 @@
-class CreateOdds < ActiveRecord::Migration
+class CreateOdds < ActiveRecord::Migration[5.2]
     def change
       create_table :odds do |t|
         t.string :team_one_name, null: false
