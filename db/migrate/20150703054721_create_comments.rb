@@ -9,9 +9,9 @@ class CreateComments < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :comments, :commentable_type
-    add_index :comments, :commentable_id
-    add_index :comments, :user_id
+    add_index :comments, :commentable_type unless index_exists?(:comments, :commentable_type)
+    add_index :comments, :commentable_id unless index_exists?(:comments, :commentable_id)
+    add_index :comments, :user_id unless index_exists?(:comments, :user_id)
   end
 
   def self.down
