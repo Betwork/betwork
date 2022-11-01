@@ -7,6 +7,8 @@ class CreateBets < ActiveRecord::Migration[5.2]
       t.string :user_one_name, null: false
       t.string :user_two_name, null: false
       t.integer :amount
+      t.integer :user_id_one
+      t.integer :user_id_two
     end
   end
 end

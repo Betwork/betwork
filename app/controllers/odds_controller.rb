@@ -9,6 +9,7 @@ class OddsController < ApplicationController
         puts params[:page]
         @friends = @user.following_users.paginate(page: params[:page])
         @game = Odd.find params[:id]
+        @amount = params[:amount].nil? ? -1 : params[:amount]
     end
 
     def show

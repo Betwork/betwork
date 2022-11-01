@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 2022_10_01_024446) do
     t.string "user_one_name", null: false
     t.string "user_two_name", null: false
     t.integer "amount"
+    t.integer "user_id_one"
+    t.integer "user_id_two"
   end
 
   create_table "comments", force: :cascade do |t|

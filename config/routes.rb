@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     member do
       get :updatebet
       get :placebet
+      get :confirm
+      get :allbets
     end
   end
   resources :comments, only: [:create, :destroy]

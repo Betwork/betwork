@@ -1,0 +1,34 @@
+<h2>Your Bets</h2>
+
+<table class="table table-striped col-md-12" id="bets">
+  <thead>
+    <tr>
+	    <th>Home Team</th>
+	    <th>Away Team</th>
+      <th>Odds</th>
+      <th>Amount</th>
+      <th>Betting Against</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @user_bets.each do |odd| %>
+      <tr>
+        <td>
+          <%= odd.team_one_name%>
+        </td>
+        <td>
+          <%= odd.team_two_name%>
+        </td>
+        <td>
+          <%= odd.money_line%>
+        </td>
+        <td>
+         <%= odd.amount%>
+        </td>
+        <td>
+         <%= odd.user_two_name %>
+         </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

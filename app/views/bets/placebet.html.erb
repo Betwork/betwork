@@ -1,1 +1,43 @@
-<h2> TEST ME OUT NOW!</h2>
+<h2>Confirm Your Bettings Details</h2>
+<table class="table table-striped col-md-12" id="bets">
+  <thead>
+    <tr>
+	    <th>Home Team</th>
+	    <th>Away Team</th>
+        <th>Betting Against</th>
+      <th>Odds</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>
+          <%= @game.team_one_name%>
+        </td>
+        <td>
+          <%= @game.team_two_name%>
+        </td>
+        <td>
+            <%= @friend.name%>
+        </td>
+        <td>
+          <%= @game.money_line%>
+        </td>
+        <td>
+        
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+<label> Amount </label>
+<%= form_for Bet.new do |f| %>
+  <%= f.text_field :amount%>
+  <%= f.hidden_field :team_one_name, value:@game.team_one_name%>
+  <%= f.hidden_field :team_two_name, value:@game.team_two_name%>
+  <%= f.hidden_field :money_line, value:@game.money_line%>
+  <%= f.hidden_field :user_one_name, value:current_user.name%>
+  <%= f.hidden_field :user_two_name, value:@friend.name%>
+  <%= f.hidden_field :user_id_one, value:current_user.id%>
+  <%= f.hidden_field :user_id_two, value:@friend.id%>
+  <%= f.submit "Confirm Bet" %>
+<% end %>
