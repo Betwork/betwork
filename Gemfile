@@ -51,8 +51,8 @@ group :production do
   gem 'pg'
   gem 'unicorn'
   gem 'rails_12factor'
-  gem 'fog'
-  gem 'fog-aws'
+#  gem 'fog'
+#  gem 'fog-aws'
 end
 
 gem 'devise'
