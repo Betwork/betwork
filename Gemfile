@@ -33,27 +33,21 @@ gem 'selenium-webdriver'
 gem 'webdrivers', '4.0'
 gem 'email_spec'
 
-group :development do
-  gem 'spring'
-  gem 'better_errors'
-  gem 'binding_of_caller'
-  gem 'letter_opener'
-  gem 'guard'
-  gem 'guard-rspec', '~> 4.2.8'
-end
+gem 'spring'
+gem 'better_errors'
+gem 'binding_of_caller'
+gem 'letter_opener'
+gem 'guard'
+gem 'guard-rspec', '~> 4.2.8'
 
-group :development, :test do
-  gem 'puma', '5.6.5'
-  gem 'sqlite3', '~> 1.3.11'
-end
+gem 'puma', '5.6.5'
+gem 'sqlite3', '~> 1.3.11'
 
-group :production do
-  gem 'pg'
-  gem 'unicorn'
-  gem 'rails_12factor'
-  gem 'fog'
-  gem 'fog-aws'
-end
+gem 'pg'
+gem 'unicorn'
+gem 'rails_12factor'
+gem 'fog'
+gem 'fog-aws'
 
 gem 'devise'
 gem 'carrierwave'
