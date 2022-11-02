@@ -1,6 +1,12 @@
 ## BETWORK 
 Betwork is a sports betting application built for sports enthusiasts who are tired of losing money to the house. Betwork allows you to ditch the bookie and makes sports betting enjoyable once again!
 
+Team:
+* Jordi Adoumie - jja2163
+* Solomon Chang - sjc2233
+* Matthew Golden - mtg2158
+* Anirudh Birla - ab5188
+
 ### Setup 
 
 Clone this repo using the following command:
@@ -47,7 +53,7 @@ Current capabilities to test:
 * Navigate back to the home page and go to My Bets to see a list of your current bets
 * Sign out
 
-Run cucumber tests using
+Run cucumber tests for users (signing in/up/out), friends, and betting using
 ```
 rails g cucumber:install
 If asked to overwrite, enter n for NO
