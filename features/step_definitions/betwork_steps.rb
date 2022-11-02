@@ -38,12 +38,17 @@ Given /the Betwork test database exists/ do
     puts "created user #{user.name}"
   end
 
+  Odd.populate 1 do |bet|
+    bet.team_one_name = "Los Angeles Lakers"
+    bet.team_two_name = "New York Knicks"
+    bet.money_line= -110
+  end
+
   Odd.populate 5 do |bet|
     bet.team_one_name = Faker::Name.name
     bet.team_two_name = Faker::Name.name
     bet.money_line= -110
   end
-
 
   user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
   user.skip_confirmation!
@@ -153,8 +158,20 @@ When /I last press follow/ do
   end
 end
 
+When /I place a bet on the first game/ do
+  visit '/odds/1/friends'
+end
+
+When /I first press place bet/ do
+  visit '/bets/1/placebet?amount=-1&friend_id=7&game=1'
+end
+
 Given /my test friend exists/ do
   user = User.new(name: 'Betty', email: 'Betty@betwork.com', sex: 'female', password: 'password')
   user.skip_confirmation!
   user.save!
+end
+
+Then /I sleep/ do
+  sleep(15)
 end

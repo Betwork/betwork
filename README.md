@@ -1,6 +1,12 @@
 ## BETWORK 
 Betwork is a sports betting application built for sports enthusiasts who are tired of losing money to the house. Betwork allows you to ditch the bookie and makes sports betting enjoyable once again!
 
+Team:
+* Jordi Adoumie - jja2163
+* Solomon Chang - sjc2233
+* Matthew Golden - mtg2158
+* Anirudh Birla - ab5188
+
 ### Setup 
 
 Clone this repo using the following command:
@@ -13,12 +19,16 @@ Then use bundler to install all dependencies
 
 ```
 bundle install
+bundle update
 ```
 
-Run Migrations:
+Run Migrations and populate with Mock Data:
 
 ```
+rake db:drop
 rake db:migrate
+rake fill:data
+rake db:seed
 ```
 
 Run rails using
@@ -27,13 +37,29 @@ Run rails using
 rails server
 ```
 
-### Test Data 
-To get mock data, run the following commands
-```
-rake fill:data
-```
+### Testing
 
-This will create records with values from faker & populator gems. Also here are the test user credentials:
+Login with Test User credentials or create your own via sign-up:
 
 * email: test@betwork.com
 * password: password
+
+Current capabilities to test:
+* Login with given credentials or sign-up on your own
+* Navigate to Find Friends, follow (add) new friends, navigate to My Friends to view your current friends
+* Once you have a friend, navigating to Live Bets shows you the current games that can be bet on
+* Choose a game to bet on (Place Bet) and choose a friend to bet against (Place Bet)
+* Enter an amount to bet, and confirm your bet 
+* Navigate back to the home page and go to My Bets to see a list of your current bets
+* Sign out
+
+Run cucumber tests for users (signing in/up/out), friends, and betting using
+```
+rails g cucumber:install
+If asked to overwrite, enter n for NO
+rake db:migrate RAILS_ENV=test
+bundle exec cucumber
+```
+Run RSPEC tests using
+```
+```

@@ -18,21 +18,21 @@ Scenario: I look for a new friend
     When I follow "Find Friends"
     Then I should see "Betty"
 
-## This scenario is combined events to prevent redundancy
-#Scenario: I add a new friend, see my new friend, and remove my new friend
-#    Given my test friend exists
-#    And I am on the Betwork find friends page
-#    # this is pressing the follow button for the last result which is our test user Betty
-#    When I last press follow
-#    # After pressing follow I should see unfollow button
-#    Then I should see "unfollow"
-#    # Go to my friends
-#    When I follow "Friends"
-#    # I should see Betty
-#    Then I should see "Betty"
-#    # Unfollow (unfriend) Betty
-#    When I press "unfollow"
-#    # "Refresh" the page by going to the page again
-#    Then I follow "Friends"
-#    # See that I have no friends :(
-#    Then I should see "No Friends found."
+# This scenario is combined events to prevent redundancy
+Scenario: I add a new friend, see my new friend, and remove my new friend
+    Given my test friend exists
+    And I am on the Betwork find friends page
+    # this is pressing the follow button for the last result which is our test user Betty
+    When I last press follow
+    # After pressing follow I should see unfollow button
+    Then I should see "unfollow"
+    # Go to my friends
+    When I follow "Friends"
+    # I should see Betty
+    Then I should see "Betty"
+    # Unfollow (unfriend) Betty
+    When I press "unfollow"
+    # "Refresh" the page by going to the page again
+    Then I follow "Friends"
+    # See that I have no friends :(
+    Then I should see "No Friends found."
