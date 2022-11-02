@@ -32,7 +32,7 @@ Scenario: I place a bet against my friend and look at my new bet
 
   # I place the bet against Betty
   And I first press place bet
-  Then I should see "Confirm Your Bettings Details"
+  Then I should see "Confirm Your Betting Details"
   And I should see "New York Knicks"
   And I should see "Los Angeles Lakers"
   And I should see "-110"
