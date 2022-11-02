@@ -1,42 +1,19 @@
 require 'rails_helper'
-# User signup rspec
+
 RSpec.describe Odd, type: :model do
-  subject {User.new(name: 'Betty', email: 'Betty@betwork.com', password: 'password')}
 
-  before { subject.save }
-
-  it "name should be present" do # name blank
-    subject.name = nil
-    expect(subject).to_not be_valid
+  it "be able to see all odds for all games" do
+    Odd.create([{team_one_name: 'Los Angeles Lakers', team_two_name: 'Chicago Bulls', money_line: +225}])
+    Odd.create([{team_one_name: 'Los Angeles Clippers', team_two_name: 'New Orleans Pelicans', money_line: -130}])
+    Odd.create([{team_one_name: 'Miami Heat', team_two_name: 'Cleveland Cavaliers', money_line: -170 }])
+    Odd.create([{team_one_name: 'Los Angeles Lakers', team_two_name: 'Chicago Bulls', money_line: -220}])
+    Odd.create([{team_one_name: 'Orlando Magic', team_two_name: 'Golden State Warriors', money_line: +310}])
+    expect(Odd.count == 5)
+    @odds = Odd.all
+    for odd in @odds
+      expect([+225, -130, -170, -220, +310].include? odd.money_line)
+    end
   end
 
-  it "name should be present" do # name valid
-    subject.name = "Matt"
-    expect(subject).to be_valid
-  end
 
-  it "email should not be invalid" do # invalid email
-    subject.email = "heyhihey"
-    expect(subject).to_not be_valid
-  end
-
-  it "email should not be blank" do # blank email
-    subject.email = nil
-    expect(subject).to_not be_valid
-  end
-
-  it "email is valid" do # blank email
-    subject.email = "test@gmail.com"
-    expect(subject).to be_valid
-  end
-
-  it "password should not be incorrect length" do # 7 chars invalid
-    subject.password = "aaaaaaa"
-    expect(subject).to_not be_valid
-  end
-
-  it "password should be correct length" do # needs to be 8 chars
-    subject.password = "aaaaaaaa"
-    expect(subject).to be_valid
-  end
 end

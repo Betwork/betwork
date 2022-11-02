@@ -1,96 +1,66 @@
 require 'rails_helper'
-# User signup rspec
+
+
 RSpec.describe Follow, type: :model do
-  subject {Follow.new("followable_type": "User", "followable_id": 1, "follower_type": "User", "follower_id": 22, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")}
 
-  before { subject.save }
 
-  it "followable_type should be present" do # followable_type blank
-    subject.followable_type = nil
-    expect(subject).to_not be_valid
+  it "able to follow another user" do
+    @u1 = User.create!(name: 'Betty', email: 'Betty@betwork.com', password: 'password')
+    @u2 = User.create!(name: 'Betty1', email: 'Betty1@betwork.com', password: 'password1')
+    @follow = Follow.create!("followable_type": "User", "followable_id": @u1.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    expect(@follow).to be_valid
+    expect(@follow.followable_id == @u1.id)
   end
 
-  it "followable_type should be present" do # followable_type valid
-    subject.followable_type = "User"
-    expect(subject).to be_valid
+  it "should be able to see users you followed" do
+    @u1 = User.create!(name: 'Betty', email: 'Betty@betwork.com', password: 'password')
+    @u2 = User.create!(name: 'Betty1', email: 'Betty1@betwork.com', password: 'password1')
+    @u3 = User.create!(name: 'Betty2', email: 'Betty2@betwork.com', password: 'password2')
+    @follow = Follow.create!("followable_type": "User", "followable_id": @u1.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follow1 = Follow.create!("followable_type": "User", "followable_id": @u3.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follows = Follow.where(follower_id: @u2.id)
+    for follow in @follows
+      expect([@u1.id, @u3.id].include? follow.followable_id)
+    end
   end
 
-  it "followable_id should not be invalid" do # invalid followable_id
-    subject.followable_id = "ssss"
-    expect(subject).to_not be_valid
+  it "able to block a followed user" do
+    @u1 = User.create!(name: 'Betty', email: 'Betty@betwork.com', password: 'password')
+    @u2 = User.create!(name: 'Betty1', email: 'Betty1@betwork.com', password: 'password1')
+    @follow = Follow.create!("followable_type": "User", "followable_id": @u1.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follow.block!()
+    expect(@follow).to be_valid
+    expect(@follow.blocked == true)
   end
 
-  it "followable_id should not be blank" do # blank followable_id
-    subject.followable_id = nil
-    expect(subject).to_not be_valid
+  it "should be able to see users you followed that you did not block" do
+    @u1 = User.create!(name: 'Betty', email: 'Betty@betwork.com', password: 'password')
+    @u2 = User.create!(name: 'Betty1', email: 'Betty1@betwork.com', password: 'password1')
+    @u3 = User.create!(name: 'Betty2', email: 'Betty2@betwork.com', password: 'password2')
+    @follow = Follow.create!("followable_type": "User", "followable_id": @u1.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follow1 = Follow.create!("followable_type": "User", "followable_id": @u3.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follow.block!()
+    @follows = Follow.where(follower_id: @u2.id, blocked: nil)
+    for follow in @follows
+      expect([@u3.id].include? follow.followable_id)
+    end
   end
 
-  it "followable_id is valid" do # valid followable_id
-    subject.followable_id = 1
-    expect(subject).to be_valid
+  it "should be able to see users that you have not followed or blocked" do
+    @u1 = User.create!(name: 'Betty', email: 'Betty@betwork.com', password: 'password')
+    @u2 = User.create!(name: 'Betty1', email: 'Betty1@betwork.com', password: 'password1')
+    @u3 = User.create!(name: 'Betty2', email: 'Betty2@betwork.com', password: 'password2')
+    @u4 = User.create!(name: 'Betty3', email: 'Betty3@betwork.com', password: 'password3')
+    @follow = Follow.create!("followable_type": "User", "followable_id": @u1.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follow1 = Follow.create!("followable_type": "User", "followable_id": @u3.id, "follower_type": "User", "follower_id": @u2.id, "created_at": "2022-11-01 20:58:38.408190", "updated_at": "2022-11-01 20:58:38.408190")
+    @follow.block!()
+    @follows = Follow.where(follower_id: @u2.id)
+    for follow in @follows
+      expect(!([@u4.id].include? follow.followable_id))
+    end
   end
 
-  it "follower_type should be present" do # follower_type blank
-    subject.followable_type = nil
-    expect(subject).to_not be_valid
-  end
 
-  it "follower_type should be present" do # follower_type valid
-    subject.followable_type = "User"
-    expect(subject).to be_valid
-  end
-
-  it "follower_id should not be invalid" do # invalid follower_id
-    subject.follower_id = "ssss"
-    expect(subject).to_not be_valid
-  end
-
-  it "follower_id should not be blank" do # blank follower_id
-    subject.follower_id = nil
-    expect(subject).to_not be_valid
-  end
-
-  it "follower_id is valid" do # valid follower_id
-    subject.follower_id = 22
-    expect(subject).to be_valid
-  end
-
-  it "created_at should not be invalid" do # invalid created_at
-    subject.created_at = "ssss"
-    expect(subject).to_not be_valid
-  end
-
-  it "created_at should not be blank" do # blank created_at
-    subject.created_at = nil
-    expect(subject).to_not be_valid
-  end
-
-  it "created_at is valid" do # valid created_at
-    subject.created_at = "2022-11-01 20:58:38.408190"
-    expect(subject).to be_valid
-  end
-
-  it "updated_at should not be invalid" do # invalid updated_at
-    subject.updated_at = "ssss"
-    expect(subject).to_not be_valid
-  end
-
-  it "updated_at should not be blank" do # blank updated_at
-    subject.updated_at = nil
-    expect(subject).to_not be_valid
-  end
-
-  it "updated_at is valid" do # valid updated_at
-    created_at = DateTime.parse("2022-11-01 20:58:38.408190","%Y-%m-%d %H:%M:%S")
-    subject.created_at = "2022-11-01 20:58:38.408190"
-
-    updated_at = DateTime.parse("2022-11-01 21:58:38.408190","%Y-%m-%d %H:%M:%S")
-    subject.updated_at = "2022-11-01 21:58:38.408190"
-
-    expect(updated_at >= created_at)
-    expect(subject).to be_valid
-
-  end
 
 
 end
