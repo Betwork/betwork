@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Odd, type: :model do
 
-  it "be able to see all odds for all games" do
+  it "should be be able to see all odds for all games" do
     Odd.create([{team_one_name: 'Los Angeles Lakers', team_two_name: 'Chicago Bulls', money_line: +225}])
     Odd.create([{team_one_name: 'Los Angeles Clippers', team_two_name: 'New Orleans Pelicans', money_line: -130}])
     Odd.create([{team_one_name: 'Miami Heat', team_two_name: 'Cleveland Cavaliers', money_line: -170 }])
