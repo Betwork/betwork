@@ -2,6 +2,17 @@ class OddsController < ApplicationController
     before_action :set_user
 
     def index
+        #@odds = Odd.all
+        Odd.delete_all
+        odds = find_nba_odds()
+        odds.each do |odd|
+          new_odd = Odd.new
+          new_odd.home_team_name = odd['homeTeam']
+          new_odd.away_team_name = odd['awayTeam']
+          new_odd.home_money_line = odd['homeMoneyLine']
+          new_odd.away_money_line = odd['awayMoneyLine']
+          new_odd.save
+        end
         @odds = Odd.all
     end
 
@@ -17,6 +28,29 @@ class OddsController < ApplicationController
     end
 
 private
+
+def request_api(url)
+  response = Excon.get(
+    url,
+    headers: {
+      'X-RapidAPI-Host' => URI.parse(url).host,
+      #'X-RapidAPI-Key' => "0922e8a07dmsh4cacadace93e259p191ebajsn446e95a439bc" 
+      'X-RapidAPI-Key' => ENV.fetch('RAPIDAPI_API_KEY')
+    }
+  )
+
+  return nil if response.status != 200
+
+  puts JSON.parse(response.body)
+  JSON.parse(response.body)
+end
+
+def find_nba_odds()
+  request_api('https://sports-data3.p.rapidapi.com/nba')
+end
+
+
+
 
 def user_params
   params.require(:user).permit(:name, :about, :avatar, :cover,

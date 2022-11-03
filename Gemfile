@@ -33,6 +33,9 @@ gem 'selenium-webdriver'
 gem 'webdrivers', '4.0'
 gem 'email_spec'
 
+#Need this gem for API calls
+gem 'excon'
+
 group :development do
   gem 'spring'
   gem 'better_errors'

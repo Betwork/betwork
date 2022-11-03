@@ -5,7 +5,8 @@
     <tr>
 	    <th>Home Team</th>
 	    <th>Away Team</th>
-      <th>Odds</th>
+      <th>Home Money Line</th>
+      <th>Away Money Line</th>
       <th>Amount</th>
       <th>Betting Against</th>
     </tr>
@@ -14,14 +15,18 @@
     <% @user_bets.each do |odd| %>
       <tr>
         <td>
-          <%= odd.team_one_name%>
+          <%= odd.home_team_name%>
         </td>
         <td>
-          <%= odd.team_two_name%>
+          <%= odd.away_team_name%>
         </td>
         <td>
-          <%= odd.money_line%>
+          <%= odd.home_money_line%>
         </td>
+        <td>
+          <%= odd.away_money_line%>
+        </td>
+
         <td>
          <%= odd.amount%>
         </td>
