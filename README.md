@@ -19,12 +19,23 @@ https://arcane-tundra-65485.herokuapp.com/
 
 ### Setup 
 
-Clone this repo using the following command:
+1) Clone and enter this repo using the following command:
 
 ```
 git clone https://github.com/Betwork/betwork.git 
-cd betwork 
+cd betwork
+git checkout master
+git pull
 ```
+2) Navigate to the `proj-iter1` branch to view the code at submission time:
+
+```
+git fetch
+git branch -r
+git checkout --track origin/proj-iter1
+git pull
+```
+
 Then use bundler to install all dependencies 
 
 ```
