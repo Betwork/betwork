@@ -85,4 +85,4 @@ Run RSPEC tests for users (parameter validation), friends, odds, betting, and po
 ```
 rake spec
 ```
-It must be noted that the features/functionality that we have tested apply solely to those that we deem relevant to our application from the template used. For this reason, a pure coverage report of `cucumber` or `rspec` tests will not pain an accurate picture as to the required  
+It must be noted that the features/functionality that we have tested apply solely to those that we deem relevant to our application from the template used. For this reason, a pure coverage report of `cucumber` or `rspec` tests will not paint an accurate picture as to the required  
