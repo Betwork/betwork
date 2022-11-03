@@ -7,6 +7,16 @@ Team:
 * Matthew Golden - mtg2158
 * Anirudh Birla - ab5188
 
+### Links
+1) Link to Betwork's Github Repo:
+```
+https://github.com/Betwork/betwork.git
+```
+2) Link to Heroku Deployment of Betwork:
+```
+https://arcane-tundra-65485.herokuapp.com/
+```
+
 ### Setup 
 
 Clone this repo using the following command:
@@ -60,6 +70,8 @@ If asked to overwrite, enter n for NO
 rake db:migrate RAILS_ENV=test
 bundle exec cucumber
 ```
-Run RSPEC tests using
+Run RSPEC tests for users (parameter validation), friends, odds, betting, and posting using
 ```
+rake spec
 ```
+It must be noted that the features/functionality that we have tested apply solely to those that we deem relevant to our application from the template used. For this reason, a pure coverage report of `cucumber` or `rspec` tests will not pain an accurate picture as to the required  
