@@ -21,4 +21,8 @@ class User < ActiveRecord::Base
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
+
+  def self.get_admin_user()
+    return User.where(email: "admin@betwork.com").first
+  end 
 end
