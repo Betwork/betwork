@@ -6,7 +6,7 @@ class BetsController < ApplicationController
 
     def placebet
       @friend= User.find_by(id: params[:friend_id])
-      @@test = @friend
+      @@friend_user = @friend
       @game = Odd.find params[:game]
     end
 
@@ -24,9 +24,10 @@ class BetsController < ApplicationController
     def confirm
       puts "ADMIN TYPE"
       puts current_user.class
+      @bet = Bet.find params[:id]
       admin_user = User.get_admin_user()
       puts admin_user.class
-      content_string = create_bet_message_string(current_user, @@test)
+      content_string = create_bet_message_string(current_user, @@friend_user, @bet)
       test = {"content"=> content_string}
       @post = admin_user.posts.new(test)
       @post.save
@@ -38,7 +39,7 @@ class BetsController < ApplicationController
     def create
       @bet = Bet.new(bet_params)
       @bet.save
-      redirect_to confirm_bet_path("1")
+      redirect_to confirm_bet_path(@bet)
     end
 
     def update
