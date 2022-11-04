@@ -1,8 +1,12 @@
+require 'test.rb'
+require_relative "../constants/bet_post_constants.rb"
+
 class BetsController < ApplicationController
     before_action :set_user
 
     def placebet
-      @friend = User.find_by(id: params[:friend_id])
+      @friend= User.find_by(id: params[:friend_id])
+      @@test = @friend
       @game = Odd.find params[:game]
     end
 
@@ -22,7 +26,8 @@ class BetsController < ApplicationController
       puts current_user.class
       admin_user = User.get_admin_user()
       puts admin_user.class
-      test = {"content"=> "A NEW BET HAS BEEN PLACED!!"}
+      content_string = create_bet_message_string(current_user, @@test)
+      test = {"content"=> content_string}
       @post = admin_user.posts.new(test)
       @post.save
     end
