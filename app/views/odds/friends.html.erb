@@ -5,20 +5,25 @@
     <tr>
 	    <th>Home Team</th>
 	    <th>Away Team</th>
-      <th>Odds</th>
+      <th>Home Money Line</th>
+      <th>Away Money Line</th>
     </tr>
   </thead>
   <tbody>
       <tr>
         <td>
-          <%= @game.team_one_name%>
+          <%= @game.home_team_name%>
         </td>
         <td>
-          <%= @game.team_two_name%>
+          <%= @game.away_team_name%>
         </td>
         <td>
-          <%= @game.money_line%>
+          <%= @game.home_money_line%>
         </td>
+        <td>
+          <%= @game.away_money_line%>
+        </td>
+
 <!--        <td>-->
         <%#= link_to 'Place Bet', friends_odd_path(odd), :class => 'btn btn-primary' %>
 <!--        </td>-->

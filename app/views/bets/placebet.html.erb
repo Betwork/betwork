@@ -5,23 +5,28 @@
 	    <th>Home Team</th>
 	    <th>Away Team</th>
         <th>Betting Against</th>
-      <th>Odds</th>
+      <th>Home Money Line</th>
+      <th>Away Money Line</th>
     </tr>
   </thead>
   <tbody>
       <tr>
         <td>
-          <%= @game.team_one_name%>
+          <%= @game.home_team_name%>
         </td>
         <td>
-          <%= @game.team_two_name%>
+          <%= @game.away_team_name%>
         </td>
         <td>
             <%= @friend.name%>
         </td>
         <td>
-          <%= @game.money_line%>
+          <%= @game.home_money_line%>
         </td>
+        <td>
+          <%= @game.away_money_line%>
+        </td>
+
         <td>
         
         </td>
@@ -29,15 +34,20 @@
   </tbody>
 </table>
 
-<label> Amount </label>
 <%= form_for Bet.new do |f| %>
+<label class="form-spacing"> Which team do you think is going to win!? </label>
+  <%= f.select :betting_on,  [[@game.home_team_name, 'Home Team'] , [@game.away_team_name]]%>
+  <br/>
+  <label> Amount </label>
   <%= f.text_field :amount%>
-  <%= f.hidden_field :team_one_name, value:@game.team_one_name%>
-  <%= f.hidden_field :team_two_name, value:@game.team_two_name%>
-  <%= f.hidden_field :money_line, value:@game.money_line%>
+  <%= f.hidden_field :home_team_name, value:@game.home_team_name%>
+  <%= f.hidden_field :away_team_name, value:@game.away_team_name%>
+  <%= f.hidden_field :home_money_line, value:@game.home_money_line%>
+  <%= f.hidden_field :away_money_line, value:@game.away_money_line%>
   <%= f.hidden_field :user_one_name, value:current_user.name%>
   <%= f.hidden_field :user_two_name, value:@friend.name%>
   <%= f.hidden_field :user_id_one, value:current_user.id%>
   <%= f.hidden_field :user_id_two, value:@friend.id%>
+  <br/>
   <%= f.submit "Confirm Bet" %>
 <% end %>
