@@ -29,6 +29,10 @@ namespace :fill do
       puts "created user #{user.name}"
     end
 
+    admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
+    admin_user.skip_confirmation!
+    admin_user.save!
+
     # Odd.populate 5 do |bet|
     #   bet.team_one_name = Faker::Name.name
     #   bet.team_two_name = Faker::Name.name

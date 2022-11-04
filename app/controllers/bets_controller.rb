@@ -17,7 +17,14 @@ class BetsController < ApplicationController
     def updatebet
     end
 
-    def confirm 
+    def confirm
+      puts "ADMIN TYPE"
+      puts current_user.class
+      admin_user = User.get_admin_user()
+      puts admin_user.class
+      test = {"content"=> "A NEW BET HAS BEEN PLACED!!"}
+      @post = admin_user.posts.new(test)
+      @post.save
     end
 
     def edit 
