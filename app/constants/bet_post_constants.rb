@@ -1,6 +1,6 @@
 MESSAGE_PART_ONE = "<span class=\"atwho-inserted\" data-atwho-at-query=\"@\" contenteditable=\"false\"><a href="
 MESSAGE_PART_TWO = "</a></span>&nbsp;has placed a bet for $"
-MESSAGE_PART_THREE = "against <span class=\"atwho-inserted\" data-atwho-at-query=\"@\" contenteditable=\"false\"><a href="
+MESSAGE_PART_THREE = " against <span class=\"atwho-inserted\" data-atwho-at-query=\"@\" contenteditable=\"false\"><a href="
 MESSAGE_PART_FOUR = "</a></span>&nbsp;"
 
 
@@ -10,4 +10,3 @@ end
 
 
 
-"<span class=\"atwho-inserted\" data-atwho-at-query=\"@\" contenteditable=\"false\"><a href=\"/users/1\">Cheryle Kessler</a></span>&nbsp;eats good food with <span class=\"atwho-inserted\" data-atwho-at-query=\"@\" contenteditable=\"false\"><a href=\"/users/2\">Tiesha Nikolaus</a></span>&nbsp;"
