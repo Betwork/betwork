@@ -8,7 +8,7 @@
     <span class="text"><%= post.content_html %></span>
     <% if post.attachment.present? %>
       <div class="attachment">
-        <%= image_tag post.attachment %>
+        <%= image_tag post.attachment.url unless post.attachment.nil? %>
       </div>
     <% end %>
     <%= render 'shared/created_at', activity: post %>
