@@ -43,6 +43,8 @@ namespace :fill do
 
 
     user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
+    user.actualBalance = 3333.33
+    user.balanceInEscrow = 2222.22
     user.skip_confirmation!
     user.save!
     puts 'Created test user with email=test@socify.com and password=password'
