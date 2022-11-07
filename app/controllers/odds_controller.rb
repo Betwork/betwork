@@ -11,6 +11,7 @@ class OddsController < ApplicationController
           new_odd.away_team_name = odd['awayTeam']
           new_odd.home_money_line = odd['homeMoneyLine']
           new_odd.away_money_line = odd['awayMoneyLine']
+          new_odd.date = odd['startTime']
           new_odd.save
         end
         @odds = Odd.all
