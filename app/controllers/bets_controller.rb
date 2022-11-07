@@ -68,7 +68,8 @@ def user_params
 end
 
 def bet_params
-  params.require(:bet).permit(:home_team_name, :away_team_name, :home_money_line, :away_money_line, :user_one_name, :betting_on, :user_two_name, :amount, :user_id_one, :user_id_two)
+  params.require(:bet).permit(:home_team_name, :away_team_name, :home_money_line, :date,
+    :away_money_line, :user_one_name, :betting_on, :user_two_name, :amount, :user_id_one, :user_id_two)
 end
 
 def check_ownership

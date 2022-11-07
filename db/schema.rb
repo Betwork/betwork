@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2017_06_13_183249) do
     t.integer "amount"
     t.integer "user_id_one"
     t.integer "user_id_two"
+    t.string "date"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -149,6 +150,7 @@ ActiveRecord::Schema.define(version: 2017_06_13_183249) do
     t.string "away_team_name", null: false
     t.integer "home_money_line"
     t.integer "away_money_line"
+    t.string "date"
   end
 
   create_table "posts", force: :cascade do |t|

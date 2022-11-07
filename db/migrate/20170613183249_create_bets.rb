@@ -11,6 +11,7 @@ class CreateBets < ActiveRecord::Migration[5.2]
       t.integer :amount
       t.integer :user_id_one
       t.integer :user_id_two
+      t.string :date
     end
   end
 end

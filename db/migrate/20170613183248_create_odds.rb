@@ -5,6 +5,7 @@ class CreateOdds < ActiveRecord::Migration[5.2]
         t.string :away_team_name, null: false 
         t.integer :home_money_line
         t.integer :away_money_line
+        t.string :date
       end
     end
   end
