@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   resources :posts
-  resources :odds do 
+  resources :odds do
     member do
       get :friends
     end
@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       get :followers
       get :deactivate
       get :mentionable
+      get :funds
     end
   end
 
@@ -44,6 +45,7 @@ Rails.application.routes.draw do
   match :unlike, to: 'likes#destroy', as: :unlike, via: :post
   match :find_friends, to: 'home#find_friends', as: :find_friends, via: :get
   match :about, to: 'home#about', as: :about, via: :get
+  match :funds, to: 'users#funds', as: :funds, via: :post
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -11,4 +11,9 @@ module UsersHelper
   def is_current_user?(user)
     user == current_user
   end
+
+  # def updateFunds
+  #   puts params[:session]
+  #   puts puts params[:user]
+  # end
 end

@@ -27,11 +27,13 @@ namespace :fill do
       user.sign_in_count = 0
       user.posts_count = 0
       user.actualBalance = 999.99
-      user.balanceInEscrow = 888.88
+      user.balanceInEscrow = 444.44
       puts "created user #{user.name}"
     end
 
     admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
+    admin_user.actualBalance = 3333.34
+    admin_user.balanceInEscrow = 2222.24
     admin_user.skip_confirmation!
     admin_user.save!
 
@@ -40,7 +42,6 @@ namespace :fill do
     #   bet.team_two_name = Faker::Name.name
     #   bet.money_line= -110
     # end
-
 
     user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
     user.actualBalance = 3333.33
@@ -127,11 +128,8 @@ namespace :fill do
       puts "user #{user.name} commented on event #{event.id}"
     end
 
-
     puts 'Creating Odds for Bets'
     puts '============================='
-
-    
 
   end
 end
