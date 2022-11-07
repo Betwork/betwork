@@ -7,12 +7,12 @@
   <%#= fa_icon 'shield' %>
   <%#= pluralize(@user.posts_count, 'post') %>
   <!--  </h5>-->
-  <% if @user.dob.present? %>
-    <h5>
-      <%= fa_icon @user.sex %>
-      <%= "#{pluralize(age(@user.dob), 'year')} old" %>
-    </h5>
-  <% end %>
+  <%# if @user.dob.present? %>
+  <!--    <h5>-->
+  <%#= fa_icon @user.sex %>
+  <%#= "#{pluralize(age(@user.dob), 'year')} old" %>
+  <!--    </h5>-->
+  <%# end %>
   <%# if @user.location.present? %>
   <!--    <h5>-->
   <%#= fa_icon 'map-marker' %>
