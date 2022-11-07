@@ -26,6 +26,8 @@ namespace :fill do
       user.confirmed_at = DateTime.now
       user.sign_in_count = 0
       user.posts_count = 0
+      user.actualBalance = 999.99
+      user.balanceInEscrow = 888.88
       puts "created user #{user.name}"
     end
 

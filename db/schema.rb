@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2017_06_13_183249) do
+ActiveRecord::Schema.define(version: 2022_11_07_145603) do
 
   create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
@@ -200,6 +200,8 @@ ActiveRecord::Schema.define(version: 2017_06_13_183249) do
     t.string "slug"
     t.integer "sash_id"
     t.integer "level", default: 0
+    t.decimal "actualBalance", precision: 100, scale: 2
+    t.decimal "balanceInEscrow", precision: 100, scale: 2
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
