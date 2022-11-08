@@ -3,11 +3,13 @@ require_relative "../constants/bet_post_constants.rb"
 
 class BetsController < ApplicationController
     before_action :set_user
+    respond_to :html, :js
 
     def placebet
       @friend= User.find_by(id: params[:friend_id])
       @@friend_user = @friend
       @game = Odd.find params[:game]
+      @bet = Bet.new
     end
 
     def allbets
@@ -22,11 +24,8 @@ class BetsController < ApplicationController
     end
 
     def confirm
-      puts "ADMIN TYPE"
-      puts current_user.class
       @bet = Bet.find params[:id]
       admin_user = User.get_admin_user()
-      puts admin_user.class
       content_string = create_bet_message_string(current_user, @@friend_user, @bet)
       test = {"content"=> content_string}
       @post = admin_user.posts.new(test)
@@ -38,8 +37,17 @@ class BetsController < ApplicationController
 
     def create
       @bet = Bet.new(bet_params)
-      @bet.save
-      redirect_to confirm_bet_path(@bet)
+      if @bet.save
+       current_user.increase_balance_in_escrow(@bet.amount)
+       render js: "window.location='#{confirm_bet_path(@bet)}'"
+      else 
+        respond_to do |format|
+        format.js
+        @bet.errors.any?
+        @bet.errors.each do |key, value|
+        end
+      end 
+      end 
     end
 
     def update

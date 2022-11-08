@@ -1,0 +1,5 @@
+$(".notice").remove();
+
+<% @bet.errors.each do |key, value| %>
+    $("#helpBlock").append('<div class="notice"><%= escape_javascript(value)%></div>');
+<%end %>

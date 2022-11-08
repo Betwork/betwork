@@ -25,4 +25,16 @@ class User < ActiveRecord::Base
   def self.get_admin_user()
     return User.where(email: "admin@betwork.com").first
   end 
+
+  def decrease_balance(amount)
+    self.actualBalance -= amount
+    self.save
+  end
+
+  def increase_balance_in_escrow(amount)
+    self.balanceInEscrow += amount
+    self.save
+  end
+
+
 end
