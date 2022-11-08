@@ -5,21 +5,16 @@
   </h5>
   <h5>
     <%= fa_icon 'money' %>
-    <%= link_to 'My Bets', allbets_bet_path(current_user)%>
+    <%= link_to 'My Bets', allbets_bet_path(current_user) %>
   </h5>
-<h5>
+  <h5>
     <%= fa_icon 'money' %>
-    <%= link_to 'Live Bets', odds_path%>
+    <%= link_to 'Live Bets', odds_path %>
   </h5>
-<!-- <h5>-->
-    <%#= fa_icon 'calendar-o' %>
-    <%#= link_to 'Create Event', new_event_path%>
-<!--  </h5>-->
- 
-<!--  <h5>-->
-    <%#= fa_icon 'calendar-o' %>
-    <%#= link_to 'Events Calendar', calendar_events_path %>
-<!--  </h5>-->
+  <h5>
+    <%= fa_icon 'money' %>
+    <%= link_to 'Manage Funds', funds_user_path(current_user) %>
+  </h5>
   <h5>
     <%= fa_icon 'arrow-circle-right' %>
     <%= link_to 'Friends', friends_user_path(current_user) %>
@@ -30,7 +25,7 @@
   </h5>
   <h5>
     <%= fa_icon 'search' %>
-    <%= link_to('Find Friends', find_friends_path)%>
+    <%= link_to('Find Friends', find_friends_path) %>
   </h5>
   <h5>
     <%= fa_icon 'pencil' %>

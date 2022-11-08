@@ -26,10 +26,14 @@ namespace :fill do
       user.confirmed_at = DateTime.now
       user.sign_in_count = 0
       user.posts_count = 0
+      user.actualBalance = 999.99
+      user.balanceInEscrow = 444.44
       puts "created user #{user.name}"
     end
 
     admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
+    admin_user.actualBalance = 3333.34
+    admin_user.balanceInEscrow = 2222.24
     admin_user.skip_confirmation!
     admin_user.save!
 
@@ -39,8 +43,9 @@ namespace :fill do
     #   bet.money_line= -110
     # end
 
-
     user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
+    user.actualBalance = 3333.33
+    user.balanceInEscrow = 2222.22
     user.skip_confirmation!
     user.save!
     puts 'Created test user with email=test@socify.com and password=password'
@@ -123,11 +128,8 @@ namespace :fill do
       puts "user #{user.name} commented on event #{event.id}"
     end
 
-
     puts 'Creating Odds for Bets'
     puts '============================='
-
-    
 
   end
 end

@@ -12,6 +12,11 @@ class UsersController < ApplicationController
   end
 
   def update
+    if params[:balance_change_type] == "Add"
+      params[:user][:actualBalance] = @user.actualBalance + params[:balance_change].to_f
+    else
+      params[:user][:actualBalance] = @user.actualBalance - params[:balance_change].to_f
+    end
     if @user.update(user_params)
       redirect_to user_path(@user)
     else
@@ -34,11 +39,15 @@ class UsersController < ApplicationController
     render json: @user.following_users.as_json(only: [:id, :name]), root: false
   end
 
+  # def updateActualBalance
+  #   @user.update(params[:user])
+  # end
+
   private
 
   def user_params
     params.require(:user).permit(:name, :about, :avatar, :cover,
-                                 :sex, :dob, :location, :phone_number)
+                                 :sex, :dob, :location, :phone_number, :actualBalance)
   end
 
   def check_ownership
@@ -47,7 +56,7 @@ class UsersController < ApplicationController
 
   def set_user
     puts "USER PARAMS WEEEEEEEE"
-    puts params 
+    puts params
     @user = User.friendly.find_by(slug: params[:id]) || User.find_by(id: params[:id])
     puts @user
     render_404 and return unless @user

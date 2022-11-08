@@ -1,0 +1,36 @@
+<div id="user-info" class="well">
+  <div class="text-center">
+    <%= render 'shared/avatar', user: @user %><br>
+    <h5><%= link_to @user.name, @user %></h5>
+  </div>
+
+  <%= form_for @user do |f| %>
+    <label class="form-spacing"> Add Funds </label>
+    <form class="form-inline">
+      <div class="form-group mb-2">
+        <select name="balance_change_type" class="selectpicker form-control">
+          <option>Add</option>
+          <option>Withdraw</option>
+        </select>
+      </div>
+      <div class="form-group mx-sm-3 mb-2" placeholder="Input Amount"> <%= text_field_tag(:balance_change) %></div>
+      <div class="input-group my-group">
+        <%= f.hidden_field :actualBalance, placeholder: 'Change Funds', class: 'form-control' %>
+        <%= f.submit "Submit" %>
+      </div>
+  <% end %>
+  </form>
+
+  <h4>Actual Balance</h4>
+  <h5><%= fa_icon 'money' %> <%= pluralize(@user.actualBalance, 'dollars') %></h5>
+  <h4>Available Balance</h4>
+  <h5><%= fa_icon 'money' %> <%= pluralize(@user.actualBalance - @user.balanceInEscrow, 'dollars') %></h5>
+  <br>
+  <div class="text-center">
+    <% unless is_current_user?(@user) %>
+      <%= render 'follows/form', user: @user %>
+      <h6><%= 'Follows you' if current_user.followed_by?(@user) %></h6>
+    <% end %>
+  </div>
+</div>
+
