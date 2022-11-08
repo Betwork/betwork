@@ -6,6 +6,7 @@
   <h4>Actual Balance</h4>
   <h5><%= fa_icon 'money' %> <%= pluralize(@user.actualBalance, 'dollars') %></h5>
   <h4>Pending Bets</h4>
+  <h5><%= fa_icon 'money' %> <%= pluralize(@user.balanceInEscrow, 'dollars') %></h5>
   <h4>Available Balance</h4>
   <h5><%= fa_icon 'money' %> <%= pluralize(@user.actualBalance - @user.balanceInEscrow, 'dollars') %></h5>
   <br>

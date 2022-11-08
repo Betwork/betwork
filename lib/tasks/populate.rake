@@ -32,8 +32,8 @@ namespace :fill do
     end
 
     admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
-    admin_user.actualBalance = 3333.34
-    admin_user.balanceInEscrow = 2222.24
+    admin_user.actualBalance = 5000
+    #admin_user.balanceInEscrow = 2222.24
     admin_user.skip_confirmation!
     admin_user.save!
 
@@ -44,11 +44,11 @@ namespace :fill do
     # end
 
     user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
-    user.actualBalance = 3333.33
-    user.balanceInEscrow = 2222.22
+    user.actualBalance = 5000
+    #user.balanceInEscrow = 2222.22
     user.skip_confirmation!
     user.save!
-    puts 'Created test user with email=test@socify.com and password=password'
+    puts 'Created test user with email=test@betwork.com and password=password'
 
     puts 'Generate Friendly id slug for users'
     puts '==================================='
