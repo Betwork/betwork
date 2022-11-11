@@ -34,9 +34,16 @@
         <td>
          <%= odd.amount%>
         </td>
-        <td>
-         <%= odd.user_two_name %>
-         </td>
+        <% if !(current_user.name == odd.user_two_name) %>
+          <td>
+           <%= odd.user_two_name %>
+           </td>
+        <%end%>
+        <% if (current_user.name == odd.user_two_name) %>
+          <td>
+            <%= odd.user_one_name %>
+          </td>
+        <%end%>
       </tr>
     <% end %>
   </tbody>

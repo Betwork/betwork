@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_07_145603) do
+ActiveRecord::Schema.define(version: 2022_11_11_084505) do
 
   create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2022_11_07_145603) do
     t.integer "user_id_one"
     t.integer "user_id_two"
     t.string "date"
+    t.string "status"
   end
 
   create_table "comments", force: :cascade do |t|
