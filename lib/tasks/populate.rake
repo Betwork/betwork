@@ -50,6 +50,13 @@ namespace :fill do
     user.save!
     puts 'Created test user with email=test@betwork.com and password=password'
 
+    user = User.new(name: 'Rails-2', email: 'test2@betwork.com', sex: 'female', password: 'password')
+    user.actualBalance = 4000
+    #user.balanceInEscrow = 2222.22
+    user.skip_confirmation!
+    user.save!
+    puts 'Created test user with email=test2@betwork.com and password=password'
+
     puts 'Generate Friendly id slug for users'
     puts '==================================='
     User.find_each(&:save)

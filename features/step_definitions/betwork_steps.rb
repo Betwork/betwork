@@ -53,7 +53,7 @@ Given /the Betwork test database exists/ do
   user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
   user.skip_confirmation!
   user.save!
-  puts 'Created test user with email=test@socify.com and password=password'
+  puts 'Created test user with email=test@betwork.com and password=password'
 
   puts 'Generate Friendly id slug for users'
   puts '==================================='
