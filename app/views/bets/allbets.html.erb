@@ -1,4 +1,4 @@
-<h2>Your Bets</h2>
+<h2>Your Confirmed Bets</h2>
 
 <table class="table table-striped col-md-12" id="bets">
   <thead>
@@ -14,6 +14,7 @@
   </thead>
   <tbody>
     <% @user_bets.each do |odd| %>
+      <% if odd.status == 'confirmed' %>
       <tr>
         <td>
           <%= odd.home_team_name%>
@@ -37,7 +38,112 @@
         <td>
          <%= odd.user_two_name %>
          </td>
+        <td>
+          <%= link_to 'Cancel Bet', cancel_bet_path(odd), :class => 'btn btn-primary' %>
+        </td>
       </tr>
+      <% end %>
     <% end %>
+  </tbody>
+</table>
+
+<h2>Your Proposed Bets</h2>
+
+<table class="table table-striped col-md-12" id="bets">
+  <thead>
+  <tr>
+    <th>Home Team</th>
+    <th>Away Team</th>
+    <th>Time & Date</th>
+    <th>Home Money Line</th>
+    <th>Away Money Line</th>
+    <th>Amount</th>
+    <th>Betting Against</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @user_bets.each do |odd| %>
+    <% if odd.status == 'proposed' %>
+    <tr>
+      <td>
+        <%= odd.home_team_name%>
+      </td>
+      <td>
+        <%= odd.away_team_name%>
+      </td>
+      <td>
+        <%= odd.date%>
+      </td>
+      <td>
+        <%= odd.home_money_line%>
+      </td>
+      <td>
+        <%= odd.away_money_line%>
+      </td>
+
+      <td>
+        <%= odd.amount%>
+      </td>
+      <td>
+        <%= odd.user_two_name %>
+      </td>
+      <td>
+        <%= link_to 'Cancel Bet', cancel_bet_path(odd), :class => 'btn btn-primary' %>
+      </td>
+    </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>
+
+<h2>Your Received Bets</h2>
+
+<table class="table table-striped col-md-12" id="bets">
+  <thead>
+  <tr>
+    <th>Home Team</th>
+    <th>Away Team</th>
+    <th>Time & Date</th>
+    <th>Home Money Line</th>
+    <th>Away Money Line</th>
+    <th>Amount</th>
+    <th>Betting Against</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @user_bets.each do |odd| %>
+    <% if odd.status == 'received' %>
+    <tr>
+      <td>
+        <%= odd.home_team_name%>
+      </td>
+      <td>
+        <%= odd.away_team_name%>
+      </td>
+      <td>
+        <%= odd.date%>
+      </td>
+      <td>
+        <%= odd.home_money_line%>
+      </td>
+      <td>
+        <%= odd.away_money_line%>
+      </td>
+
+      <td>
+        <%= odd.amount%>
+      </td>
+      <td>
+        <%= odd.user_two_name %>
+      </td>
+      <td>
+        <%= link_to 'Cancel Bet', cancel_bet_path(odd), :class => 'btn btn-primary' %>
+      </td>
+      <td>
+        <%= link_to 'Accept Bet', receive_bet_path(odd), :class => 'btn btn-primary' %>
+      </td>
+    </tr>
+    <% end %>
+  <% end %>
   </tbody>
 </table>

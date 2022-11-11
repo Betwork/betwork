@@ -12,6 +12,8 @@ Rails.application.routes.draw do
       get :placebet
       get :confirm
       get :allbets
+      get :receive
+      get :cancel
     end
   end
   resources :comments, only: [:create, :destroy]

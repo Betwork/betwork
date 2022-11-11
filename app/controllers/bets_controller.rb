@@ -32,6 +32,20 @@ class BetsController < ApplicationController
       @post.save
     end
 
+    def receive
+      @bet = Bet.find params[:id]
+      @bet.status = 'confirmed'
+      @bet.save
+      redirect_to allbets_bet_path(current_user)
+    end
+
+    def cancel
+      @bet = Bet.find params[:id]
+      @bet.status = 'cancelled'
+      @bet.save
+      redirect_to allbets_bet_path(current_user)
+    end
+
     def edit 
     end 
 
