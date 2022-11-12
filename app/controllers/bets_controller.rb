@@ -16,8 +16,44 @@ class BetsController < ApplicationController
     end
 
     def allbets
+      # setting a hash that maps team abbreviations to team names
+      # used later in string comparisons
+      team_names = {
+        'ATL' => 'Atlanta Hawks',
+        'BKN' => 'Brooklyn Nets',
+        'BOS' => 'Boston Celtics',
+        'CHA' => 'Charlotte Hornets',
+        'CHI' => 'Chicago Bulls',
+        'CLE' => 'Cleveland Cavaliers',
+        'DAL' => 'Dallas Mavericks',
+        'DEN' => 'Denver Nuggets',
+        'DET' => 'Detroit Pistons',
+        'GSW' => 'Golden State Warriors',
+        'HOU' => 'Houston Rockets',
+        'IND' => 'Indiana Pacers',
+        'LAC' => 'Los Angeles Clippers',
+        'LAL' => 'Los Angeles Lakers',
+        'MEM' => 'Memphis Grizzlies',
+        'MIA' => 'Miami Heat',
+        'MIL' => 'Milwaukee Bucks',
+        'MIN' => 'Minnesota Timberwolves',
+        'NOP' => 'New Orleans Pelicans',
+        'NYK' => 'New York Knicks',
+        'OKC' => 'Oklahoma City Thunder',
+        'ORL' => 'Orlando Magic',
+        'PHI' => 'Philadelphia 76ers',
+        'PHX' => 'Phoenix Suns',
+        'POR' => 'Portland Trail Blazers',
+        'SAC' => 'Sacramento Kings',
+        'SAS' => 'San Antonio Spurs',
+        'TOR' => 'Toronto Raptors',
+        'UTA' => 'Utah Jazz',
+        'WAS' => 'Washington Wizards'
+      }
+
       # get all the bets of the current user
       @user_bets = Bet.get_by_userid(current_user.id)
+
 
       # for each bet
       @user_bets.each do |bet|
@@ -50,7 +86,7 @@ class BetsController < ApplicationController
           games_information.each do |game|
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['teams']['home']['name']) && (bet.away_team_name == game['teams']['away']['name']))
+            if ((team_names[bet.home_team_name] == game['teams']['home']['name']) && (team_names[bet.away_team_name] == game['teams']['away']['name']))
 
               # if the game is finished, proceed
               if game['status']['long'] == 'Game Finished'
