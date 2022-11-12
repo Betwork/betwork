@@ -18,7 +18,7 @@ class Bet< ActiveRecord::Base
     end 
     
     #validates_presence_of :amount, message: "Amount cannot be empty"
-    validates :amount, numericality: {only_integer: true,  message: "Amount must be a valid number!"}
+    validates :amount, numericality: {only_integer: true, greater_than: 0,  message: "Amount must be a valid number greater than zero!"}
     validate :sufficient_funds
   
   
