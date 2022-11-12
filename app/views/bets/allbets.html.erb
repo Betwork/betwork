@@ -169,6 +169,58 @@
   </tbody>
 </table>
 
+<h2>Your Finished Bets</h2>
+
+<table class="table table-striped col-md-12" id="bets">
+  <thead>
+  <tr>
+    <th>Home Team</th>
+    <th>Away Team</th>
+    <th>Time & Date</th>
+    <th>Home Money Line</th>
+    <th>Away Money Line</th>
+    <th>Amount</th>
+    <th>Betting Against</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @user_bets.each do |odd| %>
+    <% if odd.status == 'finished' %>
+      <tr>
+        <td>
+          <%= odd.home_team_name%>
+        </td>
+        <td>
+          <%= odd.away_team_name%>
+        </td>
+        <td>
+          <%= odd.date%>
+        </td>
+        <td>
+          <%= odd.home_money_line%>
+        </td>
+        <td>
+          <%= odd.away_money_line%>
+        </td>
+
+        <td>
+          <%= odd.amount%>
+        </td>
+        <% if !(current_user.name == odd.user_two_name) %>
+          <td>
+            <%= odd.user_two_name %>
+          </td>
+        <%end%>
+        <% if (current_user.name == odd.user_two_name) %>
+          <td>
+            <%= odd.user_one_name %>
+          </td>
+        <%end%>
+      </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>
 
 <h2>Your Cancelled Bets</h2>
 
