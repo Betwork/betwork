@@ -46,9 +46,11 @@ class BetsController < ApplicationController
       @bet.status = 'confirmed'
       @bet.save
       admin_user = User.get_admin_user()
-      @friend= User.find_by(id: params[:user_id_two])
+      @friend= User.find_by(id: @bet.user_id_two)
       @@friend_user = @friend
-      content_string = create_bet_message_string(current_user, @@friend_user, @bet)
+      @original = User.find_by(id: @bet.user_id_one)
+      @@original_user = @original
+      content_string = create_bet_message_string(@@original_user, @@friend_user, @bet)
       test = {"content"=> content_string}
       @post = admin_user.posts.new(test)
       @post.save
