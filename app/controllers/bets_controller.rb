@@ -60,12 +60,14 @@ class BetsController < ApplicationController
 
         # only proceed with confirmed bets
         if (bet.status == 'confirmed')
+          # puts team_names[bet.home_team_name]
 
           # get the date of the game in the right format
           date_string = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
+          # puts date_string
 
           # add the date of the game to the query string
-          url_without_date = "https://api-basketball.p.rapidapi.com/games?season=2022-2023&league=12&date="
+          url_without_date = "https://api-basketball.p.rapidapi.com/games?timezone=America%2FNew_York&season=2022-2023&league=12&date="
           url_with_date = url_without_date + date_string
 
           # send the API request
@@ -84,9 +86,11 @@ class BetsController < ApplicationController
 
           # for each game in the response
           games_information.each do |game|
+            # puts game['teams']['home']['name']
 
             # if the game has the same teams (and date from before), proceed
             if ((team_names[bet.home_team_name] == game['teams']['home']['name']) && (team_names[bet.away_team_name] == game['teams']['away']['name']))
+
 
               # if the game is finished, proceed
               if game['status']['long'] == 'Game Finished'
@@ -99,8 +103,8 @@ class BetsController < ApplicationController
                 # establish whether Home or Away won
                 if (home_score > away_score)
                   winning_team = 'Home Team'
-                elsif
-                winning_team = 'Away Team'
+                else
+                  winning_team = 'Away Team'
                 end
 
                 # get the users of the bet
