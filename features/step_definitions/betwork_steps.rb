@@ -39,15 +39,19 @@ Given /the Betwork test database exists/ do
   end
 
   Odd.populate 1 do |bet|
-    bet.team_one_name = "Los Angeles Lakers"
-    bet.team_two_name = "New York Knicks"
-    bet.money_line= -110
+    bet.home_team_name = "Los Angeles Lakers"
+    bet.away_team_name = "New York Knicks"
+    bet.home_money_line= -110
+    bet.away_money_line= -110
+    bet.date="6:00 ET 11/20/2022"
   end
 
   Odd.populate 5 do |bet|
-    bet.team_one_name = Faker::Name.name
-    bet.team_two_name = Faker::Name.name
-    bet.money_line= -110
+    bet.home_team_name = Faker::Name.name
+    bet.away_team_name = Faker::Name.name
+    bet.home_money_line= -110
+    bet.away_money_line= -110
+    bet.date="6:00 ET 11/20/2022"
   end
 
   user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
@@ -172,6 +176,10 @@ Given /my test friend exists/ do
   user.save!
 end
 
+When /^(?:|I )balance form select "([^"]*)"$/ do |option|
+  select option, :from => "balance_change_type"
+end
+
 Then /I sleep/ do
-  sleep(15)
+  sleep(5)
 end

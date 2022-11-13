@@ -1,8 +1,9 @@
 Feature: user can place bets
 
   As an avid social sports better
-  So that I can quickly place bets
-  I want to be able to see a list of bets I can place and have placed
+  So that I can place bets
+  I want to find a bet to propose against my friend
+
 
 # Bet functionality
 Background: We are on the home page and haven't logged in yet
