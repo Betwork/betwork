@@ -131,6 +131,9 @@ class BetsController < ApplicationController
                   @winning_amount = (@amount/(-odds))*100.0
                 end
 
+                # setting variables to make post
+                @bet = bet
+                admin_user = User.get_admin_user()
 
 
                 # if user one won
@@ -148,6 +151,12 @@ class BetsController < ApplicationController
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
                   puts 'User two lost'
+
+                  # making post that User One Won
+                  content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
+                  test = {"content"=> content_string}
+                  @post = admin_user.posts.new(test)
+                  @post.save
                 else
 
                   # increase his actual balance by the winnings
@@ -162,6 +171,12 @@ class BetsController < ApplicationController
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
                   puts 'User one lost'
+
+                  # making post that User Two Won
+                  content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
+                  test = {"content"=> content_string}
+                  @post = admin_user.posts.new(test)
+                  @post.save
                 end
 
                 # change the status of the bet and save it
