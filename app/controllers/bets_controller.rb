@@ -60,11 +60,11 @@ class BetsController < ApplicationController
 
         # only proceed with confirmed bets
         if (bet.status == 'confirmed')
-          # puts team_names[bet.home_team_name]
+
 
           # get the date of the game in the right format
           date_string = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
-          # puts date_string
+
 
           # add the date of the game to the query string
           url_without_date = "https://api-basketball.p.rapidapi.com/games?timezone=America%2FNew_York&season=2022-2023&league=12&date="
@@ -86,7 +86,7 @@ class BetsController < ApplicationController
 
           # for each game in the response
           games_information.each do |game|
-            # puts game['teams']['home']['name']
+
 
             # if the game has the same teams (and date from before), proceed
             if ((team_names[bet.home_team_name] == game['teams']['home']['name']) && (team_names[bet.away_team_name] == game['teams']['away']['name']))
@@ -107,9 +107,11 @@ class BetsController < ApplicationController
                   winning_team = 'Away Team'
                 end
 
+
+
                 # get the users of the bet
                 @user_one = User.find_by(id: bet.user_id_one)
-                @user_two = User.find_by(id: bet.user_id_one)
+                @user_two = User.find_by(id: bet.user_id_two)
 
                 # get the amount wagered as a float
                 @amount = (bet.amount).to_f
@@ -124,16 +126,18 @@ class BetsController < ApplicationController
 
                 # apply the US odds formula to calculate the winnings
                 if (odds > 0.0)
-                  winning_amount = (@amount/100.0)*odds
+                  @winning_amount = (@amount/100.0)*odds
                 else
-                  winning_amount = (@amount/(-odds))*100.0
+                  @winning_amount = (@amount/(-odds))*100.0
                 end
+
+
 
                 # if user one won
                 if (bet.betting_on == winning_team)
 
                   # increase his actual balance by the winnings
-                  @user_one.decrease_balance(-winning_amount)
+                  @user_one.decrease_balance(-@winning_amount)
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
@@ -143,10 +147,11 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
+                  puts 'User two lost'
                 else
 
                   # increase his actual balance by the winnings
-                  @user_two.decrease_balance(-winning_amount)
+                  @user_two.decrease_balance(-@winning_amount)
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
@@ -156,6 +161,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
+                  puts 'User one lost'
                 end
 
                 # change the status of the bet and save it
