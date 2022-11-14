@@ -1,3 +1,8 @@
+require 'uri'
+require 'net/http'
+require 'openssl'
+require 'JSON'
+
 class OddsController < ApplicationController
     before_action :set_user
 
@@ -35,7 +40,7 @@ def request_api(url)
     url,
     headers: {
       'X-RapidAPI-Host' => URI.parse(url).host,
-      #'X-RapidAPI-Key' => "0922e8a07dmsh4cacadace93e259p191ebajsn446e95a439bc" 
+      #'X-RapidAPI-Key' => "0922e8a07dmsh4cacadace93e259p191ebajsn446e95a439bc"
       'X-RapidAPI-Key' => ENV.fetch('RAPIDAPI_API_KEY')
     }
   )
@@ -47,7 +52,20 @@ def request_api(url)
 end
 
 def find_nba_odds()
-  request_api('https://sports-data3.p.rapidapi.com/nba')
+  # request_api('https://sports-data3.p.rapidapi.com/nba')
+  url = URI("https://sports-data3.p.rapidapi.com/nba")
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+  request = Net::HTTP::Get.new(url)
+  request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+  request["X-RapidAPI-Host"] = 'sports-data3.p.rapidapi.com'
+
+  response = http.request(request)
+  puts JSON.parse(response.read_body)
+  JSON.parse(response.read_body)
 end
 
 
