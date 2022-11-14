@@ -181,5 +181,5 @@ When /^(?:|I )balance form select "([^"]*)"$/ do |option|
 end
 
 Then /I sleep/ do
-  sleep(5)
+  sleep(15)
 end

@@ -19,6 +19,14 @@ Scenario: I deposit funds
   And I press "Submit"
   Then I should see "500.0 dollars"
 
+#Scenario: I deposit a non numeric value
+#  Given I am on the Betwork home page
+#  When I follow "Manage Funds"
+#  And I balance form select "Add"
+#  And I fill in "balance_change" with "f"
+#  And I press "Submit"
+#  Then I should see "0.0 dollars"
+
 Scenario: I withdraw funds
   Given I am on the Betwork home page
   When I follow "Manage Funds"
@@ -32,13 +40,29 @@ Scenario: I withdraw funds
   And I press "Submit"
   Then I should not see "500.0 dollars"
   And I should see "100.0 dollars"
-  And I sleep
 
-#Scenario: I go to view my funds with a pending bet placed
-  # Need to add money, propose a bet, navigate to page
+#Scenario: I withdraw non-numeric funds
 #  Given I am on the Betwork home page
 #  When I follow "Manage Funds"
-#  Then I sleep
-#  Then I should see "Add funds"
-#  And I should see "Actual Balance"
-#  And I should see "Available Balance"
+#  And I balance form select "Add"
+#  And I fill in "balance_change" with "500"
+#  And I press "Submit"
+#  And I am on the Betwork home page
+#  And I follow "Manage Funds"
+#  And I balance form select "Withdraw"
+#  And I fill in "balance_change" with "400"
+#  And I press "Submit"
+#  Then I should not see "500.0 dollars"
+#  And I should see "100.0 dollars"
+
+Scenario: I go to view my funds with a pending bet placed
+#   Need to add money, propose a bet, navigate to page
+  Given I am on the Betwork home page
+  When I follow "Manage Funds"
+  And I balance form select "Add"
+  And I fill in "balance_change" with "500"
+  And I press "Submit"
+  # Artificially place a bet for $10
+  # And I just placed a bet
+  # And I follow "Manage Funds"
+  # Then I should see 490 and 10
