@@ -68,6 +68,12 @@ class BetsController < ApplicationController
       if (@status == 'confirmed')
         current_user.increase_balance_in_escrow(-@amount)
         @friend.increase_balance_in_escrow(-@amount)
+        admin_user = User.get_admin_user()
+        @@friend_user = @friend
+        content_string = create_bet_cancel_message_string(current_user, @@friend_user, @bet)
+        test = {"content"=> content_string}
+        @post = admin_user.posts.new(test)
+        @post.save
       elsif ((@status == 'proposed') && (current_user.name == @bet.user_one_name))
         current_user.increase_balance_in_escrow(-@amount)
       elsif ((@status == 'proposed') && (current_user.name == @bet.user_two_name))
@@ -75,12 +81,6 @@ class BetsController < ApplicationController
       end
       @bet.status = 'cancelled'
       @bet.save
-      admin_user = User.get_admin_user()
-      @@friend_user = @friend
-      content_string = create_bet_cancel_message_string(current_user, @@friend_user, @bet)
-      test = {"content"=> content_string}
-      @post = admin_user.posts.new(test)
-      @post.save
       redirect_to allbets_bet_path(current_user), notice: "Bet Cancelled!"
     end
 
