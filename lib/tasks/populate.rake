@@ -38,8 +38,8 @@ namespace :fill do
     admin_user.save!
 
     # Odd.populate 5 do |bet|
-    #   bet.team_one_name = Faker::Name.name
-    #   bet.team_two_name = Faker::Name.name
+    #   bet.home_team_name = Faker::Name.name
+    #   bet.away_team_name = Faker::Name.name
     #   bet.money_line= -110
     # end
 
