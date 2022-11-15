@@ -48,6 +48,9 @@ class UsersController < ApplicationController
   end
 
   def mentionable
+    puts "in mentionable"
+    puts params
+    puts params[:page]
     render json: @user.following_users.as_json(only: [:id, :name]), root: false
   end
 
