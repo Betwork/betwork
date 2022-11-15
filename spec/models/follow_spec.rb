@@ -1,8 +1,6 @@
 require 'rails_helper'
 
-
 RSpec.describe Follow, type: :model do
-
 
   it "should be able to follow another user" do
     @u1 = User.create!(name: 'Betty', email: 'Betty@betwork.com', password: 'password')
@@ -69,8 +67,5 @@ RSpec.describe Follow, type: :model do
       expect(!([@u4.id].include? follow.followable_id))
     end
   end
-
-
-
 
 end
