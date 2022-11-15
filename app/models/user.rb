@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   has_merit
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
-    :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable
   acts_as_voter
   acts_as_follower
   acts_as_followable
@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
 
   def self.get_admin_user()
     return User.where(email: "admin@betwork.com").first
-  end 
+  end
 
   def decrease_balance(amount)
     self.actualBalance -= amount
@@ -36,5 +36,14 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  # def sufficient_funds
+  #   puts "sufficient_funds getting called "
+  #   if (self.actualBalance - self.balanceInEscrow) < 0.0
+  #     errors.add(:actualBalance, "Insufficient Fundsasdfasdf")
+  #   end
+  # end
+
+  # # validates :actualBalance, numericality: { only_integer: true, greater_than: 0, message: "Amount must be a valid number greater than zero!" }
+  # validate :sufficient_funds
 
 end
