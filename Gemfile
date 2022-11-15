@@ -32,6 +32,7 @@ gem 'selenium-webdriver'
 gem 'webdrivers', '4.0'
 gem 'email_spec'
 gem 'simplecov'
+gem 'warden'
 
 #Need this gem for API calls
 gem 'excon'
