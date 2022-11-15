@@ -39,11 +39,8 @@ Scenario: I deposit a negative value
 
 Scenario: I withdraw funds
   Given I am on the Betwork home page
-  When I follow "Manage Funds"
-  And I balance form select "Add"
-  And I fill in "balance_change" with "500"
-  And I press "Submit"
-  And I am on the Betwork home page
+  # $500
+  And the admin user has money
   And I follow "Manage Funds"
   And I balance form select "Withdraw"
   And I fill in "balance_change" with "400"
@@ -53,11 +50,8 @@ Scenario: I withdraw funds
 
 Scenario: I withdraw more money than I have
   Given I am on the Betwork home page
-  When I follow "Manage Funds"
-  And I balance form select "Add"
-  And I fill in "balance_change" with "500"
-  And I press "Submit"
-  And I am on the Betwork home page
+  # $500
+  And the admin user has money
   And I follow "Manage Funds"
   And I balance form select "Withdraw"
   And I fill in "balance_change" with "600"
@@ -67,11 +61,8 @@ Scenario: I withdraw more money than I have
 
 Scenario: I withdraw negative value
   Given I am on the Betwork home page
-  When I follow "Manage Funds"
-  And I balance form select "Add"
-  And I fill in "balance_change" with "500"
-  And I press "Submit"
-  And I am on the Betwork home page
+  # $500
+  And the admin user has money
   And I follow "Manage Funds"
   And I balance form select "Withdraw"
   And I fill in "balance_change" with "-100"
@@ -81,11 +72,8 @@ Scenario: I withdraw negative value
 
 Scenario: I withdraw non numeric value
   Given I am on the Betwork home page
-  When I follow "Manage Funds"
-  And I balance form select "Add"
-  And I fill in "balance_change" with "500"
-  And I press "Submit"
-  And I am on the Betwork home page
+  # $500
+  And the admin user has money
   And I follow "Manage Funds"
   And I balance form select "Withdraw"
   And I fill in "balance_change" with "f"
@@ -93,15 +81,14 @@ Scenario: I withdraw non numeric value
   Then I should see "500.0 dollars"
   And I should see "Invalid input, please input a number greater than zero"
 
-
 Scenario: I go to view my funds with a pending bet placed
 #   Need to add money, propose a bet, navigate to page
   Given I am on the Betwork home page
-  When I follow "Manage Funds"
-  And I balance form select "Add"
-  And I fill in "balance_change" with "500"
-  And I press "Submit"
-  # Artificially place a bet for $10
-  # And I just placed a bet
-  # And I follow "Manage Funds"
-  # Then I should see 490 and 10
+  And the admin user has money
+  And my test friend exists
+  # $50 STUCK ON THIS STEP
+  And I have placed a bet
+  And I follow "My Bets"
+  Then I should see "450.0 dollars"
+  And I should see "50.0 dollars"
+  And I sleep
