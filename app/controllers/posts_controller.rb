@@ -3,10 +3,12 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   def show
+    puts "TRIEGGER"
     @comments = @post.comments.all
   end
 
   def create
+    puts "TRIEGGER"
     puts post_params
     puts "TEST THIS OUT NOW PLEASE"
     @post = current_user.posts.new(post_params)
@@ -18,14 +20,19 @@ class PostsController < ApplicationController
   end
 
   def edit
+    puts "TRIEGGER"
+    puts "ITS IN EDIT???"
+    puts post_params
   end
 
   def update
+    puts "TRIEGGER"
     @post.update(post_params)
     redirect_to @post
   end
 
   def destroy
+    puts "TRIEGGER"
     @post.destroy
     respond_to do |format|
       format.js
@@ -34,12 +41,15 @@ class PostsController < ApplicationController
   end
 
   private
+
   def set_post
+    puts "TRIEGGER"
     @post = Post.find_by(id: params[:id])
     render_404 and return unless @post && User.find_by(id: @post.user_id)
   end
 
   def post_params
+    puts "TRIEGGER"
     params.require(:post).permit(:content, :attachment)
   end
 end

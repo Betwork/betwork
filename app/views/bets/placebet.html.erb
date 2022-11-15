@@ -37,7 +37,7 @@
   Betting: </label><%= " " + pluralize(@user.actualBalance - @user.balanceInEscrow, 'dollars') %>
 
 
-<%= form_for @bet, :html => {:class => "form-horizontal"}, remote: true do |f| %>
+<%= form_for @bet, :html => { :class => "form-horizontal" }, remote: true do |f| %>
   <label class="form-spacing"> Which team do you think is going to win? </label>
   <%= f.select :betting_on, [[@game.home_team_name, 'Home Team'], [@game.away_team_name]] %>
   <br/>
@@ -55,5 +55,5 @@
   <%= f.hidden_field :status, value: 'proposed' %>
   <br/>
   <%= f.submit "Confirm Proposition" %>
-  <spand id="helpBlock" class = "help-block"></span>
+  <span id="helpBlock" class="help-block"></span>
 <% end %>
