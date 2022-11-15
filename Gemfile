@@ -21,7 +21,6 @@ gem 'bootstrap-sass', '~> 3.4.1'
 gem 'autoprefixer-rails'
 gem 'font-awesome-rails'
 
-
 #Need cucumber for testing
 #gem 'cucumber'
 gem 'capybara'
@@ -32,6 +31,7 @@ gem 'rspec-rails'
 gem 'selenium-webdriver'
 gem 'webdrivers', '4.0'
 gem 'email_spec'
+gem 'simplecov'
 
 #Need this gem for API calls
 gem 'excon'
@@ -54,8 +54,8 @@ group :production do
   gem 'pg'
   gem 'unicorn'
   gem 'rails_12factor'
-#  gem 'fog'
-#  gem 'fog-aws'
+  #  gem 'fog'
+  #  gem 'fog-aws'
 end
 
 gem 'devise'
