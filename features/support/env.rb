@@ -16,7 +16,7 @@ require 'email_spec/cucumber'
 
 # Capybara.default_driver = Selenium::WebDriver.for :chrome
 Capybara.ignore_hidden_elements = false
-Capybara.default_driver = :selenium_chrome_headless
+Capybara.default_driver = :selenium_chrome#_headless
 
 
 # frozen_string_literal: true
