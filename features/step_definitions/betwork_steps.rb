@@ -210,6 +210,18 @@ Given /I have placed a bet/ do # STUCK
   User.where(name: "Rails").update_all(balanceInEscrow: 50)
 end
 
+When /I create a new post/ do
+  find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/form/div[1]/div').click
+end
+
+And /I fill in the post with some text "([^"]*)"$/ do |text|
+  send_keys(text)
+end
+
+Then /I delete my post/ do
+  find(:xpath, '/html/body/div[1]/div/div[2]/div[2]/div[1]/div/div[2]/div[2]/div/a[2]').click
+end
+
 Given /I have a confirmed bet/ do 
   bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "")
   bet.save!
