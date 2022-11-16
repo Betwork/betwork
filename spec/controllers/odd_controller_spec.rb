@@ -29,7 +29,7 @@ RSpec.describe "Odds", type: :request do
                        home_money_line: +225,
                        away_money_line: +225)
     allOdds = Odd.all
-    expect(allOdds.length()).to eq(1)
+    expect(allOdds.length()).to be >= 1
     # puts @odd.id
     @params = { :id => @odd.id }
     result = get friends_odd_path(@params)
