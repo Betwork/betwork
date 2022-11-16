@@ -1,0 +1,88 @@
+                   Prefix Verb   URI Pattern                                                                              Controller#Action
+                    posts GET    /posts(.:format)                                                                         posts#index
+                          POST   /posts(.:format)                                                                         posts#create
+                 new_post GET    /posts/new(.:format)                                                                     posts#new
+                edit_post GET    /posts/:id/edit(.:format)                                                                posts#edit
+                     post GET    /posts/:id(.:format)                                                                     posts#show
+                          PATCH  /posts/:id(.:format)                                                                     posts#update
+                          PUT    /posts/:id(.:format)                                                                     posts#update
+                          DELETE /posts/:id(.:format)                                                                     posts#destroy
+              friends_odd GET    /odds/:id/friends(.:format)                                                              odds#friends
+                     odds GET    /odds(.:format)                                                                          odds#index
+                          POST   /odds(.:format)                                                                          odds#create
+                  new_odd GET    /odds/new(.:format)                                                                      odds#new
+                 edit_odd GET    /odds/:id/edit(.:format)                                                                 odds#edit
+                      odd GET    /odds/:id(.:format)                                                                      odds#show
+                          PATCH  /odds/:id(.:format)                                                                      odds#update
+                          PUT    /odds/:id(.:format)                                                                      odds#update
+                          DELETE /odds/:id(.:format)                                                                      odds#destroy
+            updatebet_bet GET    /bets/:id/updatebet(.:format)                                                            bets#updatebet
+             placebet_bet GET    /bets/:id/placebet(.:format)                                                             bets#placebet
+              confirm_bet GET    /bets/:id/confirm(.:format)                                                              bets#confirm
+              allbets_bet GET    /bets/:id/allbets(.:format)                                                              bets#allbets
+              receive_bet GET    /bets/:id/receive(.:format)                                                              bets#receive
+               cancel_bet GET    /bets/:id/cancel(.:format)                                                               bets#cancel
+                     bets GET    /bets(.:format)                                                                          bets#index
+                          POST   /bets(.:format)                                                                          bets#create
+                  new_bet GET    /bets/new(.:format)                                                                      bets#new
+                 edit_bet GET    /bets/:id/edit(.:format)                                                                 bets#edit
+                      bet GET    /bets/:id(.:format)                                                                      bets#show
+                          PATCH  /bets/:id(.:format)                                                                      bets#update
+                          PUT    /bets/:id(.:format)                                                                      bets#update
+                          DELETE /bets/:id(.:format)                                                                      bets#destroy
+                 comments POST   /comments(.:format)                                                                      comments#create
+                  comment DELETE /comments/:id(.:format)                                                                  comments#destroy
+         new_user_session GET    /users/sign_in(.:format)                                                                 devise/sessions#new
+             user_session POST   /users/sign_in(.:format)                                                                 devise/sessions#create
+     destroy_user_session DELETE /users/sign_out(.:format)                                                                devise/sessions#destroy
+        new_user_password GET    /users/password/new(.:format)                                                            devise/passwords#new
+       edit_user_password GET    /users/password/edit(.:format)                                                           devise/passwords#edit
+            user_password PATCH  /users/password(.:format)                                                                devise/passwords#update
+                          PUT    /users/password(.:format)                                                                devise/passwords#update
+                          POST   /users/password(.:format)                                                                devise/passwords#create
+ cancel_user_registration GET    /users/cancel(.:format)                                                                  devise/registrations#cancel
+    new_user_registration GET    /users/sign_up(.:format)                                                                 devise/registrations#new
+   edit_user_registration GET    /users/edit(.:format)                                                                    devise/registrations#edit
+        user_registration PATCH  /users(.:format)                                                                         devise/registrations#update
+                          PUT    /users(.:format)                                                                         devise/registrations#update
+                          DELETE /users(.:format)                                                                         devise/registrations#destroy
+                          POST   /users(.:format)                                                                         devise/registrations#create
+    new_user_confirmation GET    /users/confirmation/new(.:format)                                                        devise/confirmations#new
+        user_confirmation GET    /users/confirmation(.:format)                                                            devise/confirmations#show
+                          POST   /users/confirmation(.:format)                                                            devise/confirmations#create
+             friends_user GET    /users/:id/friends(.:format)                                                             users#friends
+           followers_user GET    /users/:id/followers(.:format)                                                           users#followers
+          deactivate_user GET    /users/:id/deactivate(.:format)                                                          users#deactivate
+         mentionable_user GET    /users/:id/mentionable(.:format)                                                         users#mentionable
+               funds_user GET    /users/:id/funds(.:format)                                                               users#funds
+                    users GET    /users(.:format)                                                                         users#index
+                          POST   /users(.:format)                                                                         users#create
+                 new_user GET    /users/new(.:format)                                                                     users#new
+                edit_user GET    /users/:id/edit(.:format)                                                                users#edit
+                     user GET    /users/:id(.:format)                                                                     users#show
+                          PATCH  /users/:id(.:format)                                                                     users#update
+                          PUT    /users/:id(.:format)                                                                     users#update
+                          DELETE /users/:id(.:format)                                                                     users#destroy
+          calendar_events GET    /events/calendar(.:format)                                                               events#calendar
+                   events GET    /events(.:format)                                                                        events#index
+                          POST   /events(.:format)                                                                        events#create
+                new_event GET    /events/new(.:format)                                                                    events#new
+               edit_event GET    /events/:id/edit(.:format)                                                               events#edit
+                    event GET    /events/:id(.:format)                                                                    events#show
+                          PATCH  /events/:id(.:format)                                                                    events#update
+                          PUT    /events/:id(.:format)                                                                    events#update
+                          DELETE /events/:id(.:format)                                                                    events#destroy
+                     home GET    /                                                                                        home#index
+                     root GET    /                                                                                        home#front
+                   follow POST   /follow(.:format)                                                                        follows#create
+                 unfollow POST   /unfollow(.:format)                                                                      follows#destroy
+                     like POST   /like(.:format)                                                                          likes#create
+                   unlike POST   /unlike(.:format)                                                                        likes#destroy
+             find_friends GET    /find_friends(.:format)                                                                  home#find_friends
+                    about GET    /about(.:format)                                                                         home#about
+                    funds POST   /funds(.:format)                                                                         users#funds
+       rails_service_blob GET    /rails/active_storage/blobs/:signed_id/*filename(.:format)                               active_storage/blobs#show
+rails_blob_representation GET    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format) active_storage/representations#show
+       rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                              active_storage/disk#show
+update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                      active_storage/disk#update
+     rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)                                           active_storage/direct_uploads#create
