@@ -10,8 +10,8 @@ class BetsController < ApplicationController
   respond_to :html, :js
 
   def placebet
-    puts "placebet"
-    puts params
+    #puts "placebet"
+    #puts params
     @friend = User.find_by(id: params[:friend_id])
     @@friend_user = @friend
     @game = Odd.find params[:game]
@@ -19,7 +19,7 @@ class BetsController < ApplicationController
   end
 
   def allbets
-    puts "allbets"
+    #puts "allbets"
     # setting a hash that maps team abbreviations to team names
     # used later in string comparisons
     team_names = {
@@ -147,7 +147,7 @@ class BetsController < ApplicationController
 
                 # remove wagered amount from escrow
                 @user_two.increase_balance_in_escrow(-@amount)
-                puts 'User two lost'
+                #puts 'User two lost'
 
                 # making post that User One Won
                 content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
@@ -167,7 +167,7 @@ class BetsController < ApplicationController
 
                 # remove wagered amount from escrow
                 @user_one.increase_balance_in_escrow(-@amount)
-                puts 'User one lost'
+                #puts 'User one lost'
 
                 # making post that User Two Won
                 content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -192,16 +192,16 @@ class BetsController < ApplicationController
   end
 
   def new
-    puts "new"
+    #puts "new"
     @bet = Bet.new
   end
 
   def updatebet
-    puts "updatebet"
+    #puts "updatebet"
   end
 
   def confirm
-    puts "confirm"
+    #puts "confirm"
     # @bet = Bet.find params[:id]
     # admin_user = User.get_admin_user()
     # @friend= User.find_by(id: params[:friend_id])
@@ -213,7 +213,7 @@ class BetsController < ApplicationController
   end
 
   def receive
-    puts "receive"
+    #puts "receive"
     @bet = Bet.find params[:id]
     @amount = @bet.amount
     if (current_user.actualBalance - current_user.balanceInEscrow) - @amount < 0.0
@@ -237,7 +237,7 @@ class BetsController < ApplicationController
   end
 
   def cancel
-    puts "cancel"
+    #puts "cancel"
     @bet = Bet.find params[:id]
     @amount = @bet.amount
     @status = @bet.status
@@ -268,7 +268,7 @@ class BetsController < ApplicationController
   end
 
   def create
-    puts "create"
+    #puts "create"
     @bet = Bet.new(bet_params)
     if @bet.save
       current_user.increase_balance_in_escrow(@bet.amount)
@@ -284,7 +284,7 @@ class BetsController < ApplicationController
   end
 
   def update
-    puts "update"
+    #puts "update"
     @bet.update(user_params)
   end
 
@@ -293,7 +293,7 @@ class BetsController < ApplicationController
   # end
   #
   # def friends
-  #     puts params[:page]
+  #     #puts params[:page]
   #     @friends = @user.following_users.paginate(page: params[:page])
   #     @game = Odd.find params[:id]
   # end
@@ -305,25 +305,25 @@ class BetsController < ApplicationController
   private
 
   def user_params
-    puts "user_params"
-    puts user_params
+    #puts "user_params"
+    #puts user_params
     params.require(:user).permit(:name, :about, :avatar, :cover,
                                  :sex, :dob, :location, :phone_number)
   end
 
   def bet_params
-    puts "bet_params"
+    #puts "bet_params"
     params.require(:bet).permit(:home_team_name, :away_team_name, :home_money_line, :date,
                                 :away_money_line, :user_one_name, :betting_on, :user_two_name, :amount, :user_id_one, :user_id_two, :status)
   end
 
   def check_ownership
-    puts "check_ownership"
+    #puts "check_ownership"
     redirect_to current_user, notice: 'Not Authorized' unless @user == current_user
   end
 
   def set_user
-    puts "set_user"
+    #puts "set_user"
     @user = current_user
     render_404 and return unless @user
   end
