@@ -86,9 +86,7 @@ Scenario: I go to view my funds with a pending bet placed
   Given I am on the Betwork home page
   And the admin user has money
   And my test friend exists
-  # $50 STUCK ON THIS STEP
   And I have placed a bet
-  And I follow "My Bets"
+  And I follow "Manage Funds"
   Then I should see "450.0 dollars"
   And I should see "50.0 dollars"
-  And I sleep

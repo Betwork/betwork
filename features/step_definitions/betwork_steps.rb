@@ -143,7 +143,7 @@ And /I take a screenshot/ do
 end
 
 Given /the admin user has money/ do
-    User.where(name: "Rails").update_all(actualBalance: "500")
+    User.where(name: "Rails").update_all(actualBalance: 500)
 end
 
 Then /I navigate to the dropdown-menu/ do
@@ -169,7 +169,7 @@ When /I first press place bet/ do
 end
 
 Given /my test friend exists/ do
-  user = User.new(name: 'Betty', email: 'Betty@betwork.com', sex: 'female', password: 'password', actualBalance: "500", balanceInEscrow: "0")
+  user = User.new(name: 'Betty', email: 'Betty@betwork.com', sex: 'female', password: 'password', actualBalance: 500, balanceInEscrow: 0)
   user.skip_confirmation!
   user.save!
 end
@@ -179,8 +179,9 @@ When /^(?:|I )balance form select "([^"]*)"$/ do |option|
 end
 
 Given /I have placed a bet/ do # STUCK
-  bet = Bet.new(home_team_name: "Los Angeles Lakers", away_team_name: "Chicago Bulls", betting_on: "Los Angeles Lakers", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: "Rails", user_id_two: "Betty", date: "2022-11-15", status: "proposed")
+  bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "proposed")
   bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 50)
 end
 
 Then /I sleep/ do
