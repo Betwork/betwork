@@ -39,7 +39,7 @@
 
 <%= form_for @bet, :html => {:class => "form-horizontal"}, remote: true do |f| %>
   <label class="form-spacing"> Which team do you think is going to win? </label>
-  <%= f.select :betting_on, [[@game.home_team_name, 'Home Team'], [@game.away_team_name]] %>
+  <%= f.select :betting_on, [[@game.home_team_name, 'Home Team'], [@game.away_team_name, 'Away Team']] %>
   <br/>
   <label> Amount </label>
   <%= f.text_field :amount %>

@@ -13,6 +13,19 @@
 # it.
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+# SimpleCov.start do
+#   add_filter '/test/'
+#   add_filter '/config/'
+#   add_filter '/vendor/'
+#
+#   add_group 'Controllers', 'app/controllers'
+#   add_group 'Models', 'app/models'
+#   add_group 'Helpers', 'app/helpers'
+#   add_group 'Mailers', 'app/mailers'
+# end
+# require 'support/controller_helpers'
+# require 'rails_helper'
+# require 'devise'
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -27,7 +40,7 @@ RSpec.configure do |config|
     #     # => "be bigger than 2"
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
-
+  # config.include Devise::TestHelpers
   # rspec-mocks config goes here. You can use an alternate test double
   # library (such as bogus or mocha) by changing the `mock_with` option here.
   config.mock_with :rspec do |mocks|
@@ -44,8 +57,14 @@ RSpec.configure do |config|
   # triggering implicit auto-inclusion in groups with matching metadata.
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
+  # config.mock_with :rspec do |mocks|
+  #   mocks.allow_message_expectations_on_nil = true
+  # end
+  # config.include Devise::TestHelpers, :type => :controller
+  # config.include ControllerHelpers, :type => :controller
+
+  # The settings below are suggested to provide a good initial experience
+  # with RSpec, but feel free to customize to your heart's content.
 =begin
   # This allows you to limit a spec run to individual examples or groups
   # you care about by tagging them with `:focus` metadata. When nothing

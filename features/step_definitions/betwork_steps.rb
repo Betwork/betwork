@@ -2,17 +2,16 @@ require_relative '../../lib/populator_fixes.rb'
 require 'faker'
 require 'populator'
 
-
 When /I hit return/ do
   find(:id, 'user_password').native.send_keys(:enter)
 end
 
-Given /the user database has been cleared/ do 
+Given /the user database has been cleared/ do
   [User].each(&:delete_all)
   # sleep(3)
 end
 
-Given /the Betwork test database exists/ do 
+Given /the Betwork test database exists/ do
   puts 'Erasing existing data'
   puts '====================='
 
@@ -142,15 +141,22 @@ And /I take a screenshot/ do
   page.save_screenshot('test.png')
 end
 
+
 Given /the admin user has money/ do
     User.where(name: "Rails").update_all(actualBalance: 500)
+end
+
+Given /the admin user exists/ do
+  user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
+  user.skip_confirmation!
+  user.save!
 end
 
 Then /I navigate to the dropdown-menu/ do
   find(:xpath, '//*[@id="navbar-top"]/ul').click
 end
 
-Then /I sign out of Betwork/ do 
+Then /I sign out of Betwork/ do
   find(:xpath, '/html/body/nav/div/div[2]/ul/li/ul/li[4]/a').click
 end
 
