@@ -40,16 +40,20 @@ Given /the Betwork test database exists/ do
   Odd.populate 1 do |bet|
     bet.home_team_name = "Los Angeles Lakers"
     bet.away_team_name = "New York Knicks"
-    bet.home_money_line = -110
+    bet.home_money_line= -110
+    bet.away_money_line= -110
+    bet.date="6:00 ET 11/20/2022"
   end
 
   Odd.populate 5 do |bet|
     bet.home_team_name = Faker::Name.name
     bet.away_team_name = Faker::Name.name
-    bet.home_money_line = -110
+    bet.home_money_line= -110
+    bet.away_money_line= -110
+    bet.date="6:00 ET 11/20/2022"
   end
 
-  user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
+  user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password', actualBalance: "0", balanceInEscrow: "0")
   user.skip_confirmation!
   user.save!
   puts 'Created test user with email=test@betwork.com and password=password'
@@ -137,6 +141,11 @@ And /I take a screenshot/ do
   page.save_screenshot('test.png')
 end
 
+
+Given /the admin user has money/ do
+    User.where(name: "Rails").update_all(actualBalance: 500)
+end
+
 Given /the admin user exists/ do
   user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password')
   user.skip_confirmation!
@@ -166,11 +175,21 @@ When /I first press place bet/ do
 end
 
 Given /my test friend exists/ do
-  user = User.new(name: 'Betty', email: 'Betty@betwork.com', sex: 'female', password: 'password')
+  user = User.new(name: 'Betty', email: 'Betty@betwork.com', sex: 'female', password: 'password', actualBalance: 500, balanceInEscrow: 0)
   user.skip_confirmation!
   user.save!
 end
 
+When /^(?:|I )balance form select "([^"]*)"$/ do |option|
+  select option, :from => "balance_change_type"
+end
+
+Given /I have placed a bet/ do # STUCK
+  bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "proposed")
+  bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 50)
+end
+
 Then /I sleep/ do
-  sleep(15)
+  sleep(60)
 end

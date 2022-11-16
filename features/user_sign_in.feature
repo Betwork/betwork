@@ -6,7 +6,7 @@ Feature: user can log in to Betwork
 
 Background: We are on the home page and haven't logged in yet
     Given I am on the Betwork login page
-    Given the admin user exists 
+    And the Betwork test database exists
     Then I should see "Log in"
 
 Scenario: We enter a valid username and password and should be able to log in
