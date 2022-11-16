@@ -167,11 +167,13 @@ When /I last press follow/ do
 end
 
 When /I place a bet on the first game/ do
-  visit '/odds/1/friends'
+  find(:xpath, '/html/body/div/table/tbody/tr[1]/td[6]/a').click
+  #visit '/odds/1/friends'
 end
 
 When /I first press place bet/ do
-  visit '/bets/1/placebet?amount=-1&friend_id=7&game=1'
+  find(:xpath, '/html/body/div/div/div[2]/div[1]/div/div[2]/div/div/a').click
+  #visit '/bets/1/placebet?amount=-1&friend_id=7&game=1'
 end
 
 Given /my test friend exists/ do
@@ -191,5 +193,5 @@ Given /I have placed a bet/ do # STUCK
 end
 
 Then /I sleep/ do
-  sleep(60)
+  sleep(5)
 end

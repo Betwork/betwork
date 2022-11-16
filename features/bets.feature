@@ -18,37 +18,34 @@ Scenario: I look for Live Bets
   When I follow "Live Bets"
   Then I should see "Propose Bet"
 
-#Scenario: I place a bet against my friend and look at my new bet
-#  Given my test friend exists
-#  And I am on the Betwork find friends page
-#  # Add Betty to friends list
-#  When I last press follow
-#
-#  # Go to Live Bets to bet against her
-#  And I follow "Live Bets"
-#  And I place a bet on the first game
-#  Then I should see "Betty"
-#
-#  # I place the bet against Betty
-#  And I first press place bet
-#  Then I should see "Confirm Your Betting Details"
-#  And I should see "New York Knicks"
-#  And I should see "Los Angeles Lakers"
-#  And I should see "-110"
-#  And I should see "Betty"
-#  Then I fill in "bet_amount" with "50"
-#  And I press "Confirm Bet"
-#  Then I should see "Your bet has been confirmed!"
-#
-#  # I look at my new bet
-#  And I am on the Betwork home page
-#  And I follow "My Bets"
-#  Then I should see "Your Bets"
-#  And I should see "Los Angeles Lakers"
-#  And I should see "New York Knicks"
-#  And I should see "Betty"
-#  And I should see "50"
-#  And I should see "-110"
+Scenario: I place a bet against my friend and look at my new bet
+  Given my test friend exists
+  And the admin user has money
+  And I am on the Betwork find friends page
+  # Add Betty to friends list
+  When I last press follow
+
+  # Go to Live Bets to bet against her
+   And I follow "Live Bets"
+   And I place a bet on the first game
+   Then I sleep
+   Then I should see "Betty"
+
+  # I place the bet against Betty
+  And I first press place bet
+  Then I should see "Confirm Your Betting Details"
+  And I should see "Betty"
+  Then I fill in "bet_amount" with "50"
+  And I press "Confirm Proposition"
+  Then I should see "Your bet has been proposed!"
+
+  # I look at my new bet
+  And I am on the Betwork home page
+  And I follow "My Bets"
+  Then I should see "Your Confirmed Bets"
+  And I should see "Betty"
+  And I should see "50"
+  And I confirm my bet 
 
 
 
