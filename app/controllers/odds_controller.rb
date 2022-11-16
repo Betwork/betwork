@@ -11,12 +11,19 @@ class OddsController < ApplicationController
         Odd.delete_all
         odds = find_nba_odds()
         odds.each do |odd|
-          new_odd = Odd.new
-          new_odd.home_team_name = odd['homeTeam']
-          new_odd.away_team_name = odd['awayTeam']
-          new_odd.home_money_line = odd['homeMoneyLine']
-          new_odd.away_money_line = odd['awayMoneyLine']
-          new_odd.date = odd['startTime']
+          new_odd = Odd.create!(
+            "home_team_name": odd['homeTeam'],
+            "away_team_name": odd['awayTeam'],
+            "home_money_line": odd['homeMoneyLine'],
+            "away_money_line": odd['awayMoneyLine'],
+            "date": odd['startTime']
+          )
+          # new_odd = Odd.new
+          # new_odd.home_team_name = odd['homeTeam']
+          # new_odd.away_team_name = odd['awayTeam']
+          # new_odd.home_money_line = odd['homeMoneyLine']
+          # new_odd.away_money_line = odd['awayMoneyLine']
+          # new_odd.date = odd['startTime']
           new_odd.save
         end
         @odds = Odd.all
