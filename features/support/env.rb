@@ -7,6 +7,7 @@ SimpleCov.start 'rails'
 # files.
 
 require 'cucumber/rails'
+require 'email_spec/cucumber'
 
 # frozen_string_literal: true
 
