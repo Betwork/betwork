@@ -3,7 +3,7 @@ require_relative "../constants/bet_post_constants.rb"
 require 'uri'
 require 'net/http'
 require 'openssl'
-require 'JSON'
+require 'json'
 class BetsController < ApplicationController
     before_action :set_user
     respond_to :html, :js
