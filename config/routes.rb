@@ -49,6 +49,8 @@ Rails.application.routes.draw do
   match :about, to: 'home#about', as: :about, via: :get
   match :funds, to: 'users#funds', as: :funds, via: :post
 
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.production?
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
