@@ -6,9 +6,7 @@ RSpec.describe "Posts", type: :request do
     @user.skip_confirmation!
     @user.save!
     sign_in @user
-    # @params = { :id => @user, :post => { :content => 'hi' } }
     @params = { :id => 100, :post => { :content => 'hi' } }
-    # @params = { :id => 100, :post => { :content => 'hi', :user_id => @user.id, :content_html => "<p>hi/p>" } }
     post posts_path(@params)
     allPosts = Post.all
     puts allPosts.length()
@@ -35,10 +33,6 @@ RSpec.describe "Posts", type: :request do
     @user.skip_confirmation!
     @user.save!
     sign_in @user
-    # # @params = { :id => @user, :post => { :content => 'hi' } }
-    # @params = { :id => 100, :post => { :content => 'hi' } }
-    # # @params = { :id => 100, :post => { :content => 'hi', :user_id => @user.id, :content_html => "<p>hi/p>" } }
-    # post posts_path(@params)
     @post = Post.create!("content": "hi", "user_id": @user.id, "created_at": "2022-11-02 21:31:39.931748", "updated_at": "2022-11-02 21:31:39.931748", "content_html": "<p>hi</p>")
     allPosts = Post.all
     expect(allPosts[0].content).to eq('hi')
