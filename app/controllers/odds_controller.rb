@@ -1,7 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'openssl'
-require 'JSON'
+require 'json'
 
 class OddsController < ApplicationController
     before_action :set_user
