@@ -91,14 +91,14 @@ namespace :fill do
     puts 'Creating Events'
     puts '==============='
 
-    15.times do
-      event = Event.new
-      event.name = Populator.words(1..3).titleize
-      event.event_datetime = Faker::Date.between(from: 2.years.ago, to: 1.day.from_now)
-      event.user = users.sample
-      event.save
-      puts "created event #{event.name}"
-    end
+    # 15.times do
+    #   event = Event.new
+    #   event.name = Populator.words(1..3).titleize
+    #   event.event_datetime = Faker::Date.between(from: 2.years.ago, to: 1.day.from_now)
+    #   event.user = users.sample
+    #   event.save
+    #   puts "created event #{event.name}"
+    # end
 
     puts 'Creating Likes For Posts'
     puts '========================'
@@ -110,30 +110,30 @@ namespace :fill do
       puts "post #{post.id} liked by user #{user.name}"
     end
 
-    puts 'Creating Likes For Events'
-    puts '========================='
-    events = Event.all
+    # puts 'Creating Likes For Events'
+    # puts '========================='
+    # events = Event.all
 
-    15.times do
-      event = events.sample
-      user = users.sample
-      event.liked_by user
-      puts "event #{event.id} liked by user #{user.name}"
-    end
+    # 15.times do
+    #   event = events.sample
+    #   user = users.sample
+    #   event.liked_by user
+    #   puts "event #{event.id} liked by user #{user.name}"
+    # end
 
-    puts 'Creating Comments For Events'
-    puts '============================='
+    # puts 'Creating Comments For Events'
+    # puts '============================='
 
-    15.times do
-      event = events.sample
-      user = users.sample
-      comment = event.comments.new
-      comment.commentable_type = 'Event'
-      comment.comment = Populator.sentences(1)
-      comment.user = user
-      comment.save
-      puts "user #{user.name} commented on event #{event.id}"
-    end
+    # 15.times do
+    #   event = events.sample
+    #   user = users.sample
+    #   comment = event.comments.new
+    #   comment.commentable_type = 'Event'
+    #   comment.comment = Populator.sentences(1)
+    #   comment.user = user
+    #   comment.save
+    #   puts "user #{user.name} commented on event #{event.id}"
+    # end
 
     puts 'Creating Odds for Bets'
     puts '============================='
