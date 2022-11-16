@@ -11,6 +11,14 @@ class OddsController < ApplicationController
     # puts params
     @odds = Odd.all
     Odd.delete_all
+    old_odd = Odd.create!(
+      "home_team_name": "NYK",
+      "away_team_name": "OKC",
+      "home_money_line": -210,
+      "away_money_line": 175,
+      "date": "12:10 ET 11/13/2022"
+    )
+    old_odd.save
     odds = find_nba_odds()
     odds.each do |odd|
       if (!odd['homeTeam'].nil? and
