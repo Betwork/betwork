@@ -55,7 +55,7 @@ Login with Test User credentials or create your own via sign-up:
 * password: password
 
 Current capabilities to test:
-* Login with given credentials or sign-up on your own
+* Login with given credentials or sign-up on your own (Heroku Sign Up is NOT working!)
 * Navigate to Find Friends to follow (add) new friends
 * Navigate to My Friends to view your current friends
 * Next, navigate to Manage Funds to deposit or withdraw money
