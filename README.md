@@ -1,9 +1,10 @@
 
 
+
 # Betwork
 *Ditch the Bookie!*
 
-Betwork is a sports betting application built by Columbia students as a final project for the course COMS 4152: Engineering Software as a Service in the Fall of 2022. The application primarily targets sports enthusiasts who are tired of losing money to the house and would rather be able to bet directly against their fellow sports enthusiasts. 
+Betwork is a sports betting application built by Columbia students as a final project for the course COMS 4152: Engineering Software as a Service in the Fall of 2022. The application primarily targets sports enthusiasts who are tired of losing money to the house and would rather be able to bet directly against their fellow sports enthusiasts.
 
 
 ## Table of contents
@@ -43,7 +44,8 @@ For more information on the research and thought process that went into conceptu
 
 
 ## Features
-As the team proceeds with building out Betwork, it is concerned with which new Feature flows to target to benefit users of the application as well addressing any technical debt, pending issues or suggested improvements from the previous iteration of the project. 
+As the team proceeds with building out Betwork, it is concerned with which new Feature flows to target to benefit users of the application as well addressing any technical debt, pending issues or suggested improvements from the previous iteration of the project.
+
 
 ### Major Flows
 In its current state (Iteration 2), following are the major feature flows that the application supports:
@@ -53,52 +55,58 @@ email: test@betwork.com
 password: password
 Current capabilities to test:
 
-Login with given credentials or sign-up on your own
-Navigate to Find Friends, follow (add) new friends, navigate to My Friends to view your current friends
-Once you have a friend, navigating to Live Bets shows you the current games that can be bet on
-Choose a game to bet on (Place Bet) and choose a friend to bet against (Place Bet)
-Enter an amount to bet, and confirm your bet
-Navigate back to the home page and go to My Bets to see a list of your current bets
-Sign out
+* Login with given credentials or sign-up on your own
+* Navigate to Find Friends to follow (add) new friends
+* Navigate to My Friends to view your current friends
+* Next, navigate to Manage Funds to deposit or withdraw money
+* Once you have money and friends, navigating to Live Bets shows you real-time the current games that can be bet on
+* Choose a game to bet on (Place Bet) and choose a friend to propose a bet against (Place Bet)
+* Enter an amount to bet, and confirm your bet
+* Navigate back to the home page and go to My Bets to see a list of your current bets that are
+* On this page, you can see your confirmed, proposed, received, finished, and cancelled bets
+* Should you decide to cancel your proposed bet, you may do so by clicking Cancel Bet prior to the opponent accepting the bet
+* Should you decide to decline an incoming bet, you may also do so by clicking Cancel Bet
+* After winning (or losing) a bet, your balance will update in My Funds where you can withdraw your winnings
+* Sign out
 
 ### Improvements from Iteration 1
 Following are the improvements made by the team on Betwork from Iteration 1 to Iteration 2:
 1) `SimpleCov` was integrated into the test suite of the application so that test results and coverage could be easily reported.
-2) `setup.sh` allows a user to automate their local deployment while `heroku-deploy.sh` allows a user to automate their Heroku deployment. The user therefore need not have to manually run commands every time and also need not have to figure out if any extra commands are required. 
-3) Live Odds
-4) Live Bets
+2) `setup.sh` allows a user to automate their local deployment while `heroku-deploy.sh` allows a user to automate their Heroku deployment. The user therefore need not have to manually run commands every time and also need not have to figure out if any extra commands are required.
+3) Live Odds - view real time NBA odds for upcoming games
+4) Live Bets - place bets against friends and once the matches finish, bets will be processed and paid out
 
 
 ## Codebase
 As mentioned above, the application was written as a final project for the course COMS 4152: Engineering Software as a Service in the Fall of 2022. Following are the notable features of the codebase:
-1) The Betwork framework was built on top of an existing template for a rudimentary social media application, Socify. The Medium article explaining its construction can be found at: https://medium.com/rails-ember-beyond/how-to-build-a-social-network-using-rails-eb31da569233. 
+1) The Betwork framework was built on top of an existing template for a rudimentary social media application, Socify. The Medium article explaining its construction can be found at: https://medium.com/rails-ember-beyond/how-to-build-a-social-network-using-rails-eb31da569233.
 2) The original source code from the aforementioned article can be found at: https://github.com/scaffeinate/socify/tree/stable.
-3) Given that the team's primary goal is to implement their proposed betting features, the team has not devoted substantial effort to refactoring/removing unused/unwanted features of the original Socify application. As such, the codebase is heavier than it currently need be. 
-4) The original framework was implemented in Ruby on Rails and Betwork team expanded on this. The application thus runs on `Ruby 2.6.6` and `Rails 5.2.0`. 
+3) Given that the team's primary goal is to implement their proposed betting features, the team has not devoted substantial effort to refactoring/removing unused/unwanted features of the original Socify application. As such, the codebase is heavier than it currently need be.
+4) The original framework was implemented in Ruby on Rails and Betwork team expanded on this. The application thus runs on `Ruby 2.6.6` and `Rails 5.2.0`.
 
 
 ## Workflow
 The team used Github to manage both the flow of work as well as the codebase itself in the following way:
-1) The original repository was cloned into a new repository within the Betwork organization. 
+1) The original repository was cloned into a new repository within the Betwork organization.
 2) The team then ensured that the original Socify application could be started up and run stably across the local machines of all the team members. This involved fixing the Gemfile, ActiveRecord Migration versions, etc. Once these fixes were in place, all the changes were merged into the `master` branch of the Betwork Github repo.
 3) The team proceeded to outline various features (such as friending, betting, making a post, etc.) to be focussed on for each iteration of the project. Each feature was represented by its own Milestone on Github.
-4) Each Milestone was further subdivided into the necessary tasks to be completed for the feature to be functioning to the level expected for that iteration. These tasks were represented as Issues on Github. 
-5) Each Issue was assigned to a team member who created a new remote branch for the same that was automatically linked to the issue. Once the team member had committed and pushed all the necessary code for the Issue to the remote branch, they opened a PR for the same. 
+4) Each Milestone was further subdivided into the necessary tasks to be completed for the feature to be functioning to the level expected for that iteration. These tasks were represented as Issues on Github.
+5) Each Issue was assigned to a team member who created a new remote branch for the same that was automatically linked to the issue. Once the team member had committed and pushed all the necessary code for the Issue to the remote branch, they opened a PR for the same.
 6) The PR was reviewed by at least one other member (preferably a member working on a similar feature). If both the written code and the feature itself passed the inspection, the branch was merged into `master`.
 7) Merging the branch into `master` and closing the PR automatically closed the linked Issue and updated the completion percentage of the corresponding Milestone. Thus at any given point of time, the team could easily establish:
-   1) the features completed by different team members
-   2) the features currently being worked on by different team members
-   3) the roadmap ahead until the next iteration of the project was due. 
-8) The team followed a pair programmer concept where the reviewer of the PR took up the responsibility of writing the tests (both Cucumber and Rspec) for the same. This not only eased distribution of work but also ensured that at any given point of time, at least two team members had an in-depth understanding of the code surrounding each feature.  
+    1) the features completed by different team members
+    2) the features currently being worked on by different team members
+    3) the roadmap ahead until the next iteration of the project was due.
+8) The team followed a pair programmer concept where the reviewer of the PR took up the responsibility of writing the tests (both Cucumber and Rspec) for the same. This not only eased distribution of work but also ensured that at any given point of time, at least two team members had an in-depth understanding of the code surrounding each feature.
 
 
 ## Local Deployment
 In order to simplify the local setup of the application for a user wishing to test the application on their machine, a shell script was created to run all the necessary commands in the appropriate order. This script makes the following assumptions:
 1) The user has the following installed (at the bare minimum and in addition to other standard developer tools/packages):
-   1) Homebrew
-   2) Ruby 2.6.6
-   3) Rails 5.2.0
-   4) Github CLI
+    1) Homebrew
+    2) Ruby 2.6.6
+    3) Rails 5.2.0
+    4) Github CLI
 2) With regards to Github, the user has cloned the repo and is in the main folder using the commands below:
    ```
     git clone https://github.com/Betwork/betwork.git
@@ -200,7 +208,7 @@ heroku run rake fill:data
 # re-open the app now that it has been deployed
 heroku open
 ```
-It must be noted that while the above could work on a Windows machine, it has primarily been run on MacOS and hence has been configured as such. 
+It must be noted that while the above could work on a Windows machine, it has primarily been run on MacOS and hence has been configured as such.
 
 
 ## Testing
@@ -229,13 +237,13 @@ paint an accurate picture as to the required.
 
 
 ## Future Development
-Given the commitment of the team members to bettering this application over the course of its development cycle, the team has already started planning ahead for the next iteration. 
+Given the commitment of the team members to bettering this application over the course of its development cycle, the team has already started planning ahead for the next iteration.
 
 ### Known Bugs
 Given that the application is still under development (and currently ahead of the planned schedule), team members have noticed certain behaviours - that while expected - may appear to an application user as a bug and therefore require attention in the future:
-1) A user needs to have sufficient funds to cover a received bet at the time the bet was placed. Currently, if a user receives a bet - the amount for which is greater than their available balance, they will need to cancel the bet, add funds and then propose the bet themselves. In future iterations, caching will be handled so as to allow a user to add funds to match a bet amount - even after a bet has been proposed to them. 
+1) A user needs to have sufficient funds to cover a received bet at the time the bet was placed. Currently, if a user receives a bet - the amount for which is greater than their available balance, they will need to cancel the bet, add funds and then propose the bet themselves. In future iterations, caching will be handled so as to allow a user to add funds to match a bet amount - even after a bet has been proposed to them.
 2) In order to control API requests, the status of confirmed bets is only updated when the **My Bets** page is visited. Thus, a user may need to visit the **My Bets** page and then the **Home Page** to see their actual balance.
-3) While application users currently do earn winnings based on the money line being displayed, bets do not force application users to bet different amounts based on which application user is incurring more risk. 
+3) While application users currently do earn winnings based on the money line being displayed, bets do not force application users to bet different amounts based on which application user is incurring more risk.
 
 ### Upcoming Features
 While the team will consider feedback from application users when solidifying the roadmap for the next iteration, some major features to look forward to are:
@@ -244,4 +252,3 @@ While the team will consider feedback from application users when solidifying th
 3) Users will be able to bet on multiple sports.
 4) Users will be able to view their Balances and other Betting statistics pertaining to their betting history on their **My Bets** page.
 5) Users will be able to bet on games multiple days in advance instead of just the day of. 
-6) Mobile Notifications for proposed and accepted bets
