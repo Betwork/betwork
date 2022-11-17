@@ -244,3 +244,4 @@ While the team will consider feedback from application users when solidifying th
 3) Users will be able to bet on multiple sports.
 4) Users will be able to view their Balances and other Betting statistics pertaining to their betting history on their **My Bets** page.
 5) Users will be able to bet on games multiple days in advance instead of just the day of. 
+6) Mobile Notifications for proposed and accepted bets
