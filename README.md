@@ -59,7 +59,7 @@ Current capabilities to test:
 * Navigate to Find Friends to follow (add) new friends
 * Navigate to My Friends to view your current friends
 * Next, navigate to Manage Funds to deposit or withdraw money
-* Once you have money and friends, navigating to Live Bets shows you real-time the current games that can be bet on
+* Once you have money and friends, navigating to Live Bets shows you real-time the current games that can be bet on (RapidAPI Live)
 * Choose a game to bet on (Place Bet) and choose a friend to propose a bet against (Place Bet)
 * Enter an amount to bet, and confirm your bet
 * Navigate back to the home page where you will see your updated balance (with pending bets) and now go to My Bets
