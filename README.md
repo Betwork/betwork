@@ -228,7 +228,7 @@ It must be noted that while the above could work on a Windows machine, it has pr
 Apart from code examinations and extensive manual testing, the application also has an elaborate test suite.
 
 ### Cucumber
-Run cucumber tests for users (signing in/up/out), friends, and betting using
+Run cucumber tests for users (signing in/up/out), friends, posts, likes, comments and betting using
 
 ```
 rails g cucumber:install
@@ -237,12 +237,18 @@ rake db:migrate RAILS_ENV=test
 bundle exec cucumber
 ```
 
+At this point, *Cucumber Tests are providing over 87% coverage!*
+
+Given the nature of the project and the template we leveraged to get up and running, we are very proud of the testing converage here which primarily focuses on the new features we've developed.
+
 ### Rspec
 Run RSPEC tests for users (parameter validation), friends, odds, betting, and posting using
 
 ```
 rake spec
 ```
+
+At this point, *Rake Tests are providing over 65% coverage!*
 
 It must be noted that the features/functionality that we have tested apply solely to those that we deem relevant to our
 application from the template used. For this reason, a pure coverage report of `cucumber` or `rspec` tests will not
