@@ -218,9 +218,41 @@ And /I fill in the post with some text "([^"]*)"$/ do |text|
   send_keys(text)
 end
 
+And /I fill in the comment with some text "([^"]*)"$/ do |text|
+  send_keys(text)
+end
+
+And /I click the comment button/ do 
+  find(:xpath, '/html/body/div[1]/div/div[2]/div/form/input[2]').click
+end
+
 Then /I delete my post/ do
   find(:xpath, '/html/body/div[1]/div/div[2]/div[2]/div[1]/div/div[2]/div[2]/div/a[2]').click
 end
+
+And /I like the post from the posts page/ do
+  find(:xpath, '/html/body/div[1]/div/div[1]/div/div[3]/div/div[1]/form/button').click
+end
+
+And /I unlike the post from the posts page/ do
+  find(:xpath, '/html/body/div[1]/div/div[1]/div/div[3]/div/div[1]/form/button').click
+end
+
+And /I change teams to "([^"]*)"$/ do |team|
+  test = find(:id, "bet_betting_on").find(:xpath, '/html/body/div/form/select/option[2]').select_option
+  #test.click
+  #test.selectByVisibleText(team)
+end
+
+Then /I add a comment to the post/ do 
+  find(:xpath, '/html/body/div[1]/div/div[2]/div[2]/div[1]/div/div[3]/div/div[2]/a').click
+end
+
+And /I create a new comment/ do
+  find(:xpath, '/html/body/div[1]/div/div[2]/div/form/div/div').click
+end
+
+
 
 Given /I have a confirmed bet/ do 
   bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "")
