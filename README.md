@@ -62,7 +62,7 @@ Current capabilities to test:
 * Once you have money and friends, navigating to Live Bets shows you real-time the current games that can be bet on
 * Choose a game to bet on (Place Bet) and choose a friend to propose a bet against (Place Bet)
 * Enter an amount to bet, and confirm your bet
-* Navigate back to the home page and go to My Bets to see a list of your current bets that are
+* Navigate back to the home page and go to My Bets
 * On this page, you can see your confirmed, proposed, received, finished, and cancelled bets
 * Should you decide to cancel your proposed bet, you may do so by clicking Cancel Bet prior to the opponent accepting the bet
 * Should you decide to decline an incoming bet, you may also do so by clicking Cancel Bet
