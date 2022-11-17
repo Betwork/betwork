@@ -51,10 +51,10 @@ As the team proceeds with building out Betwork, it is concerned with which new F
 In its current state (Iteration 2), following are the major feature flows that the application supports:
 Login with Test User credentials or create your own via sign-up:
 
-email: test@betwork.com
-password: password
-Current capabilities to test:
+* email: test@betwork.com
+* password: password
 
+Current capabilities to test:
 * Login with given credentials or sign-up on your own
 * Navigate to Find Friends to follow (add) new friends
 * Navigate to My Friends to view your current friends
@@ -73,9 +73,8 @@ Current capabilities to test:
 Following are the improvements made by the team on Betwork from Iteration 1 to Iteration 2:
 1) `SimpleCov` was integrated into the test suite of the application so that test results and coverage could be easily reported.
 2) `setup.sh` allows a user to automate their local deployment while `heroku-deploy.sh` allows a user to automate their Heroku deployment. The user therefore need not have to manually run commands every time and also need not have to figure out if any extra commands are required.
-3) Live Odds - view real time NBA odds for upcoming games
+3) Live Odds - view real time NBA odds for today's games
 4) Live Bets - place bets against friends and once the matches finish, bets will be processed and paid out
-
 
 ## Codebase
 As mentioned above, the application was written as a final project for the course COMS 4152: Engineering Software as a Service in the Fall of 2022. Following are the notable features of the codebase:
@@ -83,7 +82,6 @@ As mentioned above, the application was written as a final project for the cours
 2) The original source code from the aforementioned article can be found at: https://github.com/scaffeinate/socify/tree/stable.
 3) Given that the team's primary goal is to implement their proposed betting features, the team has not devoted substantial effort to refactoring/removing unused/unwanted features of the original Socify application. As such, the codebase is heavier than it currently need be.
 4) The original framework was implemented in Ruby on Rails and Betwork team expanded on this. The application thus runs on `Ruby 2.6.6` and `Rails 5.2.0`.
-
 
 ## Workflow
 The team used Github to manage both the flow of work as well as the codebase itself in the following way:
@@ -98,7 +96,6 @@ The team used Github to manage both the flow of work as well as the codebase its
     2) the features currently being worked on by different team members
     3) the roadmap ahead until the next iteration of the project was due.
 8) The team followed a pair programmer concept where the reviewer of the PR took up the responsibility of writing the tests (both Cucumber and Rspec) for the same. This not only eased distribution of work but also ensured that at any given point of time, at least two team members had an in-depth understanding of the code surrounding each feature.
-
 
 ## Local Deployment
 In order to simplify the local setup of the application for a user wishing to test the application on their machine, a shell script was created to run all the necessary commands in the appropriate order. This script makes the following assumptions:
