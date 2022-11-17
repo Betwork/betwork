@@ -16,7 +16,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    # puts "we in the fucking update"
+    # puts "we in  the fucking update"
     # puts params
     if !is_number?(params[:balance_change]) or params[:balance_change].to_f < 0
       redirect_to user_path(@user), notice: "Invalid input, please input a number greater than zero"
@@ -56,10 +56,6 @@ class UsersController < ApplicationController
     render json: @user.following_users.as_json(only: [:id, :name]), root: false
   end
 
-  # def updateActualBalance
-  #   @user.update(params[:user])
-  # end
-
   private
 
   def user_params
@@ -68,13 +64,13 @@ class UsersController < ApplicationController
   end
 
   def check_ownership
-    puts "checking ownership"
+    # puts "checking ownership"
     # puts params
     # puts @user
     # puts @user.name
     # puts current_user
     # # puts current_user.name
-    puts "what's printed"
+    # puts "what's printed"
     redirect_to current_user, notice: 'Not Authorized' unless @user == current_user
   end
 

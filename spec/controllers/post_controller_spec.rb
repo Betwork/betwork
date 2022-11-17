@@ -9,7 +9,6 @@ RSpec.describe "Posts", type: :request do
     @params = { :id => 100, :post => { :content => 'hi' } }
     post posts_path(@params)
     allPosts = Post.all
-    puts allPosts.length()
     expect(allPosts[0].content).to eq('hi')
   end
 

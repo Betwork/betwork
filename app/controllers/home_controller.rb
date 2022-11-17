@@ -21,13 +21,15 @@ class HomeController < ApplicationController
     @friends = @user.all_following
     # puts "FRIENDS STUFF"
     # puts @friends.class
-    @users =  User.where.not(id: @friends.unshift(@user)).paginate(page: params[:page])
+    @users = User.where.not(id: @friends.unshift(@user)).paginate(page: params[:page])
   end
 
   private
+
   def set_user
     @user = current_user
   end
+
   def admin_user
     @admin_user = User.get_admin_user()
   end
