@@ -264,6 +264,7 @@ Given that the application is still under development (and currently ahead of th
 2) In order to control API requests, the status of confirmed bets is only updated when the **My Bets** page is visited. Thus, a user may need to visit the **My Bets** page and then the **Home Page** to see their actual balance.
 3) While application users currently do earn winnings based on the money line being displayed, bets do not force application users to bet different amounts based on which application user is incurring more risk.
 4) Ocassionally, some bets may not properly move from a pending state to a confirmed state when it is accepted. If you try to cancel a bet that is stuck in this transition, it may still reflect in the pending balance. We will work to solve these issues for the next iteration.  
+5) *Sign up Feature does not work on Heroku!* For the final iteration we plan to set it up so that users will actually receive email confirmations.
 
 ### Upcoming Features
 While the team will consider feedback from application users when solidifying the roadmap for the next iteration, some major features to look forward to are:
