@@ -62,12 +62,28 @@ Current capabilities to test:
 * Once you have money and friends, navigating to Live Bets shows you real-time the current games that can be bet on
 * Choose a game to bet on (Place Bet) and choose a friend to propose a bet against (Place Bet)
 * Enter an amount to bet, and confirm your bet
-* Navigate back to the home page and go to My Bets
+* Navigate back to the home page where you will see your updated balance (with pending bets) and now go to My Bets
 * On this page, you can see your confirmed, proposed, received, finished, and cancelled bets
 * Should you decide to cancel your proposed bet, you may do so by clicking Cancel Bet prior to the opponent accepting the bet
 * Should you decide to decline an incoming bet, you may also do so by clicking Cancel Bet
 * After winning (or losing) a bet, your balance will update in My Funds where you can withdraw your winnings
 * Sign out
+
+### Example Screenshots
+![Image1](https://i.imgur.com/oQWqdMO.png?raw=true "Title")
+Betwork home page that shows recent betting activity and your current balance.
+* Actual Balance is total funds to your name
+* Pending bets are the amount of money in escrow for pending bets
+* Available Balance is total funds you can actually bet with
+
+![Image2](https://i.imgur.com/wAJRxnX.png?raw=true "Title")
+Betwork Live Odds page that shows today's NBA game matchups with odds and time.
+
+![Image3](https://i.imgur.com/Cuj5T62.png?raw=true "Title")
+Betwork My Bets page that shows your confirmed, proposed, received, finished, and cancelled bets with action buttons to cancel outgoing/incoming bet proposals.
+
+![Image4](https://i.imgur.com/gdM6roM.png?raw=true "Title") 
+Betwork My Funds page that allows the user to see their balance and manage funds by depositing/withdrawing money.
 
 ### Improvements from Iteration 1
 Following are the improvements made by the team on Betwork from Iteration 1 to Iteration 2:
