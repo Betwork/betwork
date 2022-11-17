@@ -14,7 +14,7 @@ require 'webdrivers'
 
 
 Capybara.ignore_hidden_elements = false 
-Capybara.default_driver = :selenium_chrome
+Capybara.default_driver = :selenium_chrome_headless
 
 # frozen_string_literal: true
 
