@@ -48,13 +48,11 @@ As the team proceeds with building out Betwork, it is concerned with which new F
 
 
 ### Major Flows
-In its current state (Iteration 2), following are the major feature flows that the application supports:
-Login with Test User credentials or create your own via sign-up:
-
+In its current state (Iteration 2), the application can be tested using the Test User credentials (or create your own via sign-up locally):
 * email: test@betwork.com
 * password: password
 
-Current capabilities to test:
+Following are the major feature flows that the application supports with:
 * Login with given credentials or sign-up on your own (Heroku Sign Up is NOT working! Only local sign-up!)
 * Navigate to Find Friends to follow (add) new friends
 * Navigate to My Friends to view your current friends
@@ -68,6 +66,10 @@ Current capabilities to test:
 * Should you decide to decline an incoming bet, you may also do so by clicking Cancel Bet
 * After winning (or losing) a bet, your balance will update in My Funds where you can withdraw your winnings (winnings will automatically be paid out after a game has been completed)
 * Sign out
+
+In order to test what it is like being on the receiving end of some of the above, you can use the Test User 2 credentials (or create your own via sign-up locally):
+* email: test2@betwork.com
+* password: password
 
 ### Example Screenshots
 ![Image1](https://i.imgur.com/oQWqdMO.png?raw=true "Title")
