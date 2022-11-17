@@ -7,7 +7,7 @@
 Betwork is a sports betting application built by Columbia students as a final project for the course COMS 4152: Engineering Software as a Service in the Fall of 2022. The application primarily targets sports enthusiasts who are tired of losing money to the house and would rather be able to bet directly against their fellow sports enthusiasts.
 
 
-## Table of contents
+## Table of Contents
 1. [Team](#team)
 2. [Quick Links](#quick-links)
 3. [Introduction](#introduction)
@@ -239,7 +239,7 @@ bundle exec cucumber
 
 At this point, *Cucumber Tests are providing over 87% coverage!*
 
-Given the nature of the project and the template we leveraged to get up and running, we are very proud of the testing converage here which primarily focuses on the new features we've developed.
+Given the nature of the project and the template we leveraged to get up and running, we are very proud of the testing coverage here which primarily focuses on the new features we've developed.
 
 ### Rspec
 Run RSPEC tests for users (parameter validation), friends, odds, betting, and posting using
