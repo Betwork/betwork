@@ -263,6 +263,7 @@ Given that the application is still under development (and currently ahead of th
 1) A user needs to have sufficient funds to cover a received bet at the time the bet was placed. Currently, if a user receives a bet - the amount for which is greater than their available balance, they will need to cancel the bet, add funds and then propose the bet themselves. In future iterations, caching will be handled so as to allow a user to add funds to match a bet amount - even after a bet has been proposed to them.
 2) In order to control API requests, the status of confirmed bets is only updated when the **My Bets** page is visited. Thus, a user may need to visit the **My Bets** page and then the **Home Page** to see their actual balance.
 3) While application users currently do earn winnings based on the money line being displayed, bets do not force application users to bet different amounts based on which application user is incurring more risk.
+4) Ocassionally, some bets may not properly move from a pending state to a confirmed state when it is accepted. If you try to cancel a bet that is stuck in this transition, it may still reflect in the pending balance. We will work to solve these issues for the next iteration.  
 
 ### Upcoming Features
 While the team will consider feedback from application users when solidifying the roadmap for the next iteration, some major features to look forward to are:
