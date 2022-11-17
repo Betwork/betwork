@@ -31,7 +31,7 @@ Our team consists of the following four students currently enrolled in Columbia 
 ## Quick Links
 To quickly access any of the critical deliverables of the project, use the links below:
 1) Betwork's Github Repo: https://github.com/Betwork/betwork.git
-2) Heroku Deployment of Betwork: https://boiling-river-69461.herokuapp.com/
+2) Heroku Deployment of Betwork: https://obscure-mountain-53319.herokuapp.com/
 
 
 ## Introduction
