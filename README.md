@@ -66,7 +66,7 @@ Current capabilities to test:
 * On this page, you can see your confirmed, proposed, received, finished, and cancelled bets
 * Should you decide to cancel your proposed bet, you may do so by clicking Cancel Bet prior to the opponent accepting the bet
 * Should you decide to decline an incoming bet, you may also do so by clicking Cancel Bet
-* After winning (or losing) a bet, your balance will update in My Funds where you can withdraw your winnings
+* After winning (or losing) a bet, your balance will update in My Funds where you can withdraw your winnings (winnings will automatically be paid out after a game has been completed)
 * Sign out
 
 ### Example Screenshots
