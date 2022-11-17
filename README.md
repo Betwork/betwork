@@ -250,7 +250,7 @@ Run RSPEC tests for users (parameter validation), friends, odds, betting, and po
 rake spec
 ```
 
-At this point, *Rake Tests are providing over 65% coverage!*
+At this point, *Rake Tests are providing over 71% coverage!*
 
 It must be noted that the features/functionality that we have tested apply solely to those that we deem relevant to our
 application from the template used. For this reason, a pure coverage report of `cucumber` or `rspec` tests will not
