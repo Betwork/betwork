@@ -4,6 +4,7 @@ require 'uri'
 require 'net/http'
 require 'openssl'
 require 'json'
+require 'aws-sdk-dynamodb'
 
 class BetsController < ApplicationController
   before_action :set_user
@@ -233,6 +234,27 @@ class BetsController < ApplicationController
     test = { "content" => content_string }
     @post = admin_user.posts.new(test)
     @post.save
+    unique_hash = @bet.user_one_name + '_' + @bet.user_two_name + '_' + @bet.home_team_name + '_' + @bet.away_team_name + '_' + @bet.betting_on + '_' + @bet.amount.to_s + '_' + @bet.date + '_' + @bet.status
+    dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    table_item = {
+      table_name: 'bets',
+      item: {
+        user_names_game: unique_hash,
+        user_one_name: @bet.user_one_name,
+        user_two_name: @bet.user_two_name,
+        user_id_one: @bet.user_id_one,
+        user_id_two: @bet.user_id_two,
+        home_team_name: @bet.home_team_name,
+        away_team_name: @bet.away_team_name,
+        betting_on: @bet.betting_on,
+        home_money_line: @bet.home_money_line,
+        away_money_line: @bet.away_money_line,
+        amount: @bet.amount,
+        date: @bet.date,
+        status: @bet.status
+      }
+    }
+    dynamodb_client.put_item(table_item)
     redirect_to allbets_bet_path(current_user), notice: "Bet Accepted!"
   end
 
