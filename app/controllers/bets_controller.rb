@@ -256,6 +256,60 @@ class BetsController < ApplicationController
       }
     }
     dynamodb_client.put_item(table_item)
+    sender = 'andybirla96@gmail.com'
+    recipient_user = User.find_by(id: @bet.user_id_one)
+    recipient = recipient_user.email
+    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    if (not(allowed_emails.include? recipient))
+      recipient = 'andybirla96@gmail.com'
+    end
+    subject = '[Betwork] Your bet with ' + @bet.user_two_name + ' was confirmed.'
+    textbody = 'Hi ' + @bet.user_one_name + '!' + "\n" + "\n"
+    textbody += @bet.user_two_name + ' confirmed the bet you placed against them! '
+    if (@bet.betting_on == 'Home Team')
+      team_1 = @bet.home_team_name
+      team_2 = @bet.away_team_name
+    else
+      team_2 = @bet.home_team_name
+      team_1 = @bet.away_team_name
+    end
+    textbody += 'They agreed to bet USD' + @bet.amount.to_s + ' on ' + team_2 + ' in ' + @bet.home_team_name + ' vs. ' + @bet.away_team_name + ' on ' + @bet.date + '.' + "\n" + "\n"
+    textbody += 'Log into Betwork to view and/or cancel the bet.'
+    encoding = 'UTF-8'
+    ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    # Try to send the email.
+    begin
+      # Provide the contents of the email.
+      ses.send_email(
+        destination: {
+          to_addresses: [
+            recipient
+          ]
+        },
+        message: {
+          body: {
+            text: {
+              charset: encoding,
+              data: textbody
+            }
+          },
+          subject: {
+            charset: encoding,
+            data: subject
+          }
+        },
+        source: sender,
+      # Uncomment the following line to use a configuration set.
+      # configuration_set_name: configsetname,
+        )
+
+      puts 'Email sent to ' + recipient
+
+
+      # If something goes wrong, display an error message.
+    rescue Aws::SES::Errors::ServiceError => error
+      puts "Email not sent. Error message: #{error}"
+    end
     redirect_to allbets_bet_path(current_user), notice: "Bet Accepted!"
   end
 
