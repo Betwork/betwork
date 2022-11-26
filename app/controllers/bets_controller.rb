@@ -333,6 +333,22 @@ class BetsController < ApplicationController
       test = { "content" => content_string }
       @post = admin_user.posts.new(test)
       @post.save
+      dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+      unique_hash = @bet.user_one_name + '_' + @bet.user_two_name + '_' + @bet.home_team_name + '_' + @bet.away_team_name + '_' + @bet.betting_on + '_' + @bet.amount.to_s + '_' + @bet.date + '_' + @bet.status
+      resp = dynamodb_client.update_item({
+                                  expression_attribute_names: {
+                                    "#S" => "status"
+                                  },
+                                  expression_attribute_values: {
+                                    ":s" => "cancelled"
+                                  },
+                                  key: {
+                                    "user_names_game" => unique_hash
+                                  },
+                                  return_values: "ALL_NEW",
+                                  table_name: "bets",
+                                  update_expression: "SET #S = :s",
+                                })
     elsif ((@status == 'proposed') && (current_user.name == @bet.user_one_name))
       current_user.increase_balance_in_escrow(-@amount)
     elsif ((@status == 'proposed') && (current_user.name == @bet.user_two_name))
