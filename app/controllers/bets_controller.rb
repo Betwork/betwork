@@ -245,6 +245,8 @@ class BetsController < ApplicationController
         user_two_name: @bet.user_two_name,
         user_id_one: @bet.user_id_one,
         user_id_two: @bet.user_id_two,
+        user_one_email: @original.email,
+        user_two_email: @friend.email,
         home_team_name: @bet.home_team_name,
         away_team_name: @bet.away_team_name,
         betting_on: @bet.betting_on,
