@@ -297,7 +297,12 @@ class BetsController < ApplicationController
       current_user.increase_balance_in_escrow(@bet.amount)
       render js: "window.location='#{confirm_bet_path(@bet)}'"
       sender = 'andybirla96@gmail.com'
-      recipient = 'andybirla96@gmail.com'
+      recipient_user = User.find_by(id: @bet.user_id_two)
+      recipient = recipient_user.email
+      allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+      if (not(allowed_emails.include? recipient))
+        recipient = 'andybirla96@gmail.com'
+      end
       subject = '[Betwork] A new bet has been proposed to you!'
       textbody = 'Hi ' + @bet.user_two_name + '!' + "\n" + "\n"
       textbody += @bet.user_one_name + ' wants to place a bet against you! '
