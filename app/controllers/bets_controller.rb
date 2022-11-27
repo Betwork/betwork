@@ -305,12 +305,12 @@ class BetsController < ApplicationController
       # configuration_set_name: configsetname,
         )
 
-      puts 'Email sent to ' + recipient
+      puts 'Confirmation Email sent to ' + recipient
 
 
       # If something goes wrong, display an error message.
     rescue Aws::SES::Errors::ServiceError => error
-      puts "Email not sent. Error message: #{error}"
+      puts "Confirmation Email not sent. Error message: #{error}"
     end
     redirect_to allbets_bet_path(current_user), notice: "Bet Accepted!"
   end
@@ -356,6 +356,64 @@ class BetsController < ApplicationController
     end
     @bet.status = 'cancelled'
     @bet.save
+    sender = 'andybirla96@gmail.com'
+    recipient = @friend.email
+    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    if (not(allowed_emails.include? recipient))
+      recipient = 'andybirla96@gmail.com'
+    end
+    subject = '[Betwork] Your bet with ' + current_user.name + ' was cancelled.'
+    textbody = 'Hi ' + @friend.name + '!' + "\n" + "\n"
+    textbody += current_user.name + ' cancelled a bet between you and them! '
+    if (@bet.betting_on == 'Home Team')
+      team_1 = @bet.home_team_name
+      team_2 = @bet.away_team_name
+    else
+      team_2 = @bet.home_team_name
+      team_1 = @bet.away_team_name
+    end
+    if (current_user.name == @bet.user_one_name)
+      opposition_team = team_2
+    else
+      opposition_team = team_1
+    end
+    textbody += 'Your bet was for USD' + @bet.amount.to_s + ' on ' + opposition_team + ' in ' + @bet.home_team_name + ' vs. ' + @bet.away_team_name + ' on ' + @bet.date + '.' + "\n" + "\n"
+    textbody += 'Log into Betwork to view the cancelled bet.'
+    encoding = 'UTF-8'
+    ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    # Try to send the email.
+    begin
+      # Provide the contents of the email.
+      ses.send_email(
+        destination: {
+          to_addresses: [
+            recipient
+          ]
+        },
+        message: {
+          body: {
+            text: {
+              charset: encoding,
+              data: textbody
+            }
+          },
+          subject: {
+            charset: encoding,
+            data: subject
+          }
+        },
+        source: sender,
+      # Uncomment the following line to use a configuration set.
+      # configuration_set_name: configsetname,
+        )
+
+      puts 'Cancellation Email sent to ' + recipient
+
+
+      # If something goes wrong, display an error message.
+    rescue Aws::SES::Errors::ServiceError => error
+      puts "Cancellation Email not sent. Error message: #{error}"
+    end
     redirect_to allbets_bet_path(current_user), notice: "Bet Cancelled!"
   end
 
@@ -415,12 +473,12 @@ class BetsController < ApplicationController
         # configuration_set_name: configsetname,
           )
 
-        puts 'Email sent to ' + recipient
+        puts 'Proposition Email sent to ' + recipient
 
 
         # If something goes wrong, display an error message.
       rescue Aws::SES::Errors::ServiceError => error
-        puts "Email not sent. Error message: #{error}"
+        puts "Proposition Email not sent. Error message: #{error}"
       end
     else
       respond_to do |format|
