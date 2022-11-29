@@ -61,6 +61,7 @@ class BetsController < ApplicationController
     # for each bet
     @user_bets.each do |bet|
 
+
       # only proceed with confirmed bets
       if (bet.status == 'confirmed')
 
@@ -179,6 +180,17 @@ class BetsController < ApplicationController
               # change the status of the bet and save it
               bet.status = 'finished'
               bet.save
+            else
+              date_string = bet['date']
+              date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+              if (date_object.hour < 12)
+                date_object = date_object + (12/24.0)
+              end
+              early = date_object - (2/24.0)
+              current_time = DateTime.now
+              toolate_boolean = current_time > early
+              bet.toolate = toolate_boolean
+              bet.save
             end
 
             # whether or not the game is finished,
@@ -187,6 +199,24 @@ class BetsController < ApplicationController
             break
           end
         end
+      elsif (bet.status == 'proposed')
+        if not((team_names[bet.home_team_name] == 'New York Knicks') &&
+          (team_names[bet.away_team_name] == 'Oklahoma City Thunder'))
+          date_string = bet['date']
+          date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+          if (date_object.hour < 12)
+            date_object = date_object + (12/24.0)
+          end
+          early = date_object - (2/24.0)
+          current_time = DateTime.now
+          toolate_boolean = current_time > early
+          bet.toolate = toolate_boolean
+          if (toolate_boolean)
+            bet.status == 'cancelled'
+          end
+          bet.save
+        end
+
       end
     end
   end

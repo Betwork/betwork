@@ -61,7 +61,11 @@
           </td>
         <%end%>
         <td>
-          <%= link_to 'Cancel Bet', cancel_bet_path(odd), :class => 'btn btn-primary' %>
+          <% if odd.toolate %>
+            <%= link_to 'Cancel Bet', cancel_bet_path(odd), :class => 'btn btn-primary disabled' %>
+          <%else%>
+            <%= link_to 'Cancel Bet', cancel_bet_path(odd), :class => 'btn btn-primary' %>
+          <% end %>
         </td>
       </tr>
       <% end %>
