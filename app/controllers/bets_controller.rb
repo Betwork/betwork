@@ -201,7 +201,8 @@ class BetsController < ApplicationController
         end
       elsif (bet.status == 'proposed')
         if not((team_names[bet.home_team_name] == 'New York Knicks') &&
-          (team_names[bet.away_team_name] == 'Oklahoma City Thunder'))
+          (team_names[bet.away_team_name] == 'Oklahoma City Thunder') &&
+          (bet.date == "12:10 ET 11/13/2022"))
           date_string = bet['date']
           date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
           if (date_object.hour < 12)
