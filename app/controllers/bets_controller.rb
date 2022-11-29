@@ -213,7 +213,7 @@ class BetsController < ApplicationController
           toolate_boolean = current_time > early
           bet.toolate = toolate_boolean
           if (toolate_boolean)
-            bet.status == 'cancelled'
+            bet.status = 'cancelled'
           end
           bet.save
         end
