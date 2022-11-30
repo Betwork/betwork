@@ -24,7 +24,7 @@ Given /the Betwork test database exists/ do
   genders = ['male', 'female']
   password = 'betwork'
 
-  User.populate 5 do |user|
+  User.populate 4 do |user|
     user.name = Faker::Name.name
     user.email = Faker::Internet.email
     user.sex = genders
@@ -36,6 +36,12 @@ Given /the Betwork test database exists/ do
     user.posts_count = 0
     puts "created user #{user.name}"
   end
+
+    admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
+    admin_user.actualBalance = 5000
+    #admin_user.balanceInEscrow = 2222.24
+    admin_user.skip_confirmation!
+    admin_user.save!
 
   Odd.populate 1 do |bet|
     bet.home_team_name = "Los Angeles Lakers"
@@ -167,11 +173,25 @@ When /I last press follow/ do
 end
 
 When /I place a bet on the first game/ do
-  visit '/odds/1/friends'
+  find(:xpath, '/html/body/div/table/tbody/tr[1]/td[6]/a').click
+  #visit '/odds/1/friends'
+end
+
+And /I cancel my bet/ do 
+  find(:xpath, '/html/body/div/table[2]/tbody/tr/td[9]/a').click
+end
+
+And /I accept a proposed bet/ do 
+  find(:xpath, '/html/body/div/table[3]/tbody/tr/td[10]/a').click
+end
+
+And /I cancel a confirmed bet/ do
+  find(:xpath, '/html/body/div/table[1]/tbody/tr/td[9]/a').click
 end
 
 When /I first press place bet/ do
-  visit '/bets/1/placebet?amount=-1&friend_id=7&game=1'
+  find(:xpath, '/html/body/div/div/div[2]/div[1]/div/div[2]/div/div/a').click
+  #visit '/bets/1/placebet?amount=-1&friend_id=7&game=1'
 end
 
 Given /my test friend exists/ do
@@ -190,6 +210,56 @@ Given /I have placed a bet/ do # STUCK
   User.where(name: "Rails").update_all(balanceInEscrow: 50)
 end
 
+When /I create a new post/ do
+  find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/form/div[1]/div').click
+end
+
+And /I fill in the post with some text "([^"]*)"$/ do |text|
+  send_keys(text)
+end
+
+And /I fill in the comment with some text "([^"]*)"$/ do |text|
+  send_keys(text)
+end
+
+And /I click the comment button/ do 
+  find(:xpath, '/html/body/div[1]/div/div[2]/div/form/input[2]').click
+end
+
+Then /I delete my post/ do
+  find(:xpath, '/html/body/div[1]/div/div[2]/div[2]/div[1]/div/div[2]/div[2]/div/a[2]').click
+end
+
+And /I like the post from the posts page/ do
+  find(:xpath, '/html/body/div[1]/div/div[1]/div/div[3]/div/div[1]/form/button').click
+end
+
+And /I unlike the post from the posts page/ do
+  find(:xpath, '/html/body/div[1]/div/div[1]/div/div[3]/div/div[1]/form/button').click
+end
+
+And /I change teams to "([^"]*)"$/ do |team|
+  test = find(:id, "bet_betting_on").find(:xpath, '/html/body/div/form/select/option[2]').select_option
+  #test.click
+  #test.selectByVisibleText(team)
+end
+
+Then /I add a comment to the post/ do 
+  find(:xpath, '/html/body/div[1]/div/div[2]/div[2]/div[1]/div/div[3]/div/div[2]/a').click
+end
+
+And /I create a new comment/ do
+  find(:xpath, '/html/body/div[1]/div/div[2]/div/form/div/div').click
+end
+
+
+
+Given /I have a confirmed bet/ do 
+  bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "")
+  bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 50)
+end 
+
 Then /I sleep/ do
-  sleep(60)
+  sleep(100)
 end

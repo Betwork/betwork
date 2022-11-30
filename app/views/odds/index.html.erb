@@ -29,7 +29,7 @@
           <%= odd.away_money_line%>
         </td>
         <td>
-        <% if !odd.home_money_line  || !odd.away_money_line %>
+        <% if !odd.home_money_line  || !odd.away_money_line || odd.toolate %>
         <%= link_to 'Propose Bet', friends_odd_path(odd, id:current_user.id), :class => 'btn btn-primary disabled' %>
         <%else%>
         <%= link_to 'Propose Bet', friends_odd_path(odd), :class => 'btn btn-primary' %>
