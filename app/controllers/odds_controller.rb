@@ -2,6 +2,7 @@ require 'uri'
 require 'net/http'
 require 'openssl'
 require 'json'
+require 'date'
 
 class OddsController < ApplicationController
   before_action :set_user
@@ -16,21 +17,61 @@ class OddsController < ApplicationController
       "away_team_name": "OKC",
       "home_money_line": -210,
       "away_money_line": 175,
-      "date": "12:10 ET 11/13/2022"
+      "date": "12:10 ET 11/13/2022",
+      "toolate": false
     )
     old_odd.save
+
+    date_string = '8:10 ET 11/26/2022'
+    date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+    if (date_object.hour < 12)
+      date_object = date_object + (12/24.0)
+    end
+    early = date_object - (2/24.0)
+    current_time = DateTime.now
+    toolate_boolean = current_time > early
+
+    old_odd_expired = Odd.create!(
+      "home_team_name": "SAS",
+      "away_team_name": "LAL",
+      "home_money_line": 120,
+      "away_money_line": -140,
+      "date": "8:10 ET 11/26/2022",
+      "toolate": toolate_boolean
+    )
+    old_odd_expired.save
+
+    old_odd_unexpired = Odd.create!(
+      "home_team_name": "WAS",
+      "away_team_name": "DAL",
+      "home_money_line": 120,
+      "away_money_line": -130,
+      "date": "7:00 ET 11/11/2022",
+      "toolate": false
+    )
+    old_odd_unexpired.save
+
     odds = find_nba_odds()
     odds.each do |odd|
       if (!odd['homeTeam'].nil? and
         !odd['awayTeam'].nil? and
         !odd['homeMoneyLine'].nil? and
         !odd['awayMoneyLine'].nil?)
+        date_string = odd['startTime']
+        date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+        if (date_object.hour < 12)
+          date_object = date_object + (12/24.0)
+        end
+        early = date_object - (2/24.0)
+        current_time = DateTime.now
+        toolate_boolean = current_time > early
         new_odd = Odd.create!(
           "home_team_name": odd['homeTeam'],
           "away_team_name": odd['awayTeam'],
           "home_money_line": odd['homeMoneyLine'],
           "away_money_line": odd['awayMoneyLine'],
-          "date": odd['startTime']
+          "date": odd['startTime'],
+          "toolate": toolate_boolean
         )
         new_odd.save
       end

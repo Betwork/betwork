@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_11_084505) do
+ActiveRecord::Schema.define(version: 2022_11_29_074813) do
 
   create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2022_11_11_084505) do
     t.integer "user_id_two"
     t.string "date"
     t.string "status"
+    t.boolean "toolate"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -152,6 +153,7 @@ ActiveRecord::Schema.define(version: 2022_11_11_084505) do
     t.integer "home_money_line"
     t.integer "away_money_line"
     t.string "date"
+    t.boolean "toolate"
   end
 
   create_table "posts", force: :cascade do |t|
