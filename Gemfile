@@ -80,6 +80,8 @@ gem 'active_model_serializers'
 
 gem 'json'
 
+gem 'aws-sdk'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

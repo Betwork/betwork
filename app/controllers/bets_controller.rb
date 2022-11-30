@@ -4,6 +4,8 @@ require 'uri'
 require 'net/http'
 require 'openssl'
 require 'json'
+require 'aws-sdk-dynamodb'
+require 'aws-sdk-ses'
 
 class BetsController < ApplicationController
   before_action :set_user
@@ -264,6 +266,83 @@ class BetsController < ApplicationController
     test = { "content" => content_string }
     @post = admin_user.posts.new(test)
     @post.save
+    unique_hash = @bet.user_one_name + '_' + @bet.user_two_name + '_' + @bet.home_team_name + '_' + @bet.away_team_name + '_' + @bet.betting_on + '_' + @bet.amount.to_s + '_' + @bet.date + '_' + @bet.status
+    dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    table_item = {
+      table_name: 'bets',
+      item: {
+        user_names_game: unique_hash,
+        user_one_name: @bet.user_one_name,
+        user_two_name: @bet.user_two_name,
+        user_id_one: @bet.user_id_one,
+        user_id_two: @bet.user_id_two,
+        user_one_email: @original.email,
+        user_two_email: @friend.email,
+        home_team_name: @bet.home_team_name,
+        away_team_name: @bet.away_team_name,
+        betting_on: @bet.betting_on,
+        home_money_line: @bet.home_money_line,
+        away_money_line: @bet.away_money_line,
+        amount: @bet.amount,
+        date: @bet.date,
+        status: @bet.status
+      }
+    }
+    dynamodb_client.put_item(table_item)
+    sender = 'andybirla96@gmail.com'
+    recipient_user = User.find_by(id: @bet.user_id_one)
+    recipient = recipient_user.email
+    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    if (not(allowed_emails.include? recipient))
+      recipient = 'andybirla96@gmail.com'
+    end
+    subject = '[Betwork] Your bet with ' + @bet.user_two_name + ' was confirmed.'
+    textbody = 'Hi ' + @bet.user_one_name + '!' + "\n" + "\n"
+    textbody += @bet.user_two_name + ' confirmed the bet you placed against them! '
+    if (@bet.betting_on == 'Home Team')
+      team_1 = @bet.home_team_name
+      team_2 = @bet.away_team_name
+    else
+      team_2 = @bet.home_team_name
+      team_1 = @bet.away_team_name
+    end
+    textbody += 'They agreed to bet USD' + @bet.amount.to_s + ' on ' + team_2 + ' in ' + @bet.home_team_name + ' vs. ' + @bet.away_team_name + ' on ' + @bet.date + '.' + "\n" + "\n"
+    textbody += 'Log into Betwork to view and/or cancel the bet.'
+    encoding = 'UTF-8'
+    ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    # Try to send the email.
+    begin
+      # Provide the contents of the email.
+      ses.send_email(
+        destination: {
+          to_addresses: [
+            recipient
+          ]
+        },
+        message: {
+          body: {
+            text: {
+              charset: encoding,
+              data: textbody
+            }
+          },
+          subject: {
+            charset: encoding,
+            data: subject
+          }
+        },
+        source: sender,
+      # Uncomment the following line to use a configuration set.
+      # configuration_set_name: configsetname,
+        )
+
+      puts 'Confirmation Email sent to ' + recipient
+
+
+      # If something goes wrong, display an error message.
+    rescue Aws::SES::Errors::ServiceError => error
+      puts "Confirmation Email not sent. Error message: #{error}"
+    end
     redirect_to allbets_bet_path(current_user), notice: "Bet Accepted!"
   end
 
@@ -285,6 +364,22 @@ class BetsController < ApplicationController
       test = { "content" => content_string }
       @post = admin_user.posts.new(test)
       @post.save
+      dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+      unique_hash = @bet.user_one_name + '_' + @bet.user_two_name + '_' + @bet.home_team_name + '_' + @bet.away_team_name + '_' + @bet.betting_on + '_' + @bet.amount.to_s + '_' + @bet.date + '_' + @bet.status
+      resp = dynamodb_client.update_item({
+                                  expression_attribute_names: {
+                                    "#S" => "status"
+                                  },
+                                  expression_attribute_values: {
+                                    ":s" => "cancelled"
+                                  },
+                                  key: {
+                                    "user_names_game" => unique_hash
+                                  },
+                                  return_values: "ALL_NEW",
+                                  table_name: "bets",
+                                  update_expression: "SET #S = :s",
+                                })
     elsif ((@status == 'proposed') && (current_user.name == @bet.user_one_name))
       current_user.increase_balance_in_escrow(-@amount)
     elsif ((@status == 'proposed') && (current_user.name == @bet.user_two_name))
@@ -292,6 +387,64 @@ class BetsController < ApplicationController
     end
     @bet.status = 'cancelled'
     @bet.save
+    sender = 'andybirla96@gmail.com'
+    recipient = @friend.email
+    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    if (not(allowed_emails.include? recipient))
+      recipient = 'andybirla96@gmail.com'
+    end
+    subject = '[Betwork] Your bet with ' + current_user.name + ' was cancelled.'
+    textbody = 'Hi ' + @friend.name + '!' + "\n" + "\n"
+    textbody += current_user.name + ' cancelled a bet between you and them! '
+    if (@bet.betting_on == 'Home Team')
+      team_1 = @bet.home_team_name
+      team_2 = @bet.away_team_name
+    else
+      team_2 = @bet.home_team_name
+      team_1 = @bet.away_team_name
+    end
+    if (current_user.name == @bet.user_one_name)
+      opposition_team = team_2
+    else
+      opposition_team = team_1
+    end
+    textbody += 'Your bet was for USD' + @bet.amount.to_s + ' on ' + opposition_team + ' in ' + @bet.home_team_name + ' vs. ' + @bet.away_team_name + ' on ' + @bet.date + '.' + "\n" + "\n"
+    textbody += 'Log into Betwork to view the cancelled bet.'
+    encoding = 'UTF-8'
+    ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    # Try to send the email.
+    begin
+      # Provide the contents of the email.
+      ses.send_email(
+        destination: {
+          to_addresses: [
+            recipient
+          ]
+        },
+        message: {
+          body: {
+            text: {
+              charset: encoding,
+              data: textbody
+            }
+          },
+          subject: {
+            charset: encoding,
+            data: subject
+          }
+        },
+        source: sender,
+      # Uncomment the following line to use a configuration set.
+      # configuration_set_name: configsetname,
+        )
+
+      puts 'Cancellation Email sent to ' + recipient
+
+
+      # If something goes wrong, display an error message.
+    rescue Aws::SES::Errors::ServiceError => error
+      puts "Cancellation Email not sent. Error message: #{error}"
+    end
     redirect_to allbets_bet_path(current_user), notice: "Bet Cancelled!"
   end
 
@@ -299,11 +452,65 @@ class BetsController < ApplicationController
   end
 
   def create
-    #puts "create"
+    # puts "created over here andy"
     @bet = Bet.new(bet_params)
     if @bet.save
       current_user.increase_balance_in_escrow(@bet.amount)
       render js: "window.location='#{confirm_bet_path(@bet)}'"
+      sender = 'andybirla96@gmail.com'
+      recipient_user = User.find_by(id: @bet.user_id_two)
+      recipient = recipient_user.email
+      allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+      if (not(allowed_emails.include? recipient))
+        recipient = 'andybirla96@gmail.com'
+      end
+      subject = '[Betwork] A new bet has been proposed to you!'
+      textbody = 'Hi ' + @bet.user_two_name + '!' + "\n" + "\n"
+      textbody += @bet.user_one_name + ' wants to place a bet against you! '
+      if (@bet.betting_on == 'Home Team')
+        team_1 = @bet.home_team_name
+        team_2 = @bet.away_team_name
+      else
+        team_2 = @bet.home_team_name
+        team_1 = @bet.away_team_name
+      end
+      textbody += 'They want to bet USD' + @bet.amount.to_s + ' on ' + team_1 + ' in ' + @bet.home_team_name + ' vs. ' + @bet.away_team_name + ' on ' + @bet.date + '.' + "\n" + "\n"
+      textbody += 'Log into Betwork to view and cancel or accept the bet.'
+      encoding = 'UTF-8'
+      ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+      # Try to send the email.
+      begin
+        # Provide the contents of the email.
+        ses.send_email(
+          destination: {
+            to_addresses: [
+              recipient
+            ]
+          },
+          message: {
+            body: {
+              text: {
+                charset: encoding,
+                data: textbody
+              }
+            },
+            subject: {
+              charset: encoding,
+              data: subject
+            }
+          },
+          source: sender,
+        # Uncomment the following line to use a configuration set.
+        # configuration_set_name: configsetname,
+          )
+
+        puts 'Proposition Email sent to ' + recipient
+
+
+        # If something goes wrong, display an error message.
+      rescue Aws::SES::Errors::ServiceError => error
+        puts "Proposition Email not sent. Error message: #{error}"
+      end
     else
       respond_to do |format|
         format.js
