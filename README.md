@@ -183,6 +183,7 @@ Similar to the above, a shell script was added to automate the deployment of the
 1) The user has installed the Heroku CLI.
 2) The user has a Heroku account with the ability to add at least 1 new application.
 3) The user has logged into the Heroku CLI using `heroku login` or `heroku login -i`.
+4) The user sign-up feature will not work for deployments to Heroku due to API KEY / Privacy requirements by Twilio's SendGrid solution/
 
 If the above is satisfied, the user need only run the following command to deploy the application to Heroku:
 ```
