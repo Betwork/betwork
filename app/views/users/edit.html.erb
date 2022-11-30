@@ -42,10 +42,6 @@
           <%= f.label :sex %><br>
           <%= f.select :sex, options_for_seasons, class: 'form-control', prompt: 'Select One' %>
         </div>
-        <div class="form-group">
-          <%= f.label :actualBalance %>
-          <%= f.text_field :actualBalance, placeholder: 'Balance', class: 'form-control' %>
-        </div>
         <div class="actions">
           <%= submit_tag 'Update', class: 'btn btn-primary' %>
         </div>

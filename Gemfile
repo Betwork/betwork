@@ -33,6 +33,7 @@ gem 'webdrivers', '4.0'
 gem 'email_spec'
 gem 'simplecov'
 gem 'warden'
+gem 'twilio-ruby'
 
 #Need this gem for API calls
 gem 'excon'

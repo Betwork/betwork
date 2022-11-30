@@ -6,6 +6,7 @@ require 'openssl'
 require 'json'
 require 'aws-sdk-dynamodb'
 require 'aws-sdk-ses'
+require 'twilio-ruby'
 
 class BetsController < ApplicationController
   before_action :set_user
@@ -190,7 +191,7 @@ class BetsController < ApplicationController
               end
               early = date_object - (2/24.0)
               current_time = DateTime.now
-              toolate_boolean = current_time > early
+              toolate_boolean = current_time.ctime > early.ctime
               bet.toolate = toolate_boolean
               bet.save
             end
@@ -210,9 +211,9 @@ class BetsController < ApplicationController
           if (date_object.hour < 12)
             date_object = date_object + (12/24.0)
           end
-          early = date_object - (2/24.0)
+          #early = date_object - (2/24.0)
           current_time = DateTime.now
-          toolate_boolean = current_time > early
+          toolate_boolean = current_time.ctime > date_object.ctime
           bet.toolate = toolate_boolean
           if (toolate_boolean)
             bet.status = 'cancelled'
@@ -292,9 +293,16 @@ class BetsController < ApplicationController
     sender = 'andybirla96@gmail.com'
     recipient_user = User.find_by(id: @bet.user_id_one)
     recipient = recipient_user.email
+    recipient_phone_number = recipient_user.phone_number
     allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    allowed_numbers = ['3108479740']
     if (not(allowed_emails.include? recipient))
       recipient = 'andybirla96@gmail.com'
+    end
+    if (not(allowed_numbers.include? recipient_phone_number))
+      recipient_phone_number = '+13108479740'
+    else 
+      recipient_phone_number = "+1" + recipient_phone_number
     end
     subject = '[Betwork] Your bet with ' + @bet.user_two_name + ' was confirmed.'
     textbody = 'Hi ' + @bet.user_one_name + '!' + "\n" + "\n"
@@ -310,6 +318,22 @@ class BetsController < ApplicationController
     textbody += 'Log into Betwork to view and/or cancel the bet.'
     encoding = 'UTF-8'
     ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    twilio_client = Twilio::REST::Client.new(
+      'AC301826b0bd8c63c945aeae5288b45720',
+      'f3a42abcb29d4bb549cd003b2dc7d749'
+    )
+    # Try to send the text.
+    begin 
+      message = twilio_client.messages.create(
+        body: textbody,
+        to: recipient_phone_number,
+        from: "+19295818779"
+      )
+      puts "Text successfully sent!"
+    rescue Twilio::REST::TwilioError => error
+      puts "Text not sent. Error message: #{error}"
+    end
+
     # Try to send the email.
     begin
       # Provide the contents of the email.
@@ -389,10 +413,18 @@ class BetsController < ApplicationController
     @bet.save
     sender = 'andybirla96@gmail.com'
     recipient = @friend.email
+    recipient_phone_number = @friend.phone_number
     allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    allowed_numbers = ['3108479740']
     if (not(allowed_emails.include? recipient))
       recipient = 'andybirla96@gmail.com'
     end
+    if (not(allowed_numbers.include? recipient_phone_number))
+      recipient_phone_number = '+13108479740'
+    else 
+      recipient_phone_number = "+1" + recipient_phone_number
+    end
+
     subject = '[Betwork] Your bet with ' + current_user.name + ' was cancelled.'
     textbody = 'Hi ' + @friend.name + '!' + "\n" + "\n"
     textbody += current_user.name + ' cancelled a bet between you and them! '
@@ -412,6 +444,22 @@ class BetsController < ApplicationController
     textbody += 'Log into Betwork to view the cancelled bet.'
     encoding = 'UTF-8'
     ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+    twilio_client = Twilio::REST::Client.new(
+      'AC301826b0bd8c63c945aeae5288b45720',
+      'f3a42abcb29d4bb549cd003b2dc7d749'
+    )
+    # Try to send the text.
+    begin 
+      message = twilio_client.messages.create(
+        body: textbody,
+        to: recipient_phone_number,
+        from: "+19295818779"
+      )
+      puts "Text successfully sent!"
+    rescue Twilio::REST::TwilioError => error
+      puts "Text not sent. Error message: #{error}"
+    end
+
     # Try to send the email.
     begin
       # Provide the contents of the email.
@@ -460,10 +508,18 @@ class BetsController < ApplicationController
       sender = 'andybirla96@gmail.com'
       recipient_user = User.find_by(id: @bet.user_id_two)
       recipient = recipient_user.email
+      recipient_phone_number = recipient_user.phone_number
       allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+      allowed_numbers = ['3108479740']
       if (not(allowed_emails.include? recipient))
         recipient = 'andybirla96@gmail.com'
       end
+      if (not(allowed_numbers.include? recipient_phone_number))
+        recipient_phone_number = '+13108479740'
+      else 
+        recipient_phone_number = "+1" + recipient_phone_number
+      end
+
       subject = '[Betwork] A new bet has been proposed to you!'
       textbody = 'Hi ' + @bet.user_two_name + '!' + "\n" + "\n"
       textbody += @bet.user_one_name + ' wants to place a bet against you! '
@@ -478,6 +534,21 @@ class BetsController < ApplicationController
       textbody += 'Log into Betwork to view and cancel or accept the bet.'
       encoding = 'UTF-8'
       ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
+      twilio_client = Twilio::REST::Client.new(
+      'AC301826b0bd8c63c945aeae5288b45720',
+      'f3a42abcb29d4bb549cd003b2dc7d749'
+      )
+      # Try to send the text.
+      begin 
+      message = twilio_client.messages.create(
+        body: textbody,
+        to: recipient_phone_number,
+        from: "+19295818779"
+        )
+        puts "Text successfully sent!"
+      rescue Twilio::REST::TwilioError => error
+        puts "Text not sent. Error message: #{error}"
+      end
       # Try to send the email.
       begin
         # Provide the contents of the email.

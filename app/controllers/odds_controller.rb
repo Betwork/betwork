@@ -62,9 +62,9 @@ class OddsController < ApplicationController
         if (date_object.hour < 12)
           date_object = date_object + (12/24.0)
         end
-        early = date_object - (2/24.0)
+        #early = date_object - (2/24.0)
         current_time = DateTime.now
-        toolate_boolean = current_time > early
+        toolate_boolean = current_time.ctime > date_object.ctime 
         new_odd = Odd.create!(
           "home_team_name": odd['homeTeam'],
           "away_team_name": odd['awayTeam'],

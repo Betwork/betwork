@@ -16,20 +16,21 @@ class UsersController < ApplicationController
   end
 
   def update
-    # puts "we in  the fucking update"
-    # puts params
-    if !is_number?(params[:balance_change]) or params[:balance_change].to_f < 0
-      redirect_to user_path(@user), notice: "Invalid input, please input a number greater than zero"
-      return
-    end
-    if params[:balance_change_type] == "Add"
-      params[:user][:actualBalance] = @user.actualBalance + params[:balance_change].to_f
-    else
-      if params[:balance_change].to_f > (@user.actualBalance - @user.balanceInEscrow)
-        redirect_to user_path(@user), notice: "Cannot withdraw more than your Actual Balance minus Pending Bets"
+    #Check if we are updating balance or not
+    if params[:balance_change]
+      if !is_number?(params[:balance_change]) or params[:balance_change].to_f < 0
+        redirect_to user_path(@user), notice: "Invalid input, please input a number greater than zero"
         return
       end
-      params[:user][:actualBalance] = @user.actualBalance - params[:balance_change].to_f
+      if params[:balance_change_type] == "Add"
+        params[:user][:actualBalance] = @user.actualBalance + params[:balance_change].to_f
+      else
+        if params[:balance_change].to_f > (@user.actualBalance - @user.balanceInEscrow)
+          redirect_to user_path(@user), notice: "Cannot withdraw more than your Actual Balance minus Pending Bets"
+          return
+        end
+        params[:user][:actualBalance] = @user.actualBalance - params[:balance_change].to_f
+      end
     end
     if @user.update(user_params)
       redirect_to user_path(@user)
