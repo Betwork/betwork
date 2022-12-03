@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_29_074813) do
+ActiveRecord::Schema.define(version: 2022_12_03_001020) do
 
   create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
@@ -110,6 +110,26 @@ ActiveRecord::Schema.define(version: 2022_11_29_074813) do
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
+  end
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.string "member_type", null: false
+    t.integer "member_id", null: false
+    t.string "group_type"
+    t.integer "group_id"
+    t.string "group_name"
+    t.string "membership_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_name"], name: "index_group_memberships_on_group_name"
+    t.index ["group_type", "group_id"], name: "index_group_memberships_on_group_type_and_group_id"
+    t.index ["member_type", "member_id"], name: "index_group_memberships_on_member_type_and_member_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "merit_actions", force: :cascade do |t|
