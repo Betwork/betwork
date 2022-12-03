@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   acts_as_followable
 
   groupify :group_member
-  # groupify :named_group_member
+  groupify :named_group_member
 
   has_many :posts
   has_many :comments

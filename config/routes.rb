@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get :funds
     end
   end
+  resources :groups
 
   resources :events do
     collection do
@@ -48,7 +49,6 @@ Rails.application.routes.draw do
   match :find_friends, to: 'home#find_friends', as: :find_friends, via: :get
   match :about, to: 'home#about', as: :about, via: :get
   match :funds, to: 'users#funds', as: :funds, via: :post
-
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
