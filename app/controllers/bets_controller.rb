@@ -294,7 +294,7 @@ class BetsController < ApplicationController
     recipient_user = User.find_by(id: @bet.user_id_one)
     recipient = recipient_user.email
     recipient_phone_number = recipient_user.phone_number
-    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com', 'jja2163@columbia.edu']
     allowed_numbers = ['3108479740']
     if (not(allowed_emails.include? recipient))
       recipient = 'andybirla96@gmail.com'
@@ -414,7 +414,7 @@ class BetsController < ApplicationController
     sender = 'andybirla96@gmail.com'
     recipient = @friend.email
     recipient_phone_number = @friend.phone_number
-    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+    allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com', 'jja2163@columbia.edu']
     allowed_numbers = ['3108479740']
     if (not(allowed_emails.include? recipient))
       recipient = 'andybirla96@gmail.com'
@@ -509,7 +509,7 @@ class BetsController < ApplicationController
       recipient_user = User.find_by(id: @bet.user_id_two)
       recipient = recipient_user.email
       recipient_phone_number = recipient_user.phone_number
-      allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com']
+      allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com', 'jja2163@columbia.edu']
       allowed_numbers = ['3108479740']
       if (not(allowed_emails.include? recipient))
         recipient = 'andybirla96@gmail.com'
