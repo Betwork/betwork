@@ -52,6 +52,10 @@ class OddsController < ApplicationController
     old_odd_unexpired.save
 
     odds = find_nba_odds()
+    if odds == nil 
+      @odds = Odd.all
+      return
+    end
     odds.each do |odd|
       if (!odd['homeTeam'].nil? and
         !odd['awayTeam'].nil? and
@@ -126,7 +130,12 @@ class OddsController < ApplicationController
 
     response = http.request(request)
     # puts JSON.parse(response.read_body)
-    JSON.parse(response.read_body)
+    begin
+      result = JSON.parse(response.read_body)
+      return result
+    rescue
+      puts "API IS Down"
+    end
   end
 
   # def user_params
