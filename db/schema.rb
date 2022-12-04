@@ -113,21 +113,15 @@ ActiveRecord::Schema.define(version: 2022_12_03_001020) do
   end
 
   create_table "group_memberships", force: :cascade do |t|
-    t.string "user_type", null: false
-    t.integer "user_id", null: false
-    t.string "group_type"
     t.integer "group_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["group_type", "group_id"], name: "index_group_memberships_on_group_type_and_group_id"
-    t.index ["user_type", "user_id"], name: "index_group_memberships_on_user_type_and_user_id"
+    t.integer "user_id"
+    t.index ["group_id"], name: "index_group_memberships_on_group_id"
+    t.index ["user_id"], name: "index_group_memberships_on_user_id"
   end
 
   create_table "groups", force: :cascade do |t|
     t.string "name_of_group"
-    t.string "type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "creator_id"
   end
 
   create_table "merit_actions", force: :cascade do |t|

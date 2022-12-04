@@ -29,11 +29,19 @@ Rails.application.routes.draw do
   end
   resources :groups
 
-  resources :events do
-    collection do
-      get :calendar
-    end
-  end
+  # resources :groups_memberships do
+  #   member do
+  #     post :add_or_remove_membership
+  #   end
+  # end
+
+  # resources :groups_memberships
+
+  # resources :events do
+  #   collection do
+  #     get :calendar
+  #   end
+  # end
 
   authenticated :user do
     root to: 'home#index', as: 'home'
@@ -49,6 +57,9 @@ Rails.application.routes.draw do
   match :find_friends, to: 'home#find_friends', as: :find_friends, via: :get
   match :about, to: 'home#about', as: :about, via: :get
   match :funds, to: 'users#funds', as: :funds, via: :post
+  match :add_or_remove, to: 'groups#add_or_remove', as: :add_or_remove, via: :post
+  match :add_membership, to: 'groups_memberships#add_membership', as: :add_membership, via: :post
+  match :remove_membership, to: 'groups_memberships#remove_membership', as: :remove_membership, via: :post
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

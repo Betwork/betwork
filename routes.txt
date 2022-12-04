@@ -71,15 +71,6 @@
                           PATCH  /groups/:id(.:format)                                                                    groups#update
                           PUT    /groups/:id(.:format)                                                                    groups#update
                           DELETE /groups/:id(.:format)                                                                    groups#destroy
-          calendar_events GET    /events/calendar(.:format)                                                               events#calendar
-                   events GET    /events(.:format)                                                                        events#index
-                          POST   /events(.:format)                                                                        events#create
-                new_event GET    /events/new(.:format)                                                                    events#new
-               edit_event GET    /events/:id/edit(.:format)                                                               events#edit
-                    event GET    /events/:id(.:format)                                                                    events#show
-                          PATCH  /events/:id(.:format)                                                                    events#update
-                          PUT    /events/:id(.:format)                                                                    events#update
-                          DELETE /events/:id(.:format)                                                                    events#destroy
                      home GET    /                                                                                        home#index
                      root GET    /                                                                                        home#front
                    follow POST   /follow(.:format)                                                                        follows#create
@@ -89,6 +80,8 @@
              find_friends GET    /find_friends(.:format)                                                                  home#find_friends
                     about GET    /about(.:format)                                                                         home#about
                     funds POST   /funds(.:format)                                                                         users#funds
+            add_or_remove POST   /add_or_remove(.:format)                                                                 groups#add_or_remove
+ add_or_remove_membership POST   /add_or_remove_membership(.:format)                                                      groups_memberships#add_or_remove_membership
        rails_service_blob GET    /rails/active_storage/blobs/:signed_id/*filename(.:format)                               active_storage/blobs#show
 rails_blob_representation GET    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format) active_storage/representations#show
        rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                              active_storage/disk#show

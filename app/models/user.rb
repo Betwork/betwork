@@ -8,12 +8,15 @@ class User < ActiveRecord::Base
   acts_as_follower
   acts_as_followable
 
-  groupify :group_member
-  groupify :named_group_member
+  # groupify :group_member
+  # groupify :named_group_member
 
   has_many :posts
   has_many :comments
   has_many :events
+
+  has_many :group_memberships
+  has_many :groups, :through => :group_memberships
 
   mount_uploader :avatar, AvatarUploader
   mount_uploader :cover, AvatarUploader

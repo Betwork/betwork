@@ -12,8 +12,9 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.label :Name %><br>
+    <%= f.text_field :name_of_group %>
+    <%= f.hidden_field :creator_id, value: current_user.id %>
   </div>
   <div class="actions">
     <%= f.submit %>

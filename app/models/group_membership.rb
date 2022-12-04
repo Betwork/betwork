@@ -1,3 +1,4 @@
 class GroupMembership < ActiveRecord::Base
-  groupify :group_membership
+  belongs_to :user
+  belongs_to :group
 end
