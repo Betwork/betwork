@@ -8,7 +8,7 @@ class OddsController < ApplicationController
   before_action :set_user
 
   def index
-    # puts "execute index"
+    puts "execute index"
     # puts params
     @odds = Odd.all
     Odd.delete_all
