@@ -184,14 +184,21 @@ class BetsController < ApplicationController
               bet.status = 'finished'
               bet.save
             else
+              # extracting bet date and time
               date_string = bet['date']
-              date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
-              if (date_object.hour < 12)
-                date_object = date_object + (12/24.0)
-              end
-              early = date_object - (2/24.0)
+              date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+
+              # offsetting the time to EST
+              utc_offset = Rational(0, 24)
+
+              # comparing current time in EST to 2hrs before start time of game in eastern
+              early_time_eastern = date_object_eastern - (2/24.0)
               current_time = DateTime.now
-              toolate_boolean = current_time.ctime > early.ctime
+              current_time_utc = current_time.new_offset(utc_offset)
+              current_time_eastern = current_time_utc - (5/24.0)
+              toolate_boolean = current_time_eastern > early_time_eastern
+
+
               bet.toolate = toolate_boolean
               bet.save
             end
@@ -206,14 +213,20 @@ class BetsController < ApplicationController
         if not((team_names[bet.home_team_name] == 'New York Knicks') &&
           (team_names[bet.away_team_name] == 'Oklahoma City Thunder') &&
           (bet.date == "12:10 ET 11/13/2022"))
+          # extracting bet date and time
           date_string = bet['date']
-          date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
-          if (date_object.hour < 12)
-            date_object = date_object + (12/24.0)
-          end
-          #early = date_object - (2/24.0)
+          date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+
+          # offsetting the time to EST
+          utc_offset = Rational(0, 24)
+
+          # comparing current time in EST to 2hrs before start time of game in eastern
+          early_time_eastern = date_object_eastern - (2/24.0)
           current_time = DateTime.now
-          toolate_boolean = current_time.ctime > date_object.ctime
+          current_time_utc = current_time.new_offset(utc_offset)
+          current_time_eastern = current_time_utc - (5/24.0)
+          toolate_boolean = current_time_eastern > early_time_eastern
+
           bet.toolate = toolate_boolean
           if (toolate_boolean)
             bet.status = 'cancelled'

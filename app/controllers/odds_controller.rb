@@ -8,6 +8,39 @@ class OddsController < ApplicationController
   before_action :set_user
 
   def index
+
+    team_names = {
+      'ATL' => 'Atlanta Hawks',
+      'BKN' => 'Brooklyn Nets',
+      'BOS' => 'Boston Celtics',
+      'CHA' => 'Charlotte Hornets',
+      'CHI' => 'Chicago Bulls',
+      'CLE' => 'Cleveland Cavaliers',
+      'DAL' => 'Dallas Mavericks',
+      'DEN' => 'Denver Nuggets',
+      'DET' => 'Detroit Pistons',
+      'GSW' => 'Golden State Warriors',
+      'HOU' => 'Houston Rockets',
+      'IND' => 'Indiana Pacers',
+      'LAC' => 'Los Angeles Clippers',
+      'LAL' => 'Los Angeles Lakers',
+      'MEM' => 'Memphis Grizzlies',
+      'MIA' => 'Miami Heat',
+      'MIL' => 'Milwaukee Bucks',
+      'MIN' => 'Minnesota Timberwolves',
+      'NOP' => 'New Orleans Pelicans',
+      'NYK' => 'New York Knicks',
+      'OKC' => 'Oklahoma City Thunder',
+      'ORL' => 'Orlando Magic',
+      'PHI' => 'Philadelphia 76ers',
+      'PHX' => 'Phoenix Suns',
+      'POR' => 'Portland Trail Blazers',
+      'SAC' => 'Sacramento Kings',
+      'SAS' => 'San Antonio Spurs',
+      'TOR' => 'Toronto Raptors',
+      'UTA' => 'Utah Jazz',
+      'WAS' => 'Washington Wizards'
+    }
     # puts "execute index"
     # puts params
     @odds = Odd.all
@@ -57,24 +90,45 @@ class OddsController < ApplicationController
       return
     end
     odds.each do |odd|
-      if (!odd['homeTeam'].nil? and
-        !odd['awayTeam'].nil? and
-        !odd['homeMoneyLine'].nil? and
-        !odd['awayMoneyLine'].nil?)
-        date_string = odd['startTime']
-        date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
-        if (date_object.hour < 12)
-          date_object = date_object + (12/24.0)
-        end
-        #early = date_object - (2/24.0)
+
+      # checking if the odd is non-Null
+      if (!odd['home_team'].nil? and
+        !odd['away_team'].nil?)
+
+        # extracting the home and away team names
+        home_team_name = odd['home_team']
+        away_team_name = odd['away_team']
+
+        # getting the start time of the game in UTC
+        date_string = odd['commence_time']
+        date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+        # offsetting the time to EST
+        eastern_offset = Rational(-5, 24)
+        date_object_eastern = date_object_utc.new_offset(eastern_offset)
+        date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+
+        # comparing current time in EST to 2hrs before start time of game in eastern
+        early_time_eastern = date_object_eastern - (2/24.0)
         current_time = DateTime.now
-        toolate_boolean = current_time.ctime > date_object.ctime 
+        current_time_eastern = current_time.new_offset(eastern_offset)
+        toolate_boolean = current_time_eastern > early_time_eastern
+
+        # extracting the home and away team odds
+        if (odd['bookmakers'][0]['markets'][0]['outcomes'][0]['name'] == home_team_name)
+          home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+          away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+        else
+          home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+          away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+        end
+
         new_odd = Odd.create!(
-          "home_team_name": odd['homeTeam'],
-          "away_team_name": odd['awayTeam'],
-          "home_money_line": odd['homeMoneyLine'],
-          "away_money_line": odd['awayMoneyLine'],
-          "date": odd['startTime'],
+          "home_team_name": team_names.key(home_team_name),
+          "away_team_name": team_names.key(away_team_name),
+          "home_money_line": home_team_odds,
+          "away_money_line": away_team_odds,
+          "date": date_string_eastern,
           "toolate": toolate_boolean
         )
         new_odd.save
@@ -118,7 +172,7 @@ class OddsController < ApplicationController
   def find_nba_odds()
     # puts "find_nba_odds"
     # request_api('https://sports-data3.p.rapidapi.com/nba')
-    url = URI("https://sports-data3.p.rapidapi.com/nba")
+    url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/odds?regions=us&oddsFormat=american&markets=h2h&dateFormat=iso")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -126,7 +180,7 @@ class OddsController < ApplicationController
 
     request = Net::HTTP::Get.new(url)
     request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
-    request["X-RapidAPI-Host"] = 'sports-data3.p.rapidapi.com'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
     # puts JSON.parse(response.read_body)
