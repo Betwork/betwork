@@ -10,174 +10,374 @@ class HomeController < ApplicationController
   respond_to :html, :js
 
   def allbets_home_page
-    #puts "allbets_home_page"
+    #puts "allbets"
     # setting a hash that maps team abbreviations to team names
     # used later in string comparisons
-    team_names = {
-      'ATL' => 'Atlanta Hawks',
-      'BKN' => 'Brooklyn Nets',
-      'BOS' => 'Boston Celtics',
-      'CHA' => 'Charlotte Hornets',
-      'CHI' => 'Chicago Bulls',
-      'CLE' => 'Cleveland Cavaliers',
-      'DAL' => 'Dallas Mavericks',
-      'DEN' => 'Denver Nuggets',
-      'DET' => 'Detroit Pistons',
-      'GSW' => 'Golden State Warriors',
-      'HOU' => 'Houston Rockets',
-      'IND' => 'Indiana Pacers',
-      'LAC' => 'Los Angeles Clippers',
-      'LAL' => 'Los Angeles Lakers',
-      'MEM' => 'Memphis Grizzlies',
-      'MIA' => 'Miami Heat',
-      'MIL' => 'Milwaukee Bucks',
-      'MIN' => 'Minnesota Timberwolves',
-      'NOP' => 'New Orleans Pelicans',
-      'NYK' => 'New York Knicks',
-      'OKC' => 'Oklahoma City Thunder',
-      'ORL' => 'Orlando Magic',
-      'PHI' => 'Philadelphia 76ers',
-      'PHX' => 'Phoenix Suns',
-      'POR' => 'Portland Trail Blazers',
-      'SAC' => 'Sacramento Kings',
-      'SAS' => 'San Antonio Spurs',
-      'TOR' => 'Toronto Raptors',
-      'UTA' => 'Utah Jazz',
-      'WAS' => 'Washington Wizards'
-    }
+
 
     # get all the bets of the current user
     @user_bets = Bet.get_by_userid(current_user.id)
 
+    # send the API request for NBA games
+    url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/scores?daysFrom=3")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+
+    response = http.request(request)
+    nba_games = JSON.parse(response.read_body)
+
+    # send the API request for NFL games
+    url = URI("https://odds.p.rapidapi.com/v4/sports/americanfootball_nfl/scores?daysFrom=3")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+
+    response = http.request(request)
+    nfl_games = JSON.parse(response.read_body)
+
+    # send the API request for NHL games
+    url = URI("https://odds.p.rapidapi.com/v4/sports/icehockey_nhl/scores?daysFrom=3")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+
+    response = http.request(request)
+    nhl_games = JSON.parse(response.read_body)
+
     # for each bet
     @user_bets.each do |bet|
+
 
       # only proceed with confirmed bets
       if (bet.status == 'confirmed')
 
-        # get the date of the game in the right format
-        date_string = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
+        # get the date of the bet in the right format
+        date_string_bet = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
 
-        # add the date of the game to the query string
-        url_without_date = "https://api-basketball.p.rapidapi.com/games?timezone=America%2FNew_York&season=2022-2023&league=12&date="
-        url_with_date = url_without_date + date_string
 
-        # send the API request
-        url = URI(url_with_date)
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        request = Net::HTTP::Get.new(url)
-        request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
-        request["X-RapidAPI-Host"] = 'api-basketball.p.rapidapi.com'
-        response = http.request(request)
+        # select the right league for the game
+        if (bet.league == 'NBA')
+          # for each game in the response
+          nba_games.each do |game|
 
-        # parse the response
-        parsed_response = JSON.parse(response.read_body)
-        games_information = parsed_response['response']
+            # extract the date of the game
+            date_string = game['commence_time']
+            date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
 
-        # for each game in the response
-        games_information.each do |game|
+            # offsetting the time to EST
+            eastern_offset = Rational(-5, 24)
+            date_object_eastern = date_object_utc.new_offset(eastern_offset)
+            date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
-          # if the game has the same teams (and date from before), proceed
-          if ((team_names[bet.home_team_name] == game['teams']['home']['name']) &&
-            (team_names[bet.away_team_name] == game['teams']['away']['name']))
+            # if the game has the same teams (and date from before), proceed
+            if ((bet.home_team_name == game['home_team']) &&
+              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
 
-            # if the game is finished, proceed
-            if game['status']['long'] == 'Game Finished'
+              # if the game is finished, proceed
+              if game['completed'] == true
 
-              #get the final scores of the game
-              scores = game['scores']
-              home_score = scores['home']['total']
-              away_score = scores['away']['total']
+                #get the final scores of the game
+                scores = game['scores']
 
-              # establish whether Home or Away won
-              if (home_score > away_score)
-                winning_team = 'Home Team'
+                #get the scores of the home and away team
+                if (scores[0]['name'] == game['home_team'])
+                  home_score = scores[0]['score']
+                  away_score = scores[1]['score']
+                else
+                  home_score = scores[1]['score']
+                  away_score = scores[0]['score']
+                end
+
+
+                # establish whether Home or Away won
+                if (home_score > away_score)
+                  winning_team = 'Home Team'
+                else
+                  winning_team = 'Away Team'
+                end
+
+                # get the users of the bet
+                @user_one = User.find_by(id: bet.user_id_one)
+                @user_two = User.find_by(id: bet.user_id_two)
+
+                # get the amount wagered as a float
+                @amount = (bet.amount).to_f
+
+                # figure out which odds to use for the winnings based
+                # on outcome of the game
+                if (winning_team == 'Home Team')
+                  odds = (bet.home_money_line).to_f
+                else
+                  odds = (bet.away_money_line).to_f
+                end
+
+                # apply the US odds formula to calculate the winnings
+                if (odds > 0.0)
+                  @winning_amount = (@amount / 100.0) * odds
+                else
+                  @winning_amount = (@amount / (-odds)) * 100.0
+                end
+
+                # setting variables to make post
+                @bet = bet
+                admin_user = User.get_admin_user()
+
+                # if user one won
+                if (bet.betting_on == winning_team)
+
+                  # increase his actual balance by the winnings
+                  @user_one.decrease_balance(-@winning_amount)
+
+                  # remove wagered amount from escrow
+                  @user_one.increase_balance_in_escrow(-@amount)
+
+                  # remove amount wagered from actual balance of user two
+                  @user_two.decrease_balance(@amount)
+
+                  # remove wagered amount from escrow
+                  @user_two.increase_balance_in_escrow(-@amount)
+                  #puts 'User two lost'
+
+                  # making post that User One Won
+                  content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
+                  test = { "content" => content_string }
+                  @post = admin_user.posts.new(test)
+                  @post.save
+                else
+
+                  # increase his actual balance by the winnings
+                  @user_two.decrease_balance(-@winning_amount)
+
+                  # remove wagered amount from escrow
+                  @user_two.increase_balance_in_escrow(-@amount)
+
+                  # remove amount wagered from actual balance of user two
+                  @user_one.decrease_balance(@amount)
+
+                  # remove wagered amount from escrow
+                  @user_one.increase_balance_in_escrow(-@amount)
+                  #puts 'User one lost'
+
+                  # making post that User Two Won
+                  content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
+                  test = { "content" => content_string }
+                  @post = admin_user.posts.new(test)
+                  @post.save
+                end
+
+                # change the status of the bet and save it
+                bet.status = 'finished'
+                bet.save
               else
-                winning_team = 'Away Team'
+                # extracting bet date and time
+                date_string = bet['date']
+                date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+
+                # offsetting the time to EST
+                utc_offset = Rational(0, 24)
+
+                # comparing current time in EST to 2hrs before start time of game in eastern
+                early_time_eastern = date_object_eastern - (2/24.0)
+                current_time = DateTime.now
+                current_time_utc = current_time.new_offset(utc_offset)
+                current_time_eastern = current_time_utc - (5/24.0)
+                toolate_boolean = current_time_eastern > early_time_eastern
+
+
+                bet.toolate = toolate_boolean
+                bet.save
               end
 
-              # get the users of the bet
-              @user_one = User.find_by(id: bet.user_id_one)
-              @user_two = User.find_by(id: bet.user_id_two)
-
-              # get the amount wagered as a float
-              @amount = (bet.amount).to_f
-
-              # figure out which odds to use for the winnings based
-              # on outcome of the game
-              if (winning_team == 'Home Team')
-                odds = (bet.home_money_line).to_f
-              else
-                odds = (bet.away_money_line).to_f
-              end
-
-              # apply the US odds formula to calculate the winnings
-              if (odds > 0.0)
-                @winning_amount = (@amount / 100.0) * odds
-              else
-                @winning_amount = (@amount / (-odds)) * 100.0
-              end
-
-              # setting variables to make post
-              @bet = bet
-              admin_user = User.get_admin_user()
-
-              # if user one won
-              if (bet.betting_on == winning_team)
-
-                # increase his actual balance by the winnings
-                @user_one.decrease_balance(-@winning_amount)
-
-                # remove wagered amount from escrow
-                @user_one.increase_balance_in_escrow(-@amount)
-
-                # remove amount wagered from actual balance of user two
-                @user_two.decrease_balance(@amount)
-
-                # remove wagered amount from escrow
-                @user_two.increase_balance_in_escrow(-@amount)
-                #puts 'User two lost'
-
-                # making post that User One Won
-                content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
-                test = { "content" => content_string }
-                @post = admin_user.posts.new(test)
-                @post.save
-              else
-
-                # increase his actual balance by the winnings
-                @user_two.decrease_balance(-@winning_amount)
-
-                # remove wagered amount from escrow
-                @user_two.increase_balance_in_escrow(-@amount)
-
-                # remove amount wagered from actual balance of user two
-                @user_one.decrease_balance(@amount)
-
-                # remove wagered amount from escrow
-                @user_one.increase_balance_in_escrow(-@amount)
-                #puts 'User one lost'
-
-                # making post that User Two Won
-                content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
-                test = { "content" => content_string }
-                @post = admin_user.posts.new(test)
-                @post.save
-              end
-
-              # change the status of the bet and save it
-              bet.status = 'finished'
-              bet.save
+              # whether or not the game is finished,
+              # once we have found the game, we do not
+              # want to further check games of this day
+              break
             end
-
-            # whether or not the game is finished,
-            # once we have found the game, we do not
-            # want to further check games of this day
-            break
           end
+        elsif (bet.league == 'NFL')
+          # for each game in the response
+          nhl_games.each do |game|
+
+            date_string = game['commence_time']
+            date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+            # offsetting the time to EST
+            eastern_offset = Rational(-5, 24)
+            date_object_eastern = date_object_utc.new_offset(eastern_offset)
+            date_string_game = date_object_eastern.strftime('%Y-%m-%d')
+
+            # if the game has the same teams (and date from before), proceed
+            if ((bet.home_team_name == game['home_team']) &&
+              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
+
+              # if the game is finished, proceed
+              if game['completed'] == true
+
+                #get the final scores of the game
+                scores = game['scores']
+
+                if (scores[0]['name'] == game['home_team'])
+                  home_score = scores[0]['score']
+                  away_score = scores[1]['score']
+                else
+                  home_score = scores[1]['score']
+                  away_score = scores[0]['score']
+                end
+
+
+                # establish whether Home or Away won
+                if (home_score > away_score)
+                  winning_team = 'Home Team'
+                else
+                  winning_team = 'Away Team'
+                end
+
+                # get the users of the bet
+                @user_one = User.find_by(id: bet.user_id_one)
+                @user_two = User.find_by(id: bet.user_id_two)
+
+                # get the amount wagered as a float
+                @amount = (bet.amount).to_f
+
+                # figure out which odds to use for the winnings based
+                # on outcome of the game
+                if (winning_team == 'Home Team')
+                  odds = (bet.home_money_line).to_f
+                else
+                  odds = (bet.away_money_line).to_f
+                end
+
+                # apply the US odds formula to calculate the winnings
+                if (odds > 0.0)
+                  @winning_amount = (@amount / 100.0) * odds
+                else
+                  @winning_amount = (@amount / (-odds)) * 100.0
+                end
+
+                # setting variables to make post
+                @bet = bet
+                admin_user = User.get_admin_user()
+
+                # if user one won
+                if (bet.betting_on == winning_team)
+
+                  # increase his actual balance by the winnings
+                  @user_one.decrease_balance(-@winning_amount)
+
+                  # remove wagered amount from escrow
+                  @user_one.increase_balance_in_escrow(-@amount)
+
+                  # remove amount wagered from actual balance of user two
+                  @user_two.decrease_balance(@amount)
+
+                  # remove wagered amount from escrow
+                  @user_two.increase_balance_in_escrow(-@amount)
+                  #puts 'User two lost'
+
+                  # making post that User One Won
+                  content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
+                  test = { "content" => content_string }
+                  @post = admin_user.posts.new(test)
+                  @post.save
+                else
+
+                  # increase his actual balance by the winnings
+                  @user_two.decrease_balance(-@winning_amount)
+
+                  # remove wagered amount from escrow
+                  @user_two.increase_balance_in_escrow(-@amount)
+
+                  # remove amount wagered from actual balance of user two
+                  @user_one.decrease_balance(@amount)
+
+                  # remove wagered amount from escrow
+                  @user_one.increase_balance_in_escrow(-@amount)
+                  #puts 'User one lost'
+
+                  # making post that User Two Won
+                  content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
+                  test = { "content" => content_string }
+                  @post = admin_user.posts.new(test)
+                  @post.save
+                end
+
+                # change the status of the bet and save it
+                bet.status = 'finished'
+                bet.save
+              else
+                # extracting bet date and time
+                date_string = bet['date']
+                date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+
+                # offsetting the time to EST
+                utc_offset = Rational(0, 24)
+
+                # comparing current time in EST to 2hrs before start time of game in eastern
+                early_time_eastern = date_object_eastern - (2/24.0)
+                current_time = DateTime.now
+                current_time_utc = current_time.new_offset(utc_offset)
+                current_time_eastern = current_time_utc - (5/24.0)
+                toolate_boolean = current_time_eastern > early_time_eastern
+
+
+                bet.toolate = toolate_boolean
+                bet.save
+              end
+
+              # whether or not the game is finished,
+              # once we have found the game, we do not
+              # want to further check games of this day
+              break
+            end
+          end
+        else
+
         end
+
+
+
+
+      elsif (bet.status == 'proposed')
+        if not((bet.home_team_name == 'New Orleans Pelicans') &&
+          (bet.away_team_name == 'Phoenix Suns') &&
+          (bet.date == "20:40 ET 12/11/2022"))
+          # extracting bet date and time
+          date_string = bet['date']
+          date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
+
+          # offsetting the time to EST
+          utc_offset = Rational(0, 24)
+
+          # comparing current time in EST to 2hrs before start time of game in eastern
+          early_time_eastern = date_object_eastern - (2/24.0)
+          current_time = DateTime.now
+          current_time_utc = current_time.new_offset(utc_offset)
+          current_time_eastern = current_time_utc - (5/24.0)
+          toolate_boolean = current_time_eastern > early_time_eastern
+
+          bet.toolate = toolate_boolean
+          if (toolate_boolean)
+            bet.status = 'cancelled'
+          end
+          bet.save
+        end
+
       end
     end
   end
