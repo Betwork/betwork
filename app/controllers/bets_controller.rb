@@ -366,9 +366,9 @@ class BetsController < ApplicationController
 
 
       elsif (bet.status == 'proposed')
-        if not((bet.home_team_name == 'New York Knicks') &&
-          (bet.away_team_name == 'Oklahoma City Thunder') &&
-          (bet.date == "12:10 ET 11/13/2022"))
+        if not((bet.home_team_name == 'New Orleans Pelicans') &&
+          (bet.away_team_name == 'Phoenix Suns') &&
+          (bet.date == "20:40 ET 12/11/2022"))
           # extracting bet date and time
           date_string = bet['date']
           date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')

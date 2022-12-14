@@ -82,11 +82,11 @@ class OddsController < ApplicationController
     @odds = Odd.all
     Odd.delete_all
     old_odd = Odd.create!(
-      "home_team_name": team_names["NYK"],
-      "away_team_name": team_names["OKC"],
+      "home_team_name": "New Orleans Pelicans",
+      "away_team_name": "Phoenix Suns",
       "home_money_line": -210,
       "away_money_line": 175,
-      "date": "12:10 ET 11/13/2022",
+      "date": "20:40 ET 12/11/2022",
       "toolate": false,
       "league": "NBA"
     )
