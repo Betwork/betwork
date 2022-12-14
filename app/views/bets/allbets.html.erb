@@ -3,6 +3,7 @@
 <table class="table table-striped col-md-12" id="bets">
   <thead>
     <tr>
+      <th>League</th>
 	    <th>Home Team</th>
 	    <th>Away Team</th>
 	    <th>Time & Date</th>
@@ -17,6 +18,9 @@
     <% @user_bets.each do |odd| %>
       <% if odd.status == 'confirmed' %>
       <tr>
+        <td>
+          <%= odd.league%>
+        </td>
         <td>
           <%= odd.home_team_name%>
         </td>
@@ -78,6 +82,7 @@
 <table class="table table-striped col-md-12" id="bets">
   <thead>
   <tr>
+    <th>League</th>
     <th>Home Team</th>
     <th>Away Team</th>
     <th>Time & Date</th>
@@ -92,6 +97,9 @@
   <% @user_bets.each do |odd| %>
     <% if ((odd.status == 'proposed') && (current_user.name == odd.user_one_name)) %>
     <tr>
+      <td>
+        <%= odd.league%>
+      </td>
       <td>
         <%= odd.home_team_name%>
       </td>
@@ -148,6 +156,7 @@
 <table class="table table-striped col-md-12" id="bets">
   <thead>
   <tr>
+    <th>League</th>
     <th>Home Team</th>
     <th>Away Team</th>
     <th>Time & Date</th>
@@ -162,6 +171,9 @@
   <% @user_bets.each do |odd| %>
     <% if ((odd.status == 'proposed') && (current_user.name == odd.user_two_name)) %>
     <tr>
+      <td>
+        <%= odd.league%>
+      </td>
       <td>
         <%= odd.home_team_name%>
       </td>
@@ -223,6 +235,7 @@
 <table class="table table-striped col-md-12" id="bets">
   <thead>
   <tr>
+    <th>League</th>
     <th>Home Team</th>
     <th>Away Team</th>
     <th>Time & Date</th>
@@ -237,6 +250,9 @@
   <% @user_bets.each do |odd| %>
     <% if odd.status == 'finished' %>
       <tr>
+        <td>
+          <%= odd.league%>
+        </td>
         <td>
           <%= odd.home_team_name%>
         </td>
@@ -292,6 +308,7 @@
 <table class="table table-striped col-md-12" id="bets">
   <thead>
   <tr>
+    <th>League</th>
     <th>Home Team</th>
     <th>Away Team</th>
     <th>Time & Date</th>
@@ -306,6 +323,9 @@
   <% @user_bets.each do |odd| %>
     <% if odd.status == 'cancelled' %>
       <tr>
+        <td>
+          <%= odd.league%>
+        </td>
         <td>
           <%= odd.home_team_name%>
         </td>

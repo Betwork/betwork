@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_13_220943) do
+ActiveRecord::Schema.define(version: 2022_12_14_070420) do
 
   create_table "activities", force: :cascade do |t|
     t.string "trackable_type"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2022_12_13_220943) do
     t.string "date"
     t.string "status"
     t.boolean "toolate"
+    t.string "league"
   end
 
   create_table "comments", force: :cascade do |t|
