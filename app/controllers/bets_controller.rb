@@ -58,6 +58,20 @@ class BetsController < ApplicationController
     response = http.request(request)
     nfl_games = JSON.parse(response.read_body)
 
+    # send the API request for NHL games
+    url = URI("https://odds.p.rapidapi.com/v4/sports/icehockey_nhl/scores?daysFrom=3")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+
+    response = http.request(request)
+    nhl_games = JSON.parse(response.read_body)
+
     # for each bet
     @user_bets.each do |bet|
 
@@ -70,7 +84,7 @@ class BetsController < ApplicationController
 
 
         # select the right league for the game
-        if bet.league == 'NBA'
+        if (bet.league == 'NBA')
           # for each game in the response
           nba_games.each do |game|
 
@@ -208,9 +222,9 @@ class BetsController < ApplicationController
               break
             end
           end
-        else
+        elsif (bet.league == 'NFL')
           # for each game in the response
-          nfl_games.each do |game|
+          nhl_games.each do |game|
 
             date_string = game['commence_time']
             date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
@@ -344,6 +358,8 @@ class BetsController < ApplicationController
               break
             end
           end
+        else
+
         end
 
 

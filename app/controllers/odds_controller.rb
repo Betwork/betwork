@@ -124,108 +124,155 @@ class OddsController < ApplicationController
     old_odd_unexpired.save
 
     odds = find_nba_odds()
-    if odds == nil 
-      @odds = Odd.all
-      return
-    end
-    odds.each do |odd|
+    if odds != nil
+      odds.each do |odd|
 
-      # checking if the odd is non-Null
-      if (!odd['home_team'].nil? and
-        !odd['away_team'].nil?)
+        # checking if the odd is non-Null
+        if (!odd['home_team'].nil? and
+          !odd['away_team'].nil?)
 
-        # extracting the home and away team names
-        home_team_name = odd['home_team']
-        away_team_name = odd['away_team']
+          # extracting the home and away team names
+          home_team_name = odd['home_team']
+          away_team_name = odd['away_team']
 
-        # getting the start time of the game in UTC
-        date_string = odd['commence_time']
-        date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+          # getting the start time of the game in UTC
+          date_string = odd['commence_time']
+          date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
 
-        # offsetting the time to EST
-        eastern_offset = Rational(-5, 24)
-        date_object_eastern = date_object_utc.new_offset(eastern_offset)
-        date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+          # offsetting the time to EST
+          eastern_offset = Rational(-5, 24)
+          date_object_eastern = date_object_utc.new_offset(eastern_offset)
+          date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
 
-        # comparing current time in EST to 2hrs before start time of game in eastern
-        early_time_eastern = date_object_eastern - (2/24.0)
-        current_time = DateTime.now
-        current_time_eastern = current_time.new_offset(eastern_offset)
-        toolate_boolean = current_time_eastern > early_time_eastern
+          # comparing current time in EST to 2hrs before start time of game in eastern
+          early_time_eastern = date_object_eastern - (2/24.0)
+          current_time = DateTime.now
+          current_time_eastern = current_time.new_offset(eastern_offset)
+          toolate_boolean = current_time_eastern > early_time_eastern
 
-        # extracting the home and away team odds
-        if (odd['bookmakers'][0]['markets'][0]['outcomes'][0]['name'] == home_team_name)
-          home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
-          away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
-        else
-          home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
-          away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+          # extracting the home and away team odds
+          if (odd['bookmakers'][0]['markets'][0]['outcomes'][0]['name'] == home_team_name)
+            home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+            away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+          else
+            home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+            away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+          end
+
+          new_odd = Odd.create!(
+            "home_team_name": home_team_name,
+            "away_team_name": away_team_name,
+            "home_money_line": home_team_odds,
+            "away_money_line": away_team_odds,
+            "date": date_string_eastern,
+            "toolate": toolate_boolean,
+            "league": "NBA"
+          )
+          new_odd.save
         end
-
-        new_odd = Odd.create!(
-          "home_team_name": home_team_name,
-          "away_team_name": away_team_name,
-          "home_money_line": home_team_odds,
-          "away_money_line": away_team_odds,
-          "date": date_string_eastern,
-          "toolate": toolate_boolean,
-          "league": "NBA"
-        )
-        new_odd.save
       end
     end
 
     odds = find_nfl_odds()
-    if odds == nil
-      @odds = Odd.all
-      return
-    end
-    odds.each do |odd|
+    if odds != nil
+      odds.each do |odd|
 
-      # checking if the odd is non-Null
-      if (!odd['home_team'].nil? and
-        !odd['away_team'].nil?)
+        # checking if the odd is non-Null
+        if (!odd['home_team'].nil? and
+          !odd['away_team'].nil?)
 
-        # extracting the home and away team names
-        home_team_name = odd['home_team']
-        away_team_name = odd['away_team']
+          # extracting the home and away team names
+          home_team_name = odd['home_team']
+          away_team_name = odd['away_team']
 
-        # getting the start time of the game in UTC
-        date_string = odd['commence_time']
-        date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+          # getting the start time of the game in UTC
+          date_string = odd['commence_time']
+          date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
 
-        # offsetting the time to EST
-        eastern_offset = Rational(-5, 24)
-        date_object_eastern = date_object_utc.new_offset(eastern_offset)
-        date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+          # offsetting the time to EST
+          eastern_offset = Rational(-5, 24)
+          date_object_eastern = date_object_utc.new_offset(eastern_offset)
+          date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
 
-        # comparing current time in EST to 2hrs before start time of game in eastern
-        early_time_eastern = date_object_eastern - (2/24.0)
-        current_time = DateTime.now
-        current_time_eastern = current_time.new_offset(eastern_offset)
-        toolate_boolean = current_time_eastern > early_time_eastern
+          # comparing current time in EST to 2hrs before start time of game in eastern
+          early_time_eastern = date_object_eastern - (2/24.0)
+          current_time = DateTime.now
+          current_time_eastern = current_time.new_offset(eastern_offset)
+          toolate_boolean = current_time_eastern > early_time_eastern
 
-        # extracting the home and away team odds
-        if (odd['bookmakers'][0]['markets'][0]['outcomes'][0]['name'] == home_team_name)
-          home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
-          away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
-        else
-          home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
-          away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+          # extracting the home and away team odds
+          if (odd['bookmakers'][0]['markets'][0]['outcomes'][0]['name'] == home_team_name)
+            home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+            away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+          else
+            home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+            away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+          end
+
+          new_odd = Odd.create!(
+            "home_team_name": home_team_name,
+            "away_team_name": away_team_name,
+            "home_money_line": home_team_odds,
+            "away_money_line": away_team_odds,
+            "date": date_string_eastern,
+            "toolate": toolate_boolean,
+            "league": "NFL"
+          )
+          new_odd.save
         end
-
-        new_odd = Odd.create!(
-          "home_team_name": home_team_name,
-          "away_team_name": away_team_name,
-          "home_money_line": home_team_odds,
-          "away_money_line": away_team_odds,
-          "date": date_string_eastern,
-          "toolate": toolate_boolean,
-          "league": "NFL"
-        )
-        new_odd.save
       end
     end
+
+    odds = find_nhl_odds()
+    if odds != nil
+      odds.each do |odd|
+
+        # checking if the odd is non-Null
+        if (!odd['home_team'].nil? and
+          !odd['away_team'].nil?)
+
+          # extracting the home and away team names
+          home_team_name = odd['home_team']
+          away_team_name = odd['away_team']
+
+          # getting the start time of the game in UTC
+          date_string = odd['commence_time']
+          date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+          # offsetting the time to EST
+          eastern_offset = Rational(-5, 24)
+          date_object_eastern = date_object_utc.new_offset(eastern_offset)
+          date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+
+          # comparing current time in EST to 2hrs before start time of game in eastern
+          early_time_eastern = date_object_eastern - (2/24.0)
+          current_time = DateTime.now
+          current_time_eastern = current_time.new_offset(eastern_offset)
+          toolate_boolean = current_time_eastern > early_time_eastern
+
+          # extracting the home and away team odds
+          if (odd['bookmakers'][0]['markets'][0]['outcomes'][0]['name'] == home_team_name)
+            home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+            away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+          else
+            home_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][1]['price']
+            away_team_odds = odd['bookmakers'][0]['markets'][0]['outcomes'][0]['price']
+          end
+
+          new_odd = Odd.create!(
+            "home_team_name": home_team_name,
+            "away_team_name": away_team_name,
+            "home_money_line": home_team_odds,
+            "away_money_line": away_team_odds,
+            "date": date_string_eastern,
+            "toolate": toolate_boolean,
+            "league": "NHL"
+          )
+          new_odd.save
+        end
+      end
+    end
+
     @odds = Odd.all
   end
 
@@ -288,6 +335,29 @@ class OddsController < ApplicationController
     # puts "find_nba_odds"
     # request_api('https://sports-data3.p.rapidapi.com/nba')
     url = URI("https://odds.p.rapidapi.com/v4/sports/americanfootball_nfl/odds?regions=us&oddsFormat=american&markets=h2h&dateFormat=iso")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+
+    response = http.request(request)
+    # puts JSON.parse(response.read_body)
+    begin
+      result = JSON.parse(response.read_body)
+      return result
+    rescue
+      puts "API IS Down"
+    end
+  end
+
+  def find_nhl_odds()
+    # puts "find_nba_odds"
+    # request_api('https://sports-data3.p.rapidapi.com/nba')
+    url = URI("https://odds.p.rapidapi.com/v4/sports/icehockey_nhl/odds?regions=us&oddsFormat=american&markets=h2h&dateFormat=iso")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
