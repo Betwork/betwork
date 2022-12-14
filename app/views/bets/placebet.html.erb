@@ -54,6 +54,7 @@
   <%= f.hidden_field :user_id_two, value: @friend.id %>
   <%= f.hidden_field :status, value: 'proposed' %>
   <%= f.hidden_field :toolate, value: false %>
+  <%= f.hidden_field :league, value: @game.league %>
   <br/>
   <%= f.submit "Confirm Proposition" %>
   <span id="helpBlock" class = "help-block"></span>
