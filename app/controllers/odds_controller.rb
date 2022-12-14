@@ -82,8 +82,8 @@ class OddsController < ApplicationController
     @odds = Odd.all
     Odd.delete_all
     old_odd = Odd.create!(
-      "home_team_name": "NYK",
-      "away_team_name": "OKC",
+      "home_team_name": team_names["NYK"],
+      "away_team_name": team_names["OKC"],
       "home_money_line": -210,
       "away_money_line": 175,
       "date": "12:10 ET 11/13/2022",
@@ -102,8 +102,8 @@ class OddsController < ApplicationController
     toolate_boolean = current_time > early
 
     old_odd_expired = Odd.create!(
-      "home_team_name": "SAS",
-      "away_team_name": "LAL",
+      "home_team_name": team_names["SAS"],
+      "away_team_name": team_names["LAL"],
       "home_money_line": 120,
       "away_money_line": -140,
       "date": "8:10 ET 11/26/2022",
@@ -113,8 +113,8 @@ class OddsController < ApplicationController
     old_odd_expired.save
 
     old_odd_unexpired = Odd.create!(
-      "home_team_name": "WAS",
-      "away_team_name": "DAL",
+      "home_team_name": team_names["WAS"],
+      "away_team_name": team_names["DAL"],
       "home_money_line": 120,
       "away_money_line": -130,
       "date": "7:00 ET 11/11/2022",
