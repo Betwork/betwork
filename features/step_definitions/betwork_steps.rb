@@ -173,12 +173,13 @@ When /I last press follow/ do
 end
 
 When /I place a bet on the first game/ do
-  find(:xpath, '/html/body/div/table/tbody/tr[1]/td[6]/a').click
+  find(:xpath, '/html/body/div/table/tbody/tr[1]/td[6]/a', match: :first).click
   #visit '/odds/1/friends'
 end
 
 And /I cancel my bet/ do 
-  find(:xpath, '/html/body/div/table[2]/tbody/tr/td[9]/a').click
+  find(:xpath, '/html/body/div/table[2]/tbody/tr/td[10]/a').click
+
 end
 
 And /I accept a proposed bet/ do 
