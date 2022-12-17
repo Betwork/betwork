@@ -499,9 +499,40 @@ class BetsController < ApplicationController
 
 
       elsif (bet.status == 'proposed')
-        if not((bet.home_team_name == 'New Orleans Pelicans') &&
-          (bet.away_team_name == 'Phoenix Suns') &&
-          (bet.date == "20:40 ET 12/11/2022"))
+
+        # team names
+        nba_home_team_name = nba_games[0]['home_team']
+        nba_away_team_name = nba_games[0]['away_team']
+
+        # getting the start time of the game in UTC
+        date_string = nba_games[0]['commence_time']
+        date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+        # offsetting the time to EST
+        eastern_offset = Rational(-5, 24)
+        date_object_eastern = date_object_utc.new_offset(eastern_offset)
+        nba_date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+
+
+
+        # team names
+        nhl_home_team_name = nhl_games[0]['home_team']
+        nhl_away_team_name = nhl_games[0]['away_team']
+
+        # getting the start time of the game in UTC
+        date_string = nhl_games[0]['commence_time']
+        date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+        # offsetting the time to EST
+        eastern_offset = Rational(-5, 24)
+        date_object_eastern = date_object_utc.new_offset(eastern_offset)
+        nhl_date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+
+        if (not((bet.home_team_name == nba_home_team_name) &&
+          (bet.away_team_name == nba_away_team_name) &&
+          (bet.date == nba_date_string_eastern)) && not((bet.home_team_name == nhl_home_team_name) &&
+          (bet.away_team_name == nhl_away_team_name) &&
+          (bet.date == nhl_date_string_eastern)))
           # extracting bet date and time
           date_string = bet['date']
           date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
@@ -519,6 +550,8 @@ class BetsController < ApplicationController
           bet.toolate = toolate_boolean
           if (toolate_boolean)
             bet.status = 'cancelled'
+            @original = User.find_by(id: bet.user_id_one)
+            @original.increase_balance_in_escrow(-bet.amount)
           end
           bet.save
         end
