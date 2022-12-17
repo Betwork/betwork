@@ -81,47 +81,88 @@ class OddsController < ApplicationController
     # puts params
     @odds = Odd.all
     Odd.delete_all
+
+    # CREATING AN OLD NBA GAME
+
+    # send the API request for NBA games
+    url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/scores?daysFrom=3")
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+    response = http.request(request)
+    nba_games = JSON.parse(response.read_body)
+
+    # team names
+    home_team_name = nba_games[0]['home_team']
+    away_team_name = nba_games[0]['away_team']
+
+    # getting the start time of the game in UTC
+    date_string = nba_games[0]['commence_time']
+    date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+    # offsetting the time to EST
+    eastern_offset = Rational(-5, 24)
+    date_object_eastern = date_object_utc.new_offset(eastern_offset)
+    date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+
+    # create the odd based on the oldest game from scores
     old_odd = Odd.create!(
-      "home_team_name": "New Orleans Pelicans",
-      "away_team_name": "Phoenix Suns",
+      "home_team_name": home_team_name,
+      "away_team_name": away_team_name,
       "home_money_line": -210,
       "away_money_line": 175,
-      "date": "20:40 ET 12/11/2022",
+      "date": date_string_eastern,
       "toolate": false,
       "league": "NBA"
     )
     old_odd.save
 
-    date_string = '8:10 ET 11/26/2022'
-    date_object = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
-    if (date_object.hour < 12)
-      date_object = date_object + (12/24.0)
-    end
-    early = date_object - (2/24.0)
-    current_time = DateTime.now
-    toolate_boolean = current_time > early
 
-    old_odd_expired = Odd.create!(
-      "home_team_name": team_names["SAS"],
-      "away_team_name": team_names["LAL"],
-      "home_money_line": 120,
-      "away_money_line": -140,
-      "date": "8:10 ET 11/26/2022",
-      "toolate": toolate_boolean,
-      "league": "NBA"
-    )
-    old_odd_expired.save
 
-    old_odd_unexpired = Odd.create!(
-      "home_team_name": team_names["WAS"],
-      "away_team_name": team_names["DAL"],
-      "home_money_line": 120,
-      "away_money_line": -130,
-      "date": "7:00 ET 11/11/2022",
+
+    # CREATING AN OLD NHL GAME
+
+    # send the API request for NHL games
+    url = URI("https://odds.p.rapidapi.com/v4/sports/icehockey_nhl/scores?daysFrom=3")
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(url)
+    request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
+    request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
+    response = http.request(request)
+    nhl_games = JSON.parse(response.read_body)
+
+    # team names
+    home_team_name = nhl_games[0]['home_team']
+    away_team_name = nhl_games[0]['away_team']
+
+    # getting the start time of the game in UTC
+    date_string = nhl_games[0]['commence_time']
+    date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
+
+    # offsetting the time to EST
+    eastern_offset = Rational(-5, 24)
+    date_object_eastern = date_object_utc.new_offset(eastern_offset)
+    date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
+
+    # create the odd based on the oldest game from scores
+    old_odd = Odd.create!(
+      "home_team_name": home_team_name,
+      "away_team_name": away_team_name,
+      "home_money_line": -210,
+      "away_money_line": 175,
+      "date": date_string_eastern,
       "toolate": false,
-      "league": "NBA"
+      "league": "NHL"
     )
-    old_odd_unexpired.save
+    old_odd.save
+
+
+
 
     odds = find_nba_odds()
     if odds != nil
