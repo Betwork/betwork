@@ -178,15 +178,14 @@ end
 
 And /I cancel my bet/ do
   find(:xpath, '/html/body/div/table[2]/tbody/tr/td[10]/a').click
-
 end
 
 And /I accept a proposed bet/ do
-  find(:xpath, '/html/body/div/table[3]/tbody/tr/td[10]/a').click
+  find(:xpath, '/html/body/div/table[3]/tbody/tr/td[11]/a').click
 end
 
 And /I cancel a confirmed bet/ do
-  find(:xpath, '/html/body/div/table[1]/tbody/tr/td[9]/a').click
+  find(:xpath, '/html/body/div/table[1]/tbody/tr/td[10]/a').click
 end
 
 When /I first press place bet/ do
