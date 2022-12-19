@@ -25,7 +25,7 @@ RSpec.describe "Bets", type: :request do
                         away_team_name: 'OKC',
                         home_money_line: -210,
                         away_money_line: 175,
-                        date: "12:10 ET 11/13/2022")
+                        date: "12:10 ET 11/13/2023")
 
     @params = { :id => @odd1.id, :amount => -1, :friend_id => @u2.id, :game => @odd1.id }
     result = get placebet_bet_path(@params)
@@ -42,7 +42,8 @@ RSpec.describe "Bets", type: :request do
                    :amount => 125,
                    :user_id_one => @u1.id,
                    :user_id_two => @u2.id,
-                   :status => "proposed" }
+                   :status => "proposed",
+                   :league => "NBA" }
 
     @params = { :bet => @betparams }
     result = post bets_path(@params)
@@ -72,13 +73,31 @@ RSpec.describe "Bets", type: :request do
     expect(allUsers[1].balanceInEscrow).to eq(0)
     expect(allUsers[1].actualBalance).to eq(@u2.actualBalance)
 
-    @params = { :id => @u1.name }
+    @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
+
+    puts "Balances before cancelling bet"
+    allUsers = User.all
+    puts allUsers[0].name
+    puts allUsers[0].actualBalance
+    puts allUsers[0].balanceInEscrow
+    puts allUsers[1].name
+    puts allUsers[1].actualBalance
+    puts allUsers[1].balanceInEscrow
 
     #cancel the second bet PROPOSED bet, escrow balance should reset
     @params = { :id => allBets[1].id }
     get cancel_bet_path(@params)
+
+    puts "Balances after cancelling bet"
+    allUsers = User.all
+    puts allUsers[0].name
+    puts allUsers[0].actualBalance
+    puts allUsers[0].balanceInEscrow
+    puts allUsers[1].name
+    puts allUsers[1].actualBalance
+    puts allUsers[1].balanceInEscrow
 
     allBets = Bet.all
     expect(allBets.length()).to eq(3)
@@ -104,21 +123,62 @@ RSpec.describe "Bets", type: :request do
 
     sign_out @u2
     sign_in @u1
-    @params = { :id => @u1.name }
+    @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
     # expect(allUsers[0].balanceInEscrow).to eq(allBets[0].amount)
     expect(allUsers[1].balanceInEscrow).to eq(allBets[0].amount)
 
+    puts "odds acc to TEST"
+    puts allBets[0].away_money_line
+
     #the Away team wins in this game
     allBets = Bet.all
     if (allBets[0].away_money_line > 0.0)
       @winning_amount = (allBets[0].amount / 100.0) * allBets[0].away_money_line
+      puts "bet TEST entered odds > 0"
     else
       @winning_amount = (allBets[0].amount / (-allBets[0].away_money_line)) * 100.0
+      puts "bet TEST entered odds <= 0"
     end
+
+    puts "winning amount acc to TEST"
+    puts @winning_amount
+
+    puts "bets status before winning game"
+    allBets = Bet.all
+    puts allBets.length()
+    puts allBets[0].status
+    puts allBets[1].status
+
+    #update the time of the bet
+    @odd1.update(date: "12:10 ET 11/13/2022")
+    # update u1 and u2 bets
+    puts "UPDATE U1 after date change"
+    @params = { :id => @u1.name, :fakedata => true }
+    result = get allbets_bet_path(@params)
+    expect(result).to eq(200)
+    puts "UPDATE U2 after date change"
+    @params = { :id => @u2.name, :fakedata => true }
+    result = get allbets_bet_path(@params)
+    expect(result).to eq(200)
+
+    puts "user balances after winning game"
     allUsers = User.all
-    # puts allUsers[0].actualBalance
+    puts allUsers[0].name
+    puts allUsers[0].actualBalance
+    puts allUsers[0].balanceInEscrow
+    puts allUsers[1].name
+    puts allUsers[1].actualBalance
+    puts allUsers[1].balanceInEscrow
+
+    puts "bets data after update"
+    allBets = Bet.all
+    puts allBets.length()
+    puts allBets[0].status
+    puts allBets[1].status
+
+    allUsers = User.all
     expect(allUsers[0].actualBalance).to eq(originalBal_u1 + @winning_amount)
     expect(allUsers[1].actualBalance).to eq(originalBal_u2 - allBets[0].amount)
   end
@@ -194,7 +254,7 @@ RSpec.describe "Bets", type: :request do
     expect(allUsers[1].balanceInEscrow).to eq(0)
     expect(allUsers[1].actualBalance).to eq(@u2.actualBalance)
 
-    @params = { :id => @u1.name }
+    @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
 
@@ -213,6 +273,12 @@ RSpec.describe "Bets", type: :request do
     sign_out @u1
     sign_in @u2
 
+    puts "bets status before accepting bet"
+    allBets = Bet.all
+    puts allBets.length()
+    puts allBets[0].status
+    puts allBets[1].status
+
     #accept the bet, balance in escrow should increase for @u2
     @params = { :id => allBets[0].id }
     get receive_bet_path(@params)
@@ -220,13 +286,19 @@ RSpec.describe "Bets", type: :request do
     expect(allUsers[0].balanceInEscrow).to eq(allBets[0].amount + allBets[2].amount)
     expect(allUsers[1].balanceInEscrow).to eq(allBets[0].amount)
 
+    puts "bets status after accepting bet"
+    allBets = Bet.all
+    puts allBets.length()
+    puts allBets[0].status
+    puts allBets[1].status
+
     #cancel the other bet, balance in escrow should decrease for @u1
     @params = { :id => allBets[2].id }
     get cancel_bet_path(@params)
 
     sign_out @u2
     sign_in @u1
-    @params = { :id => @u1.name }
+    @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
     # expect(allUsers[0].balanceInEscrow).to eq(allBets[0].amount)
@@ -305,7 +377,7 @@ RSpec.describe "Bets", type: :request do
     expect(allUsers[1].balanceInEscrow).to eq(0)
     expect(allUsers[1].actualBalance).to eq(@u2.actualBalance)
 
-    @params = { :id => @u1.name }
+    @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
 
@@ -326,7 +398,7 @@ RSpec.describe "Bets", type: :request do
 
     sign_out @u2
     sign_in @u1
-    @params = { :id => @u1.name }
+    @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
     # expect(allUsers[0].balanceInEscrow).to eq(allBets[0].amount)

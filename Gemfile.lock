@@ -57,6 +57,7 @@ GEM
       activesupport (>= 3.0.0)
     ambry (1.0.0)
     arel (9.0.0)
+    ast (2.4.2)
     auto_html (1.6.4)
       redcarpet (~> 3.1)
       rinku (~> 1.5.0)
@@ -1590,6 +1591,9 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
+    parallel (1.22.1)
+    parser (3.1.2.1)
+      ast (~> 2.4.1)
     pg (1.4.5)
     populator (1.0.0)
     pry (0.14.1)
@@ -1636,6 +1640,7 @@ GEM
       method_source
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
+    rainbow (3.1.1)
     raindrops (0.20.0)
     rake (13.0.6)
     rb-fsevent (0.11.2)
@@ -1669,6 +1674,19 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.12.0)
+    rubocop (1.37.1)
+      json (~> 2.3)
+      parallel (~> 1.10)
+      parser (>= 3.1.2.1)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.23.0, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.23.0)
+      parser (>= 3.1.1.0)
+    ruby-progressbar (1.11.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
@@ -1723,6 +1741,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
+    unicode-display_width (2.3.0)
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -1781,6 +1800,7 @@ DEPENDENCIES
   rails (= 5.2.0)
   rails_12factor
   rspec-rails
+  rubocop
   sanitize
   sass-rails (~> 5.0.0)
   selenium-webdriver

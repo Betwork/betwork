@@ -39,6 +39,7 @@ gem 'twilio-ruby'
 gem 'excon'
 
 group :development do
+  gem 'rubocop'
   gem 'spring'
   gem 'better_errors'
   gem 'binding_of_caller'
