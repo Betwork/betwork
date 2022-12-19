@@ -13,8 +13,8 @@ class BetsController < ApplicationController
   respond_to :html, :js
 
   def placebet
-    #puts "placebet"
-    #puts params
+    ##puts "placebet"
+    ##puts params
     @friend = User.find_by(id: params[:friend_id])
     @@friend_user = @friend
     @game = Odd.find params[:game]
@@ -22,16 +22,16 @@ class BetsController < ApplicationController
   end
 
   def allbets
-    #puts "allbets"
+    ##puts "allbets"
     # setting a hash that maps team abbreviations to team names
     # used later in string comparisons
 
     # get all the bets of the current user
     @user_bets = Bet.get_by_userid(current_user.id)
     fakedata = params[:fakedata]
-    puts "THE VALUE OF FAKEDATA"
-    puts fakedata
-    puts params
+    #puts "THE VALUE OF FAKEDATA"
+    #puts fakedata
+    #puts params
 
     # send the API request for NBA games
     url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/scores?daysFrom=3")
@@ -77,20 +77,20 @@ class BetsController < ApplicationController
 
     # for each bet
     @user_bets.each do |bet|
-      puts "reached 1"
+      #puts "reached 1"
       # only proceed with confirmed bets
       if (bet.status == 'confirmed')
-        puts "reached 2"
+        #puts "reached 2"
 
         # get the date of the bet in the right format
         date_string_bet = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
 
         # select the right league for the game
         if (bet.league == 'NBA')
-          puts "reached 3"
+          #puts "reached 3"
           # for each game in the response
           nba_games.each do |game|
-            puts "reached 4"
+            #puts "reached 4"
 
             # extract the date of the game
             date_string = game['commence_time']
@@ -105,9 +105,9 @@ class BetsController < ApplicationController
             if ((bet.home_team_name == game['home_team']) &&
               (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
               # if the game is finished, proceed
-              puts "reached 5"
+              #puts "reached 5"
               if game['completed'] == true
-                puts "reached 6"
+                #puts "reached 6"
 
                 #get the final scores of the game
                 scores = game['scores']
@@ -143,20 +143,20 @@ class BetsController < ApplicationController
                   odds = (bet.away_money_line).to_f
                 end
 
-                puts "odds acc to bet controller"
-                puts odds
+                #puts "odds acc to bet controller"
+                #puts odds
 
                 # apply the US odds formula to calculate the winnings
                 if (odds > 0.0)
                   @winning_amount = (@amount / 100.0) * odds
-                  puts "bet controller entered odds > 0"
+                  #puts "bet controller entered odds > 0"
                 else
                   @winning_amount = (@amount / (-odds)) * 100.0
-                  puts "bet controller entered odds <= 0"
+                  #puts "bet controller entered odds <= 0"
                 end
 
-                puts "winning amount acc to bet controller"
-                puts @winning_amount
+                #puts "winning amount acc to bet controller"
+                #puts @winning_amount
 
                 # setting variables to make post
                 @bet = bet
@@ -176,7 +176,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
-                  #puts 'User two lost'
+                  ##puts 'User two lost'
 
                   # making post that User One Won
                   content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
@@ -197,7 +197,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
-                  #puts 'User one lost'
+                  ##puts 'User one lost'
 
                   # making post that User Two Won
                   content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -328,7 +328,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
-                  #puts 'User two lost'
+                  ##puts 'User two lost'
 
                   # making post that User One Won
                   content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
@@ -348,7 +348,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
-                  #puts 'User one lost'
+                  ##puts 'User one lost'
 
                   # making post that User Two Won
                   content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -479,7 +479,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
-                  #puts 'User two lost'
+                  ##puts 'User two lost'
 
                   # making post that User One Won
                   content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
@@ -499,7 +499,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
-                  #puts 'User one lost'
+                  ##puts 'User one lost'
 
                   # making post that User Two Won
                   content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -617,16 +617,16 @@ class BetsController < ApplicationController
   end
 
   def new
-    #puts "new"
+    ##puts "new"
     @bet = Bet.new
   end
 
   def updatebet
-    #puts "updatebet"
+    ##puts "updatebet"
   end
 
   def confirm
-    #puts "confirm"
+    ##puts "confirm"
     # @bet = Bet.find params[:id]
     # admin_user = User.get_admin_user()
     # @friend= User.find_by(id: params[:friend_id])
@@ -638,7 +638,7 @@ class BetsController < ApplicationController
   end
 
   def receive
-    #puts "receive"
+    ##puts "receive"
     @bet = Bet.find params[:id]
     @amount = @bet.amount
     if (current_user.actualBalance - current_user.balanceInEscrow) - @amount < 0.0
@@ -721,9 +721,9 @@ class BetsController < ApplicationController
         to: recipient_phone_number,
         from: "+19295818779"
       )
-      puts "Text successfully sent!"
+      #puts "Text successfully sent!"
     rescue Twilio::REST::TwilioError => error
-      puts "Text not sent. Error message: #{error}"
+      #puts "Text not sent. Error message: #{error}"
     end
 
     # Try to send the email.
@@ -752,17 +752,17 @@ class BetsController < ApplicationController
       # configuration_set_name: configsetname,
       )
 
-      puts 'Confirmation Email sent to ' + recipient
+      #puts 'Confirmation Email sent to ' + recipient
 
       # If something goes wrong, display an error message.
     rescue Aws::SES::Errors::ServiceError => error
-      puts "Confirmation Email not sent. Error message: #{error}"
+      #puts "Confirmation Email not sent. Error message: #{error}"
     end
     redirect_to allbets_bet_path(current_user), notice: "Bet Accepted!"
   end
 
   def cancel
-    #puts "cancel"
+    ##puts "cancel"
     @bet = Bet.find params[:id]
     @amount = @bet.amount
     @status = @bet.status
@@ -846,9 +846,9 @@ class BetsController < ApplicationController
         to: recipient_phone_number,
         from: "+19295818779"
       )
-      puts "Text successfully sent!"
+      #puts "Text successfully sent!"
     rescue Twilio::REST::TwilioError => error
-      puts "Text not sent. Error message: #{error}"
+      #puts "Text not sent. Error message: #{error}"
     end
 
     # Try to send the email.
@@ -877,11 +877,11 @@ class BetsController < ApplicationController
       # configuration_set_name: configsetname,
       )
 
-      puts 'Cancellation Email sent to ' + recipient
+      #puts 'Cancellation Email sent to ' + recipient
 
       # If something goes wrong, display an error message.
     rescue Aws::SES::Errors::ServiceError => error
-      puts "Cancellation Email not sent. Error message: #{error}"
+      #puts "Cancellation Email not sent. Error message: #{error}"
     end
     redirect_to allbets_bet_path(current_user), notice: "Bet Cancelled!"
   end
@@ -890,7 +890,7 @@ class BetsController < ApplicationController
   end
 
   def create
-    # puts "created over here andy"
+    # #puts "created over here andy"
     @bet = Bet.new(bet_params)
     if @bet.save
       current_user.increase_balance_in_escrow(@bet.amount)
@@ -935,9 +935,9 @@ class BetsController < ApplicationController
           to: recipient_phone_number,
           from: "+19295818779"
         )
-        puts "Text successfully sent!"
+        #puts "Text successfully sent!"
       rescue Twilio::REST::TwilioError => error
-        puts "Text not sent. Error message: #{error}"
+        #puts "Text not sent. Error message: #{error}"
       end
       # Try to send the email.
       begin
@@ -965,11 +965,11 @@ class BetsController < ApplicationController
         # configuration_set_name: configsetname,
         )
 
-        puts 'Proposition Email sent to ' + recipient
+        #puts 'Proposition Email sent to ' + recipient
 
         # If something goes wrong, display an error message.
       rescue Aws::SES::Errors::ServiceError => error
-        puts "Proposition Email not sent. Error message: #{error}"
+        #puts "Proposition Email not sent. Error message: #{error}"
       end
     else
       respond_to do |format|
@@ -982,7 +982,7 @@ class BetsController < ApplicationController
   end
 
   def update
-    #puts "update"
+    ##puts "update"
     @bet.update(user_params)
   end
 
@@ -991,7 +991,7 @@ class BetsController < ApplicationController
   # end
   #
   # def friends
-  #     #puts params[:page]
+  #     ##puts params[:page]
   #     @friends = @user.following_users.paginate(page: params[:page])
   #     @game = Odd.find params[:id]
   # end
@@ -1003,25 +1003,25 @@ class BetsController < ApplicationController
   private
 
   def user_params
-    #puts "user_params"
-    #puts user_params
+    ##puts "user_params"
+    ##puts user_params
     params.require(:user).permit(:name, :about, :avatar, :cover,
                                  :sex, :dob, :location, :phone_number)
   end
 
   def bet_params
-    #puts "bet_params"
+    ##puts "bet_params"
     params.require(:bet).permit(:home_team_name, :away_team_name, :home_money_line, :date,
                                 :away_money_line, :user_one_name, :betting_on, :user_two_name, :amount, :user_id_one, :user_id_two, :status, :league)
   end
 
   def check_ownership
-    #puts "check_ownership"
+    ##puts "check_ownership"
     redirect_to current_user, notice: 'Not Authorized' unless @user == current_user
   end
 
   def set_user
-    #puts "set_user"
+    ##puts "set_user"
     @user = current_user
     render_404 and return unless @user
   end
