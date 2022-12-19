@@ -31,7 +31,7 @@ Our team consists of the following four students currently enrolled in Columbia 
 ## Quick Links
 To quickly access any of the critical deliverables of the project, use the links below:
 1) Betwork's Github Repo: https://github.com/Betwork/betwork.git
-2) Heroku Deployment of Betwork: https://obscure-mountain-53319.herokuapp.com/
+2) Heroku Deployment of Betwork: http://fierce-hollows-46387.herokuapp.com/
 
 
 ## Introduction
@@ -48,19 +48,21 @@ As the team proceeds with building out Betwork, it is concerned with which new F
 
 
 ### Major Flows
-In its current state (Iteration 2), the application can be tested using the Test User credentials (or create your own via sign-up locally):
+In its current state (Project-Launch), the application can be tested using the Test User credentials (or create your own via sign-up locally or on Heroku):
 * email: test@betwork.com
 * password: password
 
 Following are the major feature flows that the application supports with:
-* Login with given credentials or sign-up on your own (Heroku Sign Up is NOT working! Only local sign-up!)
+* Login with given credentials or sign-up on your own
 * Navigate to Find Friends to follow (add) new friends
 * Navigate to My Friends to view your current friends
 * Next, navigate to Manage Funds to deposit or withdraw money
 * Once you have money and friends, navigating to Live Bets shows you real-time the current games that can be bet on (RapidAPI Live)
+* Games across the NBA, NFL, and NHL are supported
 * Choose a game to bet on (Place Bet) and choose a friend to propose a bet against (Place Bet)
 * Enter an amount to bet, and confirm your bet
 * Navigate back to the home page where you will see your updated balance (with pending bets) and now go to My Bets
+* Flows exist for automatically sending texts and emails to users based on their bet progression
 * On this page, you can see your confirmed, proposed, received, finished, and cancelled bets
 * Should you decide to cancel your proposed bet, you may do so by clicking Cancel Bet prior to the opponent accepting the bet
 * Should you decide to decline an incoming bet, you may also do so by clicking Cancel Bet
@@ -87,19 +89,23 @@ Betwork My Bets page that shows your confirmed, proposed, received, finished, an
 ![Image4](https://i.imgur.com/gdM6roM.png?raw=true "Title") 
 Betwork My Funds page that allows the user to see their balance and manage funds by depositing/withdrawing money.
 
-### Improvements from Iteration 1
-Following are the improvements made by the team on Betwork from Iteration 1 to Iteration 2:
-1) `SimpleCov` was integrated into the test suite of the application so that test results and coverage could be easily reported.
-2) `setup.sh` allows a user to automate their local deployment while `heroku-deploy.sh` allows a user to automate their Heroku deployment. The user therefore need not have to manually run commands every time and also need not have to figure out if any extra commands are required.
-3) Live Odds - view real time NBA odds for today's games
-4) Live Bets - place bets against friends and once the matches finish, bets will be processed and paid out
+### Improvements from Iteration 2
+Following are the improvements made by the team on Betwork from Iteration 2 to Project Launch:
+1) Twilio was set up so we could create automated texting features! We were able to demo out this feature during our proj-demo and it is incorporated in the code - however, texts will only be sent to Jordi Adoumie's phone # at this point in time because of Twilio Rules and the associated cost to deploy to all numbers generally.
+2) AWS SES allows for emailing users the status of their games! Similar to the Twilio texting features, this will only send emails to email addresses that are already verified. Because of free-tier, we are not able to email all users who sign up. They must first be verified through AWS SES. 
+3) AWS Lambda functions + Dynamo DB! We deployed logic into the cloud to check the status of all bets in the database every 2 hours and appropriately move bets out of "confirmed" status to "finished" status based on who won and who lost! Your user will get automatically paid out!
+4) Added NFL + NHL Odds! So now you can bet across three differrent proffesional leagues --> NBA, NFL, NHL
+5) API Refactoring: We decided the APIs we had used to date were not stable enough and did not support a wide variety of sports. To remedy this, we had to refactor A LOT of the code to be set up with the newer API we are using. 
+6) Sign Up Refactoring: Any user can now sign up for the platform! Follow the sign-up workflow and you will receive an email to the email provided during sign-up. After verifying your email address you will be able to log-in!
+7) Users cannot cancel or propose a bet if it is within 2 hours of the game commencing. This was a feature we decided to implement to better support real-life betting scenarios. Oftentimes, after a bet is confirmed, the Bookie will not let users cancel bets. However, since Betwork is NOT A BOOKIE... we allow users to cancel their bet as long as it is before 2 hours of game time! You also cannot propose a bet to another user if it is within 2 hours of a game starting. 
+8) Users can bet on games that are upcoming within a few days (previously could only bet on games that were occuring on the same day). Some sports like NFL require this type of betting availability. 
 
 ## Codebase
 As mentioned above, the application was written as a final project for the course COMS 4152: Engineering Software as a Service in the Fall of 2022. Following are the notable features of the codebase:
 1) The Betwork framework was built on top of an existing template for a rudimentary social media application, Socify. The Medium article explaining its construction can be found at: https://medium.com/rails-ember-beyond/how-to-build-a-social-network-using-rails-eb31da569233.
 2) The original source code from the aforementioned article can be found at: https://github.com/scaffeinate/socify/tree/stable.
-3) Given that the team's primary goal is to implement their proposed betting features, the team has not devoted substantial effort to refactoring/removing unused/unwanted features of the original Socify application. As such, the codebase is heavier than it currently need be.
-4) The original framework was implemented in Ruby on Rails and Betwork team expanded on this. The application thus runs on `Ruby 2.6.6` and `Rails 5.2.0`.
+3) The original framework was implemented in Ruby on Rails and Betwork team expanded on this. The application thus runs on `Ruby 2.6.6` and `Rails 5.2.0`.
+4) Various application logic is also hosted on AWS through lambda functions + DynamoDB to help facilitate automated email, texting, and database cleanup when games are completed (settlement process of bets)
 
 ## Workflow
 The team used Github to manage both the flow of work as well as the codebase itself in the following way:
@@ -152,7 +158,7 @@ git fetch
 git stash
     
 # ensure that the user is on the latest stable branch (Iteration 2)
-git checkout proj-iter2
+git checkout proj-launch
 
 # ensure that the branch is up to date
 git pull
@@ -261,19 +267,6 @@ paint an accurate picture as to the required.
 ## Future Development
 Given the commitment of the team members to bettering this application over the course of its development cycle, the team has already started planning ahead for the next iteration.
 
-### Known Bugs
-Given that the application is still under development (and currently ahead of the planned schedule), team members have noticed certain behaviours - that while expected - may appear to an application user as a bug and therefore require attention in the future:
-1) A user needs to have sufficient funds to cover a received bet at the time the bet was placed. Currently, if a user receives a bet - the amount for which is greater than their available balance, they will need to cancel the bet, add funds and then propose the bet themselves. In future iterations, caching will be handled so as to allow a user to add funds to match a bet amount - even after a bet has been proposed to them.
-2) In order to control API requests, the status of confirmed bets is only updated when the **My Bets** page is visited. Thus, a user may need to visit the **My Bets** page and then the **Home Page** to see their actual balance.
-3) While application users currently do earn winnings based on the money line being displayed, bets do not force application users to bet different amounts based on which application user is incurring more risk.
-4) Ocassionally, some bets may not properly move from a pending state to a confirmed state when it is accepted. If you try to cancel a bet that is stuck in this transition, it may still reflect in the pending balance. We will work to solve these issues for the next iteration.  
-5) *Sign up Feature does not work on Heroku!* For the final iteration we plan to set it up so that users will actually receive email confirmations.
-
 ### Upcoming Features
 While the team will consider feedback from application users when solidifying the roadmap for the next iteration, some major features to look forward to are:
-1) Application users will not be able to cancel a bet within 2 hours of the game starting.
-2) Users will be able to create Groups within which they can have their own Betwork Board and multi-person bets.
-3) Users will be able to bet on multiple sports.
-4) Users will be able to view their Balances and other Betting statistics pertaining to their betting history on their **My Bets** page.
-5) Users will be able to bet on games multiple days in advance instead of just the day of. 
-6) Users will receive texts when a friend places a bet against them and when a bet is settled.
+1) Users will be able to create Groups within which they can have their own Betwork Board and multi-person bets.
