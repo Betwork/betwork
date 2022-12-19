@@ -30,7 +30,6 @@ class BetsController < ApplicationController
     @user_bets = Bet.get_by_userid(current_user.id)
     fakedata = params[:fakedata]
     forcetimeupdatefortest = params[:forcetimeupdatefortest]
-    puts forcetimeupdatefortest
 
     # send the API request for NBA games
     url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/scores?daysFrom=3")
@@ -398,8 +397,6 @@ class BetsController < ApplicationController
             if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
               # if the game is finished, proceed
-              # puts "inside of nhl"
-              # puts forcetimeupdatefortest
               if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
