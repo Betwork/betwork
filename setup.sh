@@ -5,7 +5,7 @@ brew install shared-mime-info
 brew install postgresql
 git fetch
 git stash
-git checkout proj-iter2
+git checkout proj-launch
 git pull
 bundle install
 bundle update
