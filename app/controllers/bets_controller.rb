@@ -13,8 +13,8 @@ class BetsController < ApplicationController
   respond_to :html, :js
 
   def placebet
-    #puts "placebet"
-    #puts params
+    ##puts "placebet"
+    ##puts params
     @friend = User.find_by(id: params[:friend_id])
     @@friend_user = @friend
     @game = Odd.find params[:game]
@@ -22,13 +22,14 @@ class BetsController < ApplicationController
   end
 
   def allbets
-    #puts "allbets"
+    ##puts "allbets"
     # setting a hash that maps team abbreviations to team names
     # used later in string comparisons
 
-
     # get all the bets of the current user
     @user_bets = Bet.get_by_userid(current_user.id)
+    fakedata = params[:fakedata]
+    forcetimeupdatefortest = params[:forcetimeupdatefortest]
 
     # send the API request for NBA games
     url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/scores?daysFrom=3")
@@ -74,21 +75,17 @@ class BetsController < ApplicationController
 
     # for each bet
     @user_bets.each do |bet|
-
-
       # only proceed with confirmed bets
       if (bet.status == 'confirmed')
 
         # get the date of the bet in the right format
         date_string_bet = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
 
-
         # select the right league for the game
         if (bet.league == 'NBA')
           # for each game in the response
           nba_games.each do |game|
 
-            # extract the date of the game
             date_string = game['commence_time']
             date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
 
@@ -98,16 +95,13 @@ class BetsController < ApplicationController
             date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['home_team']) &&
-              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
+            if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
               # if the game is finished, proceed
-              if game['completed'] == true
-
+              if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
 
-                #get the scores of the home and away team
                 if (scores[0]['name'] == game['home_team'])
                   home_score = scores[0]['score']
                   away_score = scores[1]['score']
@@ -115,7 +109,6 @@ class BetsController < ApplicationController
                   home_score = scores[1]['score']
                   away_score = scores[0]['score']
                 end
-
 
                 # establish whether Home or Away won
                 if (home_score > away_score)
@@ -164,14 +157,13 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
-                  #puts 'User two lost'
+                  ##puts 'User two lost'
 
                   # making post that User One Won
                   content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
                   test = { "content" => content_string }
                   @post = admin_user.posts.new(test)
                   @post.save
-
                 else
 
                   # increase his actual balance by the winnings
@@ -185,7 +177,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
-                  #puts 'User one lost'
+                  ##puts 'User one lost'
 
                   # making post that User Two Won
                   content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -194,26 +186,26 @@ class BetsController < ApplicationController
                   @post.save
                 end
 
-
                 unique_hash = bet.user_one_name + '_' + bet.user_two_name + '_' + bet.home_team_name + '_' + bet.away_team_name + '_' + bet.betting_on + '_' + bet.amount.to_s + '_' + bet.date + '_' + bet.status
                 dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
                 resp = dynamodb_client.update_item({
-                 expression_attribute_names: {
-                   "#S" => "status"
-                 },
-                 expression_attribute_values: {
-                   ":s" => "finished"
-                 },
-                 key: {
-                   "user_names_game" => unique_hash
-                 },
-                 return_values: "ALL_NEW",
-                 table_name: "bets",
-                 update_expression: "SET #S = :s",
-               })
+                                                     expression_attribute_names: {
+                                                       "#S" => "status"
+                                                     },
+                                                     expression_attribute_values: {
+                                                       ":s" => "finished"
+                                                     },
+                                                     key: {
+                                                       "user_names_game" => unique_hash
+                                                     },
+                                                     return_values: "ALL_NEW",
+                                                     table_name: "bets",
+                                                     update_expression: "SET #S = :s",
+                                                   })
                 # change the status of the bet and save it
                 bet.status = 'finished'
                 bet.save
+
               else
                 # extracting bet date and time
                 date_string = bet['date']
@@ -223,12 +215,11 @@ class BetsController < ApplicationController
                 utc_offset = Rational(0, 24)
 
                 # comparing current time in EST to 2hrs before start time of game in eastern
-                early_time_eastern = date_object_eastern - (2/24.0)
+                early_time_eastern = date_object_eastern - (2 / 24.0)
                 current_time = DateTime.now
                 current_time_utc = current_time.new_offset(utc_offset)
-                current_time_eastern = current_time_utc - (5/24.0)
+                current_time_eastern = current_time_utc - (5 / 24.0)
                 toolate_boolean = current_time_eastern > early_time_eastern
-
 
                 bet.toolate = toolate_boolean
                 bet.save
@@ -254,12 +245,10 @@ class BetsController < ApplicationController
             date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['home_team']) &&
-              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
+            if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
               # if the game is finished, proceed
-              if game['completed'] == true
-
+              if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
 
@@ -271,9 +260,8 @@ class BetsController < ApplicationController
                   away_score = scores[0]['score']
                 end
 
-
                 # establish whether Home or Away won
-                if (home_score > away_score)
+                if (home_score > away_score) && !fakedata
                   winning_team = 'Home Team'
                 else
                   winning_team = 'Away Team'
@@ -319,7 +307,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
-                  #puts 'User two lost'
+                  ##puts 'User two lost'
 
                   # making post that User One Won
                   content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
@@ -339,7 +327,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
-                  #puts 'User one lost'
+                  ##puts 'User one lost'
 
                   # making post that User Two Won
                   content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -348,23 +336,22 @@ class BetsController < ApplicationController
                   @post.save
                 end
 
-
                 unique_hash = bet.user_one_name + '_' + bet.user_two_name + '_' + bet.home_team_name + '_' + bet.away_team_name + '_' + bet.betting_on + '_' + bet.amount.to_s + '_' + bet.date + '_' + bet.status
                 dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
                 resp = dynamodb_client.update_item({
-                 expression_attribute_names: {
-                   "#S" => "status"
-                 },
-                 expression_attribute_values: {
-                   ":s" => "finished"
-                 },
-                 key: {
-                   "user_names_game" => unique_hash
-                 },
-                 return_values: "ALL_NEW",
-                 table_name: "bets",
-                 update_expression: "SET #S = :s",
-               })
+                                                     expression_attribute_names: {
+                                                       "#S" => "status"
+                                                     },
+                                                     expression_attribute_values: {
+                                                       ":s" => "finished"
+                                                     },
+                                                     key: {
+                                                       "user_names_game" => unique_hash
+                                                     },
+                                                     return_values: "ALL_NEW",
+                                                     table_name: "bets",
+                                                     update_expression: "SET #S = :s",
+                                                   })
                 # change the status of the bet and save it
                 bet.status = 'finished'
                 bet.save
@@ -378,12 +365,11 @@ class BetsController < ApplicationController
                 utc_offset = Rational(0, 24)
 
                 # comparing current time in EST to 2hrs before start time of game in eastern
-                early_time_eastern = date_object_eastern - (2/24.0)
+                early_time_eastern = date_object_eastern - (2 / 24.0)
                 current_time = DateTime.now
                 current_time_utc = current_time.new_offset(utc_offset)
-                current_time_eastern = current_time_utc - (5/24.0)
+                current_time_eastern = current_time_utc - (5 / 24.0)
                 toolate_boolean = current_time_eastern > early_time_eastern
-
 
                 bet.toolate = toolate_boolean
                 bet.save
@@ -408,12 +394,10 @@ class BetsController < ApplicationController
             date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['home_team']) &&
-              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
+            if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
               # if the game is finished, proceed
-              if game['completed'] == true
-
+              if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
 
@@ -425,9 +409,8 @@ class BetsController < ApplicationController
                   away_score = scores[0]['score']
                 end
 
-
                 # establish whether Home or Away won
-                if (home_score > away_score)
+                if (home_score > away_score) && !fakedata
                   winning_team = 'Home Team'
                 else
                   winning_team = 'Away Team'
@@ -473,7 +456,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_two.increase_balance_in_escrow(-@amount)
-                  #puts 'User two lost'
+                  ##puts 'User two lost'
 
                   # making post that User One Won
                   content_string = create_bet_won_message_string(@user_one, @user_two, @bet)
@@ -493,7 +476,7 @@ class BetsController < ApplicationController
 
                   # remove wagered amount from escrow
                   @user_one.increase_balance_in_escrow(-@amount)
-                  #puts 'User one lost'
+                  ##puts 'User one lost'
 
                   # making post that User Two Won
                   content_string = create_bet_won_message_string(@user_two, @user_one, @bet)
@@ -502,29 +485,29 @@ class BetsController < ApplicationController
                   @post.save
                 end
 
-
                 unique_hash = bet.user_one_name + '_' + bet.user_two_name + '_' + bet.home_team_name + '_' + bet.away_team_name + '_' + bet.betting_on + '_' + bet.amount.to_s + '_' + bet.date + '_' + bet.status
                 dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
                 resp = dynamodb_client.update_item({
-                 expression_attribute_names: {
-                   "#S" => "status"
-                 },
-                 expression_attribute_values: {
-                   ":s" => "finished"
-                 },
-                 key: {
-                   "user_names_game" => unique_hash
-                 },
-                 return_values: "ALL_NEW",
-                 table_name: "bets",
-                 update_expression: "SET #S = :s",
-               })
+                                                     expression_attribute_names: {
+                                                       "#S" => "status"
+                                                     },
+                                                     expression_attribute_values: {
+                                                       ":s" => "finished"
+                                                     },
+                                                     key: {
+                                                       "user_names_game" => unique_hash
+                                                     },
+                                                     return_values: "ALL_NEW",
+                                                     table_name: "bets",
+                                                     update_expression: "SET #S = :s",
+                                                   })
                 # change the status of the bet and save it
                 bet.status = 'finished'
                 bet.save
 
               else
                 # extracting bet date and time
+                # puts "OKAY WERE CHANGING DATE TIME"
                 date_string = bet['date']
                 date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
 
@@ -532,12 +515,11 @@ class BetsController < ApplicationController
                 utc_offset = Rational(0, 24)
 
                 # comparing current time in EST to 2hrs before start time of game in eastern
-                early_time_eastern = date_object_eastern - (2/24.0)
+                early_time_eastern = date_object_eastern - (2 / 24.0)
                 current_time = DateTime.now
                 current_time_utc = current_time.new_offset(utc_offset)
-                current_time_eastern = current_time_utc - (5/24.0)
+                current_time_eastern = current_time_utc - (5 / 24.0)
                 toolate_boolean = current_time_eastern > early_time_eastern
-
 
                 bet.toolate = toolate_boolean
                 bet.save
@@ -551,9 +533,6 @@ class BetsController < ApplicationController
           end
 
         end
-
-
-
 
       elsif (bet.status == 'proposed')
 
@@ -570,8 +549,6 @@ class BetsController < ApplicationController
         date_object_eastern = date_object_utc.new_offset(eastern_offset)
         nba_date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
 
-
-
         # team names
         nhl_home_team_name = nhl_games[0]['home_team']
         nhl_away_team_name = nhl_games[0]['away_team']
@@ -585,11 +562,7 @@ class BetsController < ApplicationController
         date_object_eastern = date_object_utc.new_offset(eastern_offset)
         nhl_date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
 
-        if (not((bet.home_team_name == nba_home_team_name) &&
-          (bet.away_team_name == nba_away_team_name) &&
-          (bet.date == nba_date_string_eastern)) && not((bet.home_team_name == nhl_home_team_name) &&
-          (bet.away_team_name == nhl_away_team_name) &&
-          (bet.date == nhl_date_string_eastern)))
+        if (not ((bet.home_team_name == nba_home_team_name) && (bet.away_team_name == nba_away_team_name) && (bet.date == nba_date_string_eastern)) && not((bet.home_team_name == nhl_home_team_name) && (bet.away_team_name == nhl_away_team_name) && (bet.date == nhl_date_string_eastern)))
           # extracting bet date and time
           date_string = bet['date']
           date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
@@ -598,14 +571,14 @@ class BetsController < ApplicationController
           utc_offset = Rational(0, 24)
 
           # comparing current time in EST to 2hrs before start time of game in eastern
-          early_time_eastern = date_object_eastern - (2/24.0)
+          early_time_eastern = date_object_eastern - (2 / 24.0)
           current_time = DateTime.now
           current_time_utc = current_time.new_offset(utc_offset)
-          current_time_eastern = current_time_utc - (5/24.0)
+          current_time_eastern = current_time_utc - (5 / 24.0)
           toolate_boolean = current_time_eastern > early_time_eastern
 
           bet.toolate = toolate_boolean
-          if (toolate_boolean)
+          if toolate_boolean || forcetimeupdatefortest
             bet.status = 'cancelled'
             @original = User.find_by(id: bet.user_id_one)
             @original.increase_balance_in_escrow(-bet.amount)
@@ -618,16 +591,16 @@ class BetsController < ApplicationController
   end
 
   def new
-    #puts "new"
+    ##puts "new"
     @bet = Bet.new
   end
 
   def updatebet
-    #puts "updatebet"
+    ##puts "updatebet"
   end
 
   def confirm
-    #puts "confirm"
+    ##puts "confirm"
     # @bet = Bet.find params[:id]
     # admin_user = User.get_admin_user()
     # @friend= User.find_by(id: params[:friend_id])
@@ -639,7 +612,7 @@ class BetsController < ApplicationController
   end
 
   def receive
-    #puts "receive"
+    ##puts "receive"
     @bet = Bet.find params[:id]
     @amount = @bet.amount
     if (current_user.actualBalance - current_user.balanceInEscrow) - @amount < 0.0
@@ -689,12 +662,12 @@ class BetsController < ApplicationController
     recipient_phone_number = recipient_user.phone_number
     allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com', 'jja2163@columbia.edu']
     allowed_numbers = ['3108479740']
-    if (not(allowed_emails.include? recipient))
+    if (not (allowed_emails.include? recipient))
       recipient = 'andybirla96@gmail.com'
     end
-    if (not(allowed_numbers.include? recipient_phone_number))
+    if (not (allowed_numbers.include? recipient_phone_number))
       recipient_phone_number = '+13108479740'
-    else 
+    else
       recipient_phone_number = "+1" + recipient_phone_number
     end
     subject = '[Betwork] Your bet with ' + @bet.user_two_name + ' was confirmed.'
@@ -716,15 +689,15 @@ class BetsController < ApplicationController
       'f3a42abcb29d4bb549cd003b2dc7d749'
     )
     # Try to send the text.
-    begin 
+    begin
       message = twilio_client.messages.create(
         body: textbody,
         to: recipient_phone_number,
         from: "+19295818779"
       )
-      puts "Text successfully sent!"
+      #puts "Text successfully sent!"
     rescue Twilio::REST::TwilioError => error
-      puts "Text not sent. Error message: #{error}"
+      #puts "Text not sent. Error message: #{error}"
     end
 
     # Try to send the email.
@@ -751,20 +724,19 @@ class BetsController < ApplicationController
         source: sender,
       # Uncomment the following line to use a configuration set.
       # configuration_set_name: configsetname,
-        )
+      )
 
-      puts 'Confirmation Email sent to ' + recipient
-
+      #puts 'Confirmation Email sent to ' + recipient
 
       # If something goes wrong, display an error message.
     rescue Aws::SES::Errors::ServiceError => error
-      puts "Confirmation Email not sent. Error message: #{error}"
+      #puts "Confirmation Email not sent. Error message: #{error}"
     end
     redirect_to allbets_bet_path(current_user), notice: "Bet Accepted!"
   end
 
   def cancel
-    #puts "cancel"
+    ##puts "cancel"
     @bet = Bet.find params[:id]
     @amount = @bet.amount
     @status = @bet.status
@@ -784,19 +756,19 @@ class BetsController < ApplicationController
       dynamodb_client = Aws::DynamoDB::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
       unique_hash = @bet.user_one_name + '_' + @bet.user_two_name + '_' + @bet.home_team_name + '_' + @bet.away_team_name + '_' + @bet.betting_on + '_' + @bet.amount.to_s + '_' + @bet.date + '_' + @bet.status
       resp = dynamodb_client.update_item({
-                                  expression_attribute_names: {
-                                    "#S" => "status"
-                                  },
-                                  expression_attribute_values: {
-                                    ":s" => "cancelled"
-                                  },
-                                  key: {
-                                    "user_names_game" => unique_hash
-                                  },
-                                  return_values: "ALL_NEW",
-                                  table_name: "bets",
-                                  update_expression: "SET #S = :s",
-                                })
+                                           expression_attribute_names: {
+                                             "#S" => "status"
+                                           },
+                                           expression_attribute_values: {
+                                             ":s" => "cancelled"
+                                           },
+                                           key: {
+                                             "user_names_game" => unique_hash
+                                           },
+                                           return_values: "ALL_NEW",
+                                           table_name: "bets",
+                                           update_expression: "SET #S = :s",
+                                         })
     elsif ((@status == 'proposed') && (current_user.name == @bet.user_one_name))
       current_user.increase_balance_in_escrow(-@amount)
     elsif ((@status == 'proposed') && (current_user.name == @bet.user_two_name))
@@ -809,12 +781,12 @@ class BetsController < ApplicationController
     recipient_phone_number = @friend.phone_number
     allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com', 'jja2163@columbia.edu']
     allowed_numbers = ['3108479740']
-    if (not(allowed_emails.include? recipient))
+    if (not (allowed_emails.include? recipient))
       recipient = 'andybirla96@gmail.com'
     end
-    if (not(allowed_numbers.include? recipient_phone_number))
+    if (not (allowed_numbers.include? recipient_phone_number))
       recipient_phone_number = '+13108479740'
-    else 
+    else
       recipient_phone_number = "+1" + recipient_phone_number
     end
 
@@ -842,15 +814,15 @@ class BetsController < ApplicationController
       'f3a42abcb29d4bb549cd003b2dc7d749'
     )
     # Try to send the text.
-    begin 
+    begin
       message = twilio_client.messages.create(
         body: textbody,
         to: recipient_phone_number,
         from: "+19295818779"
       )
-      puts "Text successfully sent!"
+      #puts "Text successfully sent!"
     rescue Twilio::REST::TwilioError => error
-      puts "Text not sent. Error message: #{error}"
+      #puts "Text not sent. Error message: #{error}"
     end
 
     # Try to send the email.
@@ -877,14 +849,13 @@ class BetsController < ApplicationController
         source: sender,
       # Uncomment the following line to use a configuration set.
       # configuration_set_name: configsetname,
-        )
+      )
 
-      puts 'Cancellation Email sent to ' + recipient
-
+      #puts 'Cancellation Email sent to ' + recipient
 
       # If something goes wrong, display an error message.
     rescue Aws::SES::Errors::ServiceError => error
-      puts "Cancellation Email not sent. Error message: #{error}"
+      #puts "Cancellation Email not sent. Error message: #{error}"
     end
     redirect_to allbets_bet_path(current_user), notice: "Bet Cancelled!"
   end
@@ -893,7 +864,7 @@ class BetsController < ApplicationController
   end
 
   def create
-    # puts "created over here andy"
+    # #puts "created over here andy"
     @bet = Bet.new(bet_params)
     if @bet.save
       current_user.increase_balance_in_escrow(@bet.amount)
@@ -904,12 +875,12 @@ class BetsController < ApplicationController
       recipient_phone_number = recipient_user.phone_number
       allowed_emails = ['ab5188@columbia.edu', 'andybirla96@gmail.com', 'andy.birla21@gmail.com', 'andymbirla@gmail.com', 'jja2163@columbia.edu']
       allowed_numbers = ['3108479740']
-      if (not(allowed_emails.include? recipient))
+      if (not (allowed_emails.include? recipient))
         recipient = 'andybirla96@gmail.com'
       end
-      if (not(allowed_numbers.include? recipient_phone_number))
+      if (not (allowed_numbers.include? recipient_phone_number))
         recipient_phone_number = '+13108479740'
-      else 
+      else
         recipient_phone_number = "+1" + recipient_phone_number
       end
 
@@ -928,19 +899,19 @@ class BetsController < ApplicationController
       encoding = 'UTF-8'
       ses = Aws::SES::Client.new(region: 'us-east-1', access_key_id: 'AKIAQNW4F2IKHDRYMOHR', secret_access_key: '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')
       twilio_client = Twilio::REST::Client.new(
-      'AC301826b0bd8c63c945aeae5288b45720',
-      'f3a42abcb29d4bb549cd003b2dc7d749'
+        'AC301826b0bd8c63c945aeae5288b45720',
+        'f3a42abcb29d4bb549cd003b2dc7d749'
       )
       # Try to send the text.
-      begin 
-      message = twilio_client.messages.create(
-        body: textbody,
-        to: recipient_phone_number,
-        from: "+19295818779"
+      begin
+        message = twilio_client.messages.create(
+          body: textbody,
+          to: recipient_phone_number,
+          from: "+19295818779"
         )
-        puts "Text successfully sent!"
+        #puts "Text successfully sent!"
       rescue Twilio::REST::TwilioError => error
-        puts "Text not sent. Error message: #{error}"
+        #puts "Text not sent. Error message: #{error}"
       end
       # Try to send the email.
       begin
@@ -966,14 +937,13 @@ class BetsController < ApplicationController
           source: sender,
         # Uncomment the following line to use a configuration set.
         # configuration_set_name: configsetname,
-          )
+        )
 
-        puts 'Proposition Email sent to ' + recipient
-
+        #puts 'Proposition Email sent to ' + recipient
 
         # If something goes wrong, display an error message.
       rescue Aws::SES::Errors::ServiceError => error
-        puts "Proposition Email not sent. Error message: #{error}"
+        #puts "Proposition Email not sent. Error message: #{error}"
       end
     else
       respond_to do |format|
@@ -986,7 +956,7 @@ class BetsController < ApplicationController
   end
 
   def update
-    #puts "update"
+    ##puts "update"
     @bet.update(user_params)
   end
 
@@ -995,7 +965,7 @@ class BetsController < ApplicationController
   # end
   #
   # def friends
-  #     #puts params[:page]
+  #     ##puts params[:page]
   #     @friends = @user.following_users.paginate(page: params[:page])
   #     @game = Odd.find params[:id]
   # end
@@ -1007,25 +977,25 @@ class BetsController < ApplicationController
   private
 
   def user_params
-    #puts "user_params"
-    #puts user_params
+    ##puts "user_params"
+    ##puts user_params
     params.require(:user).permit(:name, :about, :avatar, :cover,
                                  :sex, :dob, :location, :phone_number)
   end
 
   def bet_params
-    #puts "bet_params"
+    ##puts "bet_params"
     params.require(:bet).permit(:home_team_name, :away_team_name, :home_money_line, :date,
                                 :away_money_line, :user_one_name, :betting_on, :user_two_name, :amount, :user_id_one, :user_id_two, :status, :league)
   end
 
   def check_ownership
-    #puts "check_ownership"
+    ##puts "check_ownership"
     redirect_to current_user, notice: 'Not Authorized' unless @user == current_user
   end
 
   def set_user
-    #puts "set_user"
+    ##puts "set_user"
     @user = current_user
     render_404 and return unless @user
   end
