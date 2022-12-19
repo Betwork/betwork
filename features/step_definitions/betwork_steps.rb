@@ -37,26 +37,26 @@ Given /the Betwork test database exists/ do
     puts "created user #{user.name}"
   end
 
-    admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
-    admin_user.actualBalance = 5000
-    #admin_user.balanceInEscrow = 2222.24
-    admin_user.skip_confirmation!
-    admin_user.save!
+  admin_user = User.new(name: 'Betwork', email: 'admin@betwork.com', sex: 'male', password: 'password')
+  admin_user.actualBalance = 5000
+  #admin_user.balanceInEscrow = 2222.24
+  admin_user.skip_confirmation!
+  admin_user.save!
 
   Odd.populate 1 do |bet|
     bet.home_team_name = "Los Angeles Lakers"
     bet.away_team_name = "New York Knicks"
-    bet.home_money_line= -110
-    bet.away_money_line= -110
-    bet.date="6:00 ET 11/20/2022"
+    bet.home_money_line = -110
+    bet.away_money_line = -110
+    bet.date = "6:00 ET 11/20/2022"
   end
 
   Odd.populate 5 do |bet|
     bet.home_team_name = Faker::Name.name
     bet.away_team_name = Faker::Name.name
-    bet.home_money_line= -110
-    bet.away_money_line= -110
-    bet.date="6:00 ET 11/20/2022"
+    bet.home_money_line = -110
+    bet.away_money_line = -110
+    bet.date = "6:00 ET 11/20/2022"
   end
 
   user = User.new(name: 'Rails', email: 'test@betwork.com', sex: 'male', password: 'password', actualBalance: "0", balanceInEscrow: "0")
@@ -147,9 +147,8 @@ And /I take a screenshot/ do
   page.save_screenshot('test.png')
 end
 
-
 Given /the admin user has money/ do
-    User.where(name: "Rails").update_all(actualBalance: 500)
+  User.where(name: "Rails").update_all(actualBalance: 500)
 end
 
 Given /the admin user exists/ do
@@ -177,12 +176,12 @@ When /I place a bet on the first game/ do
   #visit '/odds/1/friends'
 end
 
-And /I cancel my bet/ do 
+And /I cancel my bet/ do
   find(:xpath, '/html/body/div/table[2]/tbody/tr/td[10]/a').click
 
 end
 
-And /I accept a proposed bet/ do 
+And /I accept a proposed bet/ do
   find(:xpath, '/html/body/div/table[3]/tbody/tr/td[10]/a').click
 end
 
@@ -205,7 +204,8 @@ When /^(?:|I )balance form select "([^"]*)"$/ do |option|
   select option, :from => "balance_change_type"
 end
 
-Given /I have placed a bet/ do # STUCK
+Given /I have placed a bet/ do
+  # STUCK
   bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "proposed")
   bet.save!
   User.where(name: "Rails").update_all(balanceInEscrow: 50)
@@ -223,7 +223,7 @@ And /I fill in the comment with some text "([^"]*)"$/ do |text|
   send_keys(text)
 end
 
-And /I click the comment button/ do 
+And /I click the comment button/ do
   find(:xpath, '/html/body/div[1]/div/div[2]/div/form/input[2]').click
 end
 
@@ -245,7 +245,7 @@ And /I change teams to "([^"]*)"$/ do |team|
   #test.selectByVisibleText(team)
 end
 
-Then /I add a comment to the post/ do 
+Then /I add a comment to the post/ do
   find(:xpath, '/html/body/div[1]/div/div[2]/div[2]/div[1]/div/div[3]/div/div[2]/a').click
 end
 
@@ -253,14 +253,42 @@ And /I create a new comment/ do
   find(:xpath, '/html/body/div[1]/div/div[2]/div/form/div/div').click
 end
 
-
-
-Given /I have a confirmed bet/ do 
-  bet = Bet.create!(league: "NBA", home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "19:10 ET 12/16/2022", status: "Confirmed")
+Given /I have a confirmed NBA bet/ do
+  bet = Bet.create!(league: "NBA", home_team_name: "Charlotte Hornets", away_team_name: "Atlanta Hawks", betting_on: "Home Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "19:10 ET 12/16/2022", status: "confirmed")
   bet.save!
-  User.where(name: "Rails").update_all(balanceInEscrow: 50)
-end 
+  bet = Bet.create!(league: "NBA", home_team_name: "Charlotte Hornets", away_team_name: "Atlanta Hawks", betting_on: "Away Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "19:10 ET 12/16/2022", status: "confirmed")
+  bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 100)
+end
+
+Given /I have a confirmed NFL bet/ do
+  bet = Bet.create!(league: "NFL", home_team_name: "Cleveland Browns", away_team_name: "Baltimore Ravens", betting_on: "Home Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "16:30 ET 12/17/2022", status: "confirmed")
+  bet.save!
+  bet = Bet.create!(league: "NFL", home_team_name: "Cleveland Browns", away_team_name: "Baltimore Ravens", betting_on: "Away Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "16:30 ET 12/17/2022", status: "confirmed")
+  bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 100)
+end
+
+Given /I have a confirmed NHL bet/ do
+  bet = Bet.create!(league: "NHL", home_team_name: "Minnesota Wild", away_team_name: "Chicago Blackhawks", betting_on: "Home Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "20:00 ET 12/16/2022", status: "confirmed")
+  bet.save!
+  bet = Bet.create!(league: "NHL", home_team_name: "Minnesota Wild", away_team_name: "Chicago Blackhawks", betting_on: "Away Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "20:00 ET 12/16/2022", status: "confirmed")
+  bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 100)
+end
 
 Then /I sleep/ do
-  sleep(2)
+  sleep(3)
 end

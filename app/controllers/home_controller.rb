@@ -2,6 +2,8 @@
 # Socify is an Open source Social network written in Ruby on Rails This file is licensed
 # under GNU GPL v2 or later. See the LICENSE.
 
+require_relative "../constants/bet_post_constants.rb"
+
 class HomeController < ApplicationController
   before_action :set_user, except: :front
   before_action :admin_user
@@ -30,6 +32,7 @@ class HomeController < ApplicationController
     request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
+    sleep(0.5)
     nba_games = JSON.parse(response.read_body)
     if fakedata
       # nba_games = dummy_game
@@ -47,6 +50,7 @@ class HomeController < ApplicationController
     request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
+    sleep(0.5)
     nfl_games = JSON.parse(response.read_body)
     if fakedata
       # nfl_games = dummy_game
@@ -64,6 +68,7 @@ class HomeController < ApplicationController
     request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
+    sleep(0.5)
     nhl_games = JSON.parse(response.read_body)
     if fakedata
       # nhl_games = dummy_game
@@ -506,6 +511,7 @@ class HomeController < ApplicationController
         request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
         request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
         response = http.request(request)
+        sleep(0.5)
         nba_games = JSON.parse(response.read_body)
         if fakedata
           nba_games = dummy_game
@@ -535,6 +541,7 @@ class HomeController < ApplicationController
         request["X-RapidAPI-Key"] = 'b75f06b51amshedbb7bbb363591fp1d8c49jsnea0e9ea45d3b'
         request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
         response = http.request(request)
+        sleep(0.5)
         nhl_games = JSON.parse(response.read_body)
         if fakedata
           nhl_games = dummy_game

@@ -43,6 +43,8 @@ class BetsController < ApplicationController
     request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
+    sleep(0.5)
+    sleep(0.5)
     nba_games = JSON.parse(response.read_body)
 
     # send the API request for NFL games
@@ -57,6 +59,7 @@ class BetsController < ApplicationController
     request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
+    sleep(0.5)
     nfl_games = JSON.parse(response.read_body)
 
     # send the API request for NHL games
@@ -71,6 +74,7 @@ class BetsController < ApplicationController
     request["X-RapidAPI-Host"] = 'odds.p.rapidapi.com'
 
     response = http.request(request)
+    sleep(0.5)
     nhl_games = JSON.parse(response.read_body)
 
     # for each bet
