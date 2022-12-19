@@ -246,7 +246,7 @@ rake db:migrate RAILS_ENV=test
 bundle exec cucumber
 ```
 
-At this point, *Cucumber Tests are providing over 87% coverage!*
+At this point, *Cucumber Tests are providing over 86% coverage!*
 
 Given the nature of the project and the template we leveraged to get up and running, we are very proud of the testing coverage here which primarily focuses on the new features we've developed.
 
@@ -257,7 +257,7 @@ Run RSPEC tests for users (parameter validation), friends, odds, betting, and po
 rake spec
 ```
 
-At this point, *Rake Tests are providing over 71% coverage!*
+At this point, *Rake Tests are providing over 84% coverage!*
 
 It must be noted that the features/functionality that we have tested apply solely to those that we deem relevant to our
 application from the template used. For this reason, a pure coverage report of `cucumber` or `rspec` tests will not
