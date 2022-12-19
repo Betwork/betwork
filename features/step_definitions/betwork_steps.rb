@@ -256,7 +256,7 @@ end
 
 
 Given /I have a confirmed bet/ do 
-  bet = Bet.create!(home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "2022-11-15", status: "")
+  bet = Bet.create!(league: "NBA", home_team_name: "LAL", away_team_name: "CHI", betting_on: "Home Team", home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50", user_id_one: 6, user_id_two: 7, date: "19:10 ET 12/16/2022", status: "Confirmed")
   bet.save!
   User.where(name: "Rails").update_all(balanceInEscrow: 50)
 end 

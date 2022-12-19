@@ -8,6 +8,7 @@ Feature: user can place bets
 # Bet functionality
 Background: We are on the home page and haven't logged in yet
   Given the Betwork test database exists
+  And the admin user has funds
   And I am on the Betwork login page
   And I fill in "user_email" with "test@betwork.com"
   And I fill in "user_password" with "password"

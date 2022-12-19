@@ -34,12 +34,12 @@ gem 'email_spec'
 gem 'simplecov'
 gem 'warden'
 gem 'twilio-ruby'
+gem 'nokogiri', '1.13.9'
 
 #Need this gem for API calls
 gem 'excon'
 
 group :development do
-  gem 'rubocop'
   gem 'spring'
   gem 'better_errors'
   gem 'binding_of_caller'
