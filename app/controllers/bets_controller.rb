@@ -155,8 +155,8 @@ class BetsController < ApplicationController
                   #puts "bet controller entered odds <= 0"
                 end
 
-                #puts "winning amount acc to bet controller"
-                #puts @winning_amount
+                puts "winning amount acc to bet controller"
+                puts @winning_amount
 
                 # setting variables to make post
                 @bet = bet

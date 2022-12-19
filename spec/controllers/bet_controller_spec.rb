@@ -158,7 +158,7 @@ RSpec.describe "Bets", type: :request do
                         away_team_name: 'OKC',
                         home_money_line: -210,
                         away_money_line: 175,
-                        date: "12:10 ET 11/13/2022")
+                        date: "12:10 ET 11/13/2023")
 
     @params = { :id => @odd1.id, :amount => -1, :friend_id => @u2.id, :game => @odd1.id }
     result = get placebet_bet_path(@params)
@@ -175,7 +175,8 @@ RSpec.describe "Bets", type: :request do
                    :amount => 125,
                    :user_id_one => @u1.id,
                    :user_id_two => @u2.id,
-                   :status => "proposed" }
+                   :status => "proposed",
+                   :league => "NBA" }
 
     @params = { :bet => @betparams }
     result = post bets_path(@params)
@@ -224,24 +225,12 @@ RSpec.describe "Bets", type: :request do
     sign_out @u1
     sign_in @u2
 
-    #puts "bets status before accepting bet"
-    allBets = Bet.all
-    #puts allBets.length()
-    #puts allBets[0].status
-    #puts allBets[1].status
-
     #accept the bet, balance in escrow should increase for @u2
     @params = { :id => allBets[0].id }
     get receive_bet_path(@params)
     allUsers = User.all
     expect(allUsers[0].balanceInEscrow).to eq(allBets[0].amount + allBets[2].amount)
     expect(allUsers[1].balanceInEscrow).to eq(allBets[0].amount)
-
-    #puts "bets status after accepting bet"
-    allBets = Bet.all
-    #puts allBets.length()
-    #puts allBets[0].status
-    #puts allBets[1].status
 
     #cancel the other bet, balance in escrow should decrease for @u1
     @params = { :id => allBets[2].id }
@@ -252,7 +241,6 @@ RSpec.describe "Bets", type: :request do
     @params = { :id => @u1.name, :fakedata => true }
     result = get allbets_bet_path(@params)
     expect(result).to eq(200)
-    # expect(allUsers[0].balanceInEscrow).to eq(allBets[0].amount)
     expect(allUsers[1].balanceInEscrow).to eq(allBets[0].amount)
 
     #the Away team wins in this game
@@ -262,8 +250,31 @@ RSpec.describe "Bets", type: :request do
     else
       @winning_amount = (allBets[0].amount / (-allBets[0].away_money_line)) * 100.0
     end
+
+    #update the time of the bet
+    @odd1.update(date: "12:10 ET 11/13/2022")
+    # update u1 and u2 bets
+    @params = { :id => @u1.name, :fakedata => true }
+    result = get allbets_bet_path(@params)
+    expect(result).to eq(200)
+    @params = { :id => @u2.name, :fakedata => true }
+    result = get allbets_bet_path(@params)
+    expect(result).to eq(200)
+
+    #update the time of the bet
+    @odd1.update(date: "12:10 ET 11/13/2022")
+    # update u1 and u2 bets
+    @params = { :id => @u1.name, :fakedata => true }
+    result = get allbets_bet_path(@params)
+    expect(result).to eq(200)
+    @params = { :id => @u2.name, :fakedata => true }
+    result = get allbets_bet_path(@params)
+    expect(result).to eq(200)
+
+    allBets = Bet.all
     allUsers = User.all
-    # #puts allUsers[0].actualBalance
+    puts "test winning amt is"
+    puts @winning_amount
     expect(allUsers[0].actualBalance).to eq(originalBal_u1 - allBets[0].amount)
     expect(allUsers[1].actualBalance).to eq(originalBal_u2 + @winning_amount)
   end
@@ -292,7 +303,7 @@ RSpec.describe "Bets", type: :request do
                         away_team_name: 'OKC',
                         home_money_line: -210,
                         away_money_line: 175,
-                        date: "12:10 ET 11/13/2022")
+                        date: "12:10 ET 11/13/2023")
 
     @params = { :id => @odd1.id, :amount => -1, :friend_id => @u2.id, :game => @odd1.id }
     result = get placebet_bet_path(@params)
