@@ -17,6 +17,28 @@ Feature: user can place bets
     And I fill in "user_password" with "password"
     And I press "Log in"
 
+  Scenario: Update bets from odds page 
+    Given my test friend exists
+    And I am on the Odds page
+    Then I sleep
+
+  Scenario: Accept a bet (this bet will be a proposed bet, to simulate proposed games)  
+    Given my test friend exists
+    Given I have a proposed bet
+    And I am on the Betwork home page
+    Then I navigate to the dropdown-menu
+    Then I sign out of Betwork
+  # Sign in as Betty and Accept a already finished bet to simulate "Finished Game"
+    Given I am on the Betwork login page
+    When I fill in "user_email" with "Betty@betwork.com"
+    And I fill in "user_password" with "password"
+    When I press "Log in"
+    Given I am on the Betwork home page
+    And I follow "My Bets"
+    And I accept a proposed bet
+    And I am on the Betwork home page
+    And I follow "My Bets"
+
   Scenario: I look for Live Bets
     Given my test friend exists
     Given I am on the Betwork home page

@@ -289,6 +289,14 @@ Given /I have a confirmed NHL bet/ do
   User.where(name: "Rails").update_all(balanceInEscrow: 100)
 end
 
+Given /I have a proposed bet/ do
+  bet = Bet.create!(league: "NBA", home_team_name: "Los Angeles Lakers", away_team_name: "Chicago Bulls", betting_on: "Home Team",
+                    home_money_line: "-220", away_money_line: "+150", user_one_name: "Rails", user_two_name: "Betty", amount: "50",
+                    user_id_one: 6, user_id_two: 7, date: "20:00 ET 12/16/2023", status: "proposed")
+  bet.save!
+  User.where(name: "Rails").update_all(balanceInEscrow: 50)
+end
+
 Then /I sleep/ do
   sleep(3)
 end
