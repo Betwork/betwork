@@ -29,9 +29,8 @@ class BetsController < ApplicationController
     # get all the bets of the current user
     @user_bets = Bet.get_by_userid(current_user.id)
     fakedata = params[:fakedata]
-    #puts "THE VALUE OF FAKEDATA"
-    #puts fakedata
-    #puts params
+    forcetimeupdatefortest = params[:forcetimeupdatefortest]
+    puts forcetimeupdatefortest
 
     # send the API request for NBA games
     url = URI("https://odds.p.rapidapi.com/v4/sports/basketball_nba/scores?daysFrom=3")
@@ -77,22 +76,17 @@ class BetsController < ApplicationController
 
     # for each bet
     @user_bets.each do |bet|
-      #puts "reached 1"
       # only proceed with confirmed bets
       if (bet.status == 'confirmed')
-        #puts "reached 2"
 
         # get the date of the bet in the right format
         date_string_bet = Date.strptime(bet.date, '%H:%M %z %m/%d/%Y').strftime('%Y-%m-%d')
 
         # select the right league for the game
         if (bet.league == 'NBA')
-          #puts "reached 3"
           # for each game in the response
           nba_games.each do |game|
-            #puts "reached 4"
 
-            # extract the date of the game
             date_string = game['commence_time']
             date_object_utc = DateTime.strptime(date_string, '%Y-%m-%dT%H:%M:%s')
 
@@ -102,17 +96,13 @@ class BetsController < ApplicationController
             date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['home_team']) &&
-              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
-              # if the game is finished, proceed
-              #puts "reached 5"
-              if game['completed'] == true
-                #puts "reached 6"
+            if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
+              # if the game is finished, proceed
+              if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
 
-                #get the scores of the home and away team
                 if (scores[0]['name'] == game['home_team'])
                   home_score = scores[0]['score']
                   away_score = scores[1]['score']
@@ -143,20 +133,12 @@ class BetsController < ApplicationController
                   odds = (bet.away_money_line).to_f
                 end
 
-                #puts "odds acc to bet controller"
-                #puts odds
-
                 # apply the US odds formula to calculate the winnings
                 if (odds > 0.0)
                   @winning_amount = (@amount / 100.0) * odds
-                  #puts "bet controller entered odds > 0"
                 else
                   @winning_amount = (@amount / (-odds)) * 100.0
-                  #puts "bet controller entered odds <= 0"
                 end
-
-                puts "winning amount acc to bet controller"
-                puts @winning_amount
 
                 # setting variables to make post
                 @bet = bet
@@ -183,7 +165,6 @@ class BetsController < ApplicationController
                   test = { "content" => content_string }
                   @post = admin_user.posts.new(test)
                   @post.save
-
                 else
 
                   # increase his actual balance by the winnings
@@ -225,6 +206,7 @@ class BetsController < ApplicationController
                 # change the status of the bet and save it
                 bet.status = 'finished'
                 bet.save
+
               else
                 # extracting bet date and time
                 date_string = bet['date']
@@ -264,12 +246,10 @@ class BetsController < ApplicationController
             date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['home_team']) &&
-              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
+            if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
               # if the game is finished, proceed
-              if game['completed'] == true
-
+              if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
 
@@ -282,7 +262,7 @@ class BetsController < ApplicationController
                 end
 
                 # establish whether Home or Away won
-                if (home_score > away_score)
+                if (home_score > away_score) && !fakedata
                   winning_team = 'Home Team'
                 else
                   winning_team = 'Away Team'
@@ -415,12 +395,12 @@ class BetsController < ApplicationController
             date_string_game = date_object_eastern.strftime('%Y-%m-%d')
 
             # if the game has the same teams (and date from before), proceed
-            if ((bet.home_team_name == game['home_team']) &&
-              (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game)
+            if ((bet.home_team_name == game['home_team']) && (bet.away_team_name == game['away_team']) && date_string_bet == date_string_game) || fakedata
 
               # if the game is finished, proceed
-              if game['completed'] == true
-
+              # puts "inside of nhl"
+              # puts forcetimeupdatefortest
+              if game['completed'] == true && !forcetimeupdatefortest
                 #get the final scores of the game
                 scores = game['scores']
 
@@ -433,7 +413,7 @@ class BetsController < ApplicationController
                 end
 
                 # establish whether Home or Away won
-                if (home_score > away_score)
+                if (home_score > away_score) && !fakedata
                   winning_team = 'Home Team'
                 else
                   winning_team = 'Away Team'
@@ -530,6 +510,7 @@ class BetsController < ApplicationController
 
               else
                 # extracting bet date and time
+                # puts "OKAY WERE CHANGING DATE TIME"
                 date_string = bet['date']
                 date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
 
@@ -584,11 +565,7 @@ class BetsController < ApplicationController
         date_object_eastern = date_object_utc.new_offset(eastern_offset)
         nhl_date_string_eastern = date_object_eastern.strftime('%H:%M ET %m/%d/%Y')
 
-        if (not ((bet.home_team_name == nba_home_team_name) &&
-          (bet.away_team_name == nba_away_team_name) &&
-          (bet.date == nba_date_string_eastern)) && not((bet.home_team_name == nhl_home_team_name) &&
-          (bet.away_team_name == nhl_away_team_name) &&
-          (bet.date == nhl_date_string_eastern)))
+        if (not ((bet.home_team_name == nba_home_team_name) && (bet.away_team_name == nba_away_team_name) && (bet.date == nba_date_string_eastern)) && not((bet.home_team_name == nhl_home_team_name) && (bet.away_team_name == nhl_away_team_name) && (bet.date == nhl_date_string_eastern)))
           # extracting bet date and time
           date_string = bet['date']
           date_object_eastern = DateTime.strptime(date_string, '%H:%M %z %m/%d/%Y')
@@ -604,7 +581,7 @@ class BetsController < ApplicationController
           toolate_boolean = current_time_eastern > early_time_eastern
 
           bet.toolate = toolate_boolean
-          if (toolate_boolean)
+          if toolate_boolean || forcetimeupdatefortest
             bet.status = 'cancelled'
             @original = User.find_by(id: bet.user_id_one)
             @original.increase_balance_in_escrow(-bet.amount)
