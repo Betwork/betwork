@@ -8,7 +8,7 @@ Feature: user can place bets
 # Bet functionality
 Background: We are on the home page and haven't logged in yet
   Given the Betwork test database exists
-  And the admin user has funds
+  Given the admin user has money
   And I am on the Betwork login page
   And I fill in "user_email" with "test@betwork.com"
   And I fill in "user_password" with "password"
@@ -37,6 +37,7 @@ Scenario: I place a bet against my friend and look at my new bet
   And I should see "Betty"
   Then I fill in "bet_amount" with "50"
   And I press "Confirm Proposition"
+  Then I sleep
   Then I should see "Your bet has been proposed!"
 
   # I look at my new bet
@@ -68,6 +69,7 @@ Scenario: Accept a bet (this bet will already be finished, to simulate finished 
   And I should see "Betty"
   Then I fill in "bet_amount" with "50"
   And I press "Confirm Proposition"
+  Then I sleep
   Then I should see "Your bet has been proposed!"
 
   # Sign in as Betty and Accept a already finished bet to simulate "Finished Game"
@@ -104,6 +106,7 @@ Scenario: Accept a bet (this bet will already be finished, to simulate finished 
   Then I fill in "bet_amount" with "50"
   And I change teams to "OKC"
   And I press "Confirm Proposition"
+  Then I sleep
   Then I should see "Your bet has been proposed!"
 
   # Sign in as Betty and Accept a already finished bet to simulate "Finished Game"

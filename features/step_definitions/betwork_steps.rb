@@ -262,5 +262,5 @@ Given /I have a confirmed bet/ do
 end 
 
 Then /I sleep/ do
-  sleep(100)
+  sleep(2)
 end
